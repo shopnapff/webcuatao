@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tRongLich Dev // Bio Dashboard</title>
+    <title>tRongLich Dev // Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     
@@ -53,6 +53,21 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: rainbowText 5s linear infinite;
+        }
+
+        /* CON TRỎ NHẤP NHÁY CHO HIỆU ỨNG GÕ CHỮ */
+        .typing-cursor::after {
+            content: '|';
+            display: inline-block;
+            margin-left: 3px;
+            animation: blinkCursor 0.7s infinite;
+            color: var(--neon-cyan);
+            -webkit-text-fill-color: var(--neon-cyan);
+        }
+
+        @keyframes blinkCursor {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
 
         /* HEADER & ADMIN CONTROL BAR */
@@ -633,7 +648,7 @@
                         <img id="bioAvatar" src="" class="avatar-img">
                         <img src="https://raw.githubusercontent.com/WusThanhDieu/Profile-ThanhDieu.Com-V5-Tester/refs/heads/main/res/v5/img/crown/mong-vuot-rong.png" class="avatar-frame">
                     </div>
-                    <div class="henry-gaming rainbow-text" id="bioStatus"></div>
+                    <div class="henry-gaming rainbow-text typing-cursor" id="bioStatus"></div>
                 </div>
                 <div class="user-info">
                     <h1 class="rainbow-text" id="bioName" style="font-size: 3rem; margin: 0; line-height: 1;"></h1>
@@ -824,7 +839,7 @@
             <input type="hidden" id="editLinkId">
             <div class="form-group">
                 <label>Tên Liên Kết</label>
-                <input type="text" id="linkTitleInput" placeholder="Ví dụ: Kênh Telegram Share Key">
+                <input type="text" id="linkTitleInput" placeholder="Ví dụ: Kênh Telegram  ">
             </div>
             <div class="form-group">
                 <label>Icon Class (FontAwesome)</label>
@@ -838,7 +853,29 @@
         </div>
     </div>
 
-    <script>
+    <!-- FIREBASE & APP LOGIC SCRIPT -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Cấu hình Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDMfNHEYrfn0FuQx_lIaHAhJ5FNXNC5X94",
+            authDomain: "biodashboard-5b443.firebaseapp.com",
+            databaseURL: "https://biodashboard-5b443-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "biodashboard-5b443",
+            storageBucket: "biodashboard-5b443.firebasestorage.app",
+            messagingSenderId: "682470949589",
+            appId: "1:682470949589:web:81dd5bf0c7df605b9f585c",
+            measurementId: "G-EVYKTS83T7"
+        };
+
+        // Khởi tạo Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getDatabase(app);
+
         // --- DEFAULT DATA ---
         const DEFAULT_BIO = {
             name: "𝓉ℛ𝑜𝓃𝒢<span style='color:#ff416c'>ℒℐ𝒸𝒽</span>",
@@ -865,60 +902,127 @@
             { id: 2, title: "Facebook cá nhân", icon: "fab fa-facebook-f", url: "https://facebook.com" }
         ];
 
-        // --- LOCAL STORAGE STATE WITH REAL-TIME SYNC ---
-        let bioData = JSON.parse(localStorage.getItem('poarus_bio')) || DEFAULT_BIO;
-        let filesData = JSON.parse(localStorage.getItem('poarus_files')) || DEFAULT_FILES;
-        let linksData = JSON.parse(localStorage.getItem('poarus_links')) || DEFAULT_LINKS;
-        let adminPass = localStorage.getItem('poarus_adminPass') || "1";
-        let utilityTitle = localStorage.getItem('poarus_utilityTitle') || "Tiện Ích & Liên Kết";
+        // --- APPLICATION STATE ---
+        let bioData = DEFAULT_BIO;
+        let filesData = DEFAULT_FILES;
+        let linksData = DEFAULT_LINKS;
+        let adminPass = "1";
+        let utilityTitle = "Tiện Ích & Liên Kết";
         
         let isAdmin = false;
         let currentCategory = 'all';
 
-        // --- INITIALIZATION ---
+        // --- TYPEWRITER EFFECT LOGIC ---
+        let typingTimeout = null;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function startTypewriter(textToType) {
+            if (typingTimeout) clearTimeout(typingTimeout);
+            const statusEl = document.getElementById('bioStatus');
+            if (!statusEl) return;
+
+            const text = textToType || "ℋ𝑒𝓁𝓁𝑜 𝑒𝓋𝑒𝓇𝓎𝑜𝓃𝑒. ℐ'𝓂 𝓉ℛ𝑜𝓃𝒢 ℒℐ𝒸𝒽 𝒟𝑒𝓋";
+            const typingSpeed = 100;
+            const deletingSpeed = 50;
+            const delayEnd = 2000;
+
+            function typeStep() {
+                if (!isDeleting && charIndex <= text.length) {
+                    statusEl.innerText = text.substring(0, charIndex);
+                    charIndex++;
+                    typingTimeout = setTimeout(typeStep, typingSpeed);
+                } else if (!isDeleting && charIndex > text.length) {
+                    isDeleting = true;
+                    typingTimeout = setTimeout(typeStep, delayEnd);
+                } else if (isDeleting && charIndex >= 0) {
+                    statusEl.innerText = text.substring(0, charIndex);
+                    charIndex--;
+                    typingTimeout = setTimeout(typeStep, deletingSpeed);
+                } else {
+                    isDeleting = false;
+                    charIndex = 0;
+                    typingTimeout = setTimeout(typeStep, 500);
+                }
+            }
+
+            charIndex = 0;
+            isDeleting = false;
+            typeStep();
+        }
+
+        // --- INITIALIZATION & FIREBASE REAL-TIME LISTENER ---
         function initApp() {
-            renderBio();
-            renderLinks();
-            renderFiles();
-            document.getElementById('utilityTitle').innerText = utilityTitle;
             initBackgroundMusic();
+
+            const dbRef = ref(db, 'dashboard');
+            onValue(dbRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    bioData = data.bio || DEFAULT_BIO;
+                    filesData = data.files || DEFAULT_FILES;
+                    linksData = data.links || DEFAULT_LINKS;
+                    adminPass = data.adminPass || "1";
+                    utilityTitle = data.utilityTitle || "Tiện Ích & Liên Kết";
+                } else {
+                    set(dbRef, {
+                        bio: DEFAULT_BIO,
+                        files: DEFAULT_FILES,
+                        links: DEFAULT_LINKS,
+                        adminPass: "1",
+                        utilityTitle: "Tiện Ích & Liên Kết"
+                    });
+                }
+                renderBio();
+                renderLinks();
+                renderFiles();
+                document.getElementById('utilityTitle').innerText = utilityTitle;
+            });
         }
 
         // --- BACKGROUND MUSIC AUTO-PLAY ON LOAD ---
         function initBackgroundMusic() {
             const music = document.getElementById('bgMusic');
-            music.volume = 0.5;
+            if (music) {
+                music.volume = 0.5;
+                music.play().catch(() => {
+                    const autoPlayHandler = () => {
+                        music.play().catch(e => console.log("Autoplay blocked:", e));
+                        document.removeEventListener('click', autoPlayHandler);
+                        document.removeEventListener('keydown', autoPlayHandler);
+                        document.removeEventListener('touchstart', autoPlayHandler);
+                    };
+                    document.addEventListener('click', autoPlayHandler);
+                    document.addEventListener('keydown', autoPlayHandler);
+                    document.addEventListener('touchstart', autoPlayHandler);
+                });
+            }
+        }
 
-            // Tự động phát nhạc khi vào trang
-            music.play().catch(() => {
-                // Trình duyệt chặn autoplay nếu chưa có tương tác -> Lắng nghe sự kiện click/touch/keydown đầu tiên để phát
-                const autoPlayHandler = () => {
-                    music.play().catch(e => console.log("Autoplay blocked:", e));
-                    document.removeEventListener('click', autoPlayHandler);
-                    document.removeEventListener('keydown', autoPlayHandler);
-                    document.removeEventListener('touchstart', autoPlayHandler);
-                };
-                document.addEventListener('click', autoPlayHandler);
-                document.addEventListener('keydown', autoPlayHandler);
-                document.addEventListener('touchstart', autoPlayHandler);
+        // --- SAVE DATA TO FIREBASE REALTIME DATABASE ---
+        function saveData() {
+            const dbRef = ref(db, 'dashboard');
+            set(dbRef, {
+                bio: bioData,
+                files: filesData,
+                links: linksData,
+                adminPass: adminPass,
+                utilityTitle: utilityTitle
+            }).catch((error) => {
+                console.error("Lỗi khi lưu dữ liệu lên Firebase:", error);
+                alert("Không thể lưu thay đổi lên cơ sở dữ liệu!");
             });
         }
 
-        function saveData() {
-            localStorage.setItem('poarus_bio', JSON.stringify(bioData));
-            localStorage.setItem('poarus_files', JSON.stringify(filesData));
-            localStorage.setItem('poarus_links', JSON.stringify(linksData));
-            localStorage.setItem('poarus_adminPass', adminPass);
-            localStorage.setItem('poarus_utilityTitle', utilityTitle);
-        }
-
         // --- RENDER BIO REAL-TIME ---
-        function renderBio() {
+        window.renderBio = function() {
             document.getElementById('bioName').innerHTML = bioData.name;
             document.getElementById('bioSubtitle').innerHTML = bioData.subtitle || "ℱ𝓊𝓁𝓁 𝒮𝓉𝒶𝒸𝓀 𝒟𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇";
-            document.getElementById('bioStatus').innerText = bioData.status;
             document.getElementById('bioAvatar').src = bioData.avatar;
             document.getElementById('bioDesc').innerText = bioData.desc;
+
+            // Kích hoạt hiệu ứng gõ chữ
+            startTypewriter(bioData.status);
 
             const socialsContainer = document.getElementById('socialLinks');
             socialsContainer.innerHTML = `
@@ -931,7 +1035,7 @@
         }
 
         // --- RENDER LINKS REAL-TIME ---
-        function renderLinks() {
+        window.renderLinks = function() {
             const grid = document.getElementById('utilityGrid');
             grid.innerHTML = '';
             linksData.forEach(link => {
@@ -952,9 +1056,10 @@
         }
 
         // --- RENDER FILES REAL-TIME WITH MAINTENANCE LOCK ---
-        function renderFiles() {
+        window.renderFiles = function() {
             const grid = document.getElementById('filesGrid');
-            const searchVal = document.getElementById('searchInput').value.toLowerCase();
+            const searchInputEl = document.getElementById('searchInput');
+            const searchVal = searchInputEl ? searchInputEl.value.toLowerCase() : '';
             grid.innerHTML = '';
 
             const filtered = filesData.filter(file => {
@@ -1004,7 +1109,7 @@
         }
 
         // --- FILTER CATEGORY ---
-        function filterCategory(cat, btn) {
+        window.filterCategory = function(cat, btn) {
             currentCategory = cat;
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -1012,7 +1117,7 @@
         }
 
         // --- ADMIN AUTH ---
-        function toggleAdminAuth() {
+        window.toggleAdminAuth = function() {
             if(isAdmin) {
                 isAdmin = false;
                 document.body.classList.remove('admin-mode');
@@ -1023,7 +1128,7 @@
             }
         }
 
-        function loginAdmin() {
+        window.loginAdmin = function() {
             const pass = document.getElementById('adminPasswordInput').value;
             if(pass === adminPass) {
                 isAdmin = true;
@@ -1038,7 +1143,7 @@
         }
 
         // --- ADMIN: BIO CONFIG REAL-TIME ---
-        function openBioConfigModal() {
+        window.openBioConfigModal = function() {
             document.getElementById('editBioName').value = bioData.name;
             document.getElementById('editBioStatus').value = bioData.status;
             document.getElementById('editBioAvatar').value = bioData.avatar;
@@ -1050,7 +1155,7 @@
             openModal('bioModal');
         }
 
-        function saveBioConfig() {
+        window.saveBioConfig = function() {
             bioData.name = document.getElementById('editBioName').value;
             bioData.status = document.getElementById('editBioStatus').value;
             bioData.avatar = document.getElementById('editBioAvatar').value;
@@ -1063,7 +1168,7 @@
             const newPass = document.getElementById('editAdminPass').value;
             if(newPass.trim() !== "") {
                 adminPass = newPass;
-                alert("Đã cập nhật mật khẩu Admin!");
+                alert("Đã cập nhật mật khẩu Admin mới!");
             }
 
             saveData();
@@ -1071,7 +1176,7 @@
             closeModal('bioModal');
         }
 
-        function openEditUtilityTitleModal() {
+        window.openEditUtilityTitleModal = function() {
             const newTitle = prompt("Nhập tên hiển thị mới cho tiện ích:", utilityTitle);
             if(newTitle) {
                 utilityTitle = newTitle;
@@ -1081,7 +1186,7 @@
         }
 
         // --- ADMIN: FILES MANAGEMENT REAL-TIME ---
-        function openFileModal() {
+        window.openFileModal = function() {
             document.getElementById('editFileId').value = '';
             document.getElementById('fileNameInput').value = '';
             document.getElementById('fileImgInput').value = '';
@@ -1091,7 +1196,7 @@
             openModal('fileModal');
         }
 
-        function editFile(id) {
+        window.editFile = function(id) {
             const file = filesData.find(f => f.id === id);
             if(!file) return;
             document.getElementById('editFileId').value = file.id;
@@ -1105,7 +1210,7 @@
             openModal('fileModal');
         }
 
-        function saveFile() {
+        window.saveFile = function() {
             const id = document.getElementById('editFileId').value;
             const name = document.getElementById('fileNameInput').value;
             const category = document.getElementById('fileCategorySelect').value;
@@ -1132,7 +1237,7 @@
             closeModal('fileModal');
         }
 
-        function deleteFile(id) {
+        window.deleteFile = function(id) {
             if(confirm('Bạn có chắc chắn muốn xóa file này?')) {
                 filesData = filesData.filter(f => f.id !== id);
                 saveData();
@@ -1141,7 +1246,7 @@
         }
 
         // --- ADMIN: LINKS MANAGEMENT REAL-TIME ---
-        function openAddLinkModal() {
+        window.openAddLinkModal = function() {
             document.getElementById('editLinkId').value = '';
             document.getElementById('linkTitleInput').value = '';
             document.getElementById('linkIconInput').value = 'fab fa-telegram-plane';
@@ -1149,7 +1254,7 @@
             openModal('linkModal');
         }
 
-        function editLink(id) {
+        window.editLink = function(id) {
             const link = linksData.find(l => l.id === id);
             if(!link) return;
             document.getElementById('editLinkId').value = id;
@@ -1159,7 +1264,7 @@
             openModal('linkModal');
         }
 
-        function saveLink() {
+        window.saveLink = function() {
             const id = document.getElementById('editLinkId').value;
             const title = document.getElementById('linkTitleInput').value;
             const icon = document.getElementById('linkIconInput').value;
@@ -1184,7 +1289,7 @@
             closeModal('linkModal');
         }
 
-        function deleteLink(id) {
+        window.deleteLink = function(id) {
             if(confirm('Bạn có muốn xóa liên kết này?')) {
                 linksData = linksData.filter(l => l.id !== id);
                 saveData();
@@ -1193,13 +1298,13 @@
         }
 
         // --- UTILS ---
-        function copyToClipboard(text) {
+        window.copyToClipboard = function(text) {
             navigator.clipboard.writeText(text);
             alert('Đã sao chép liên kết!');
         }
 
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        window.openModal = function(id) { document.getElementById(id).classList.add('active'); }
+        window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); }
 
         window.onload = initApp;
     </script>
