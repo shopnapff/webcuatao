@@ -604,15 +604,154 @@
         }
 
         @media (max-width: 768px) {
+            header {
+                padding: 12px 4%;
+                gap: 12px;
+            }
+            .logo-title {
+                min-width: 0;
+                font-size: clamp(0.75rem, 3vw, 1.1rem);
+                gap: 8px;
+                letter-spacing: 0.5px;
+            }
+            .admin-status-bar {
+                gap: 8px;
+            }
+            .btn-neon {
+                padding: 8px 12px;
+                letter-spacing: 0.8px;
+            }
+            .main-wrapper {
+                margin: 22px auto;
+                padding: 0 14px;
+            }
+            .glass-card {
+                padding: 24px 18px;
+                margin-bottom: 28px;
+            }
             .profile-header {
                 flex-direction: column;
                 text-align: center;
+                gap: 20px;
+            }
+            .user-info {
+                width: 100%;
+                min-width: 0;
+            }
+            #bioName {
+                font-size: clamp(2rem, 9vw, 3rem) !important;
+                line-height: 1.1 !important;
+                overflow-wrap: anywhere;
+            }
+            #bioSubtitle,
+            #bioDesc,
+            .henry-gaming {
+                overflow-wrap: anywhere;
             }
             .social-links {
                 justify-content: center;
+                gap: 10px;
             }
+            .glass-card > .admin-controls-item {
+                position: static !important;
+                width: fit-content;
+                margin: 18px 0 0 auto;
+            }
+            .section-header {
+                align-items: flex-start;
+                margin: 28px 0 15px;
+                gap: 12px;
+            }
+            .section-title {
+                min-width: 0;
+                font-size: clamp(1rem, 4.5vw, 1.25rem);
+                gap: 8px;
+            }
+            .section-header > div[style] {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+            .utility-grid,
+            .files-grid {
+                grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+                gap: 14px;
+            }
+            .controls-bar {
+                gap: 12px;
+                margin-bottom: 18px;
+            }
+            .search-box {
+                min-width: 0;
+                flex-basis: 100%;
+            }
+            .filter-tabs {
+                width: 100%;
+                gap: 8px;
+                scrollbar-width: thin;
+            }
+            .tab-btn {
+                padding: 9px 13px;
+            }
+            .modal {
+                padding: 12px;
+            }
+            .modal-content {
+                padding: 22px 18px;
+                max-height: 92vh;
+            }
+            .modal-header {
+                font-size: 1.05rem;
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
             header {
-                padding: 15px 4%;
+                flex-wrap: wrap;
+            }
+            .logo-title {
+                font-size: 0.78rem;
+                flex: 1 1 100%;
+            }
+            .admin-status-bar {
+                margin-left: auto;
+            }
+            .main-wrapper {
+                padding: 0 12px;
+            }
+            .glass-card {
+                padding: 22px 14px;
+                border-radius: 16px;
+            }
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .section-header > button,
+            .section-header > div {
+                align-self: flex-start;
+            }
+            .section-header > div[style] {
+                justify-content: flex-start;
+            }
+            .utility-grid,
+            .files-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+            .file-card {
+                min-width: 0;
+                padding: 16px;
+            }
+            .file-actions {
+                gap: 8px;
+            }
+            .btn-action {
+                min-width: 0;
+                padding: 9px 6px;
+                font-size: 0.78rem;
+            }
+            .modal-content {
+                padding: 20px 15px;
             }
         }
     </style>
