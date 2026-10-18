@@ -1,1004 +1,647 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tRongLich Dev // Dashboard</title>
+    <title>𝓉ℛ𝑜𝓃𝒢ℒℐ𝒸𝒽 — Tech Aesthetic Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#080B12',
+                        cardBg: '#111827',
+                        neonCyan: '#00E5FF',
+                        neonPurple: '#8B5CF6',
+                        successGreen: '#10B981',
+                        warningOrange: '#F59E0B',
+                        errorRed: '#EF4444'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    
+    <!-- Google Fonts: Inter & Rajdhani -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-dark: #05070a;
-            --card-bg: rgba(12, 18, 28, 0.75);
-            --card-border: rgba(0, 240, 255, 0.25);
-            --neon-cyan: #00f0ff;
-            --neon-magenta: #ff007f;
-            --neon-green: #00ff66;
-            --neon-purple: #9d00ff;
-            --text-main: #f1f5f9;
-            --text-muted: #94a3b8;
-            --glass-blur: blur(20px);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-        }
-
         body {
-            background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(circle at 15% 15%, rgba(0, 240, 255, 0.12) 0%, transparent 45%),
-                radial-gradient(circle at 85% 85%, rgba(255, 0, 127, 0.12) 0%, transparent 45%),
-                radial-gradient(circle at 50% 50%, rgba(157, 0, 255, 0.08) 0%, transparent 60%);
-            color: var(--text-main);
-            min-height: 100vh;
-            padding-bottom: 80px;
-            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #080B12;
+            color: #F3F4F6;
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 229, 255, 0.15);
+        }
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.25);
+        }
+        .neon-glow-purple {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
         }
 
-        /* RAINBOW TEXT ANIMATION */
-        @keyframes rainbowText {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
-        }
-
-        .rainbow-text {
-            color: #00f0ff;
-            background: linear-gradient(90deg, #ff007f, #00f0ff, #00ff66, #ff007f);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: rainbowText 5s linear infinite;
-        }
-
-        /* CON TRỎ NHẤP NHÁY CHO HIỆU ỨNG GÕ CHỮ */
-        .typing-cursor::after {
-            content: '|';
-            display: inline-block;
-            margin-left: 3px;
-            animation: blinkCursor 0.7s infinite;
-            color: var(--neon-cyan);
-            -webkit-text-fill-color: var(--neon-cyan);
-        }
-
-        @keyframes blinkCursor {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        /* HEADER & ADMIN CONTROL BAR */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 6%;
-            background: rgba(5, 7, 10, 0.85);
-            backdrop-filter: var(--glass-blur);
-            border-bottom: 1px solid var(--card-border);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .logo-title {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 1.3rem;
-            color: var(--neon-cyan);
-            text-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            letter-spacing: 1px;
-        }
-
-        .admin-status-bar {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .btn-neon {
-            background: transparent;
-            border: 1px solid var(--neon-cyan);
-            color: var(--neon-cyan);
-            padding: 8px 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 0 8px rgba(0, 240, 255, 0.25);
-        }
-
-        .btn-neon:hover {
-            background: var(--neon-cyan);
-            color: #000;
-            box-shadow: 0 0 20px var(--neon-cyan);
-            transform: translateY(-2px);
-        }
-
-        .btn-danger {
-            border-color: var(--neon-magenta);
-            color: var(--neon-magenta);
-            box-shadow: 0 0 8px rgba(255, 0, 127, 0.25);
-        }
-        .btn-danger:hover {
-            background: var(--neon-magenta);
-            color: #fff;
-            box-shadow: 0 0 20px var(--neon-magenta);
-        }
-
-        /* MAIN CONTAINER */
-        .main-wrapper {
-            max-width: 1300px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        /* PROFILE HEADER & AVATAR WRAPPER */
-        .glass-card {
-            background: var(--card-bg);
-            backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 35px;
-            position: relative;
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
-        }
-
-        .profile-header {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 35px;
-        }
-
+        /* --- CĂN CHỈNH KHỚP HOÀN HẢO CHO AVATAR & KHUNG VƯƠNG MIỆN --- */
         .avatar-section {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            position: relative;
+            padding-top: 18px;
         }
 
         .avatar-wrap {
             position: relative;
-            width: 140px;
-            height: 140px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 6px;
         }
 
         .avatar-img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            border: 2px solid var(--neon-cyan);
-            box-shadow: 0 0 15px var(--neon-cyan);
+            border-radius: 50%;
+            border: 2px solid #00E5FF;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
         }
 
         .avatar-frame {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 160px;
-            height: 160px;
+            top: -16px;
+            left: -18px;
+            width: 136px;
+            height: 136px;
             pointer-events: none;
+            z-index: 5;
+            max-width: none;
         }
 
-        .henry-gaming {
-            font-size: 0.95rem;
-            font-weight: 700;
-            text-align: center;
-        }
-
-        .user-info {
-            flex: 1;
-            min-width: 280px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 12px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-
-        .social-item {
-            width: 42px;
-            height: 42px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-main);
-            text-decoration: none;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-        }
-
-        .social-item:hover {
-            border-color: var(--neon-cyan);
-            color: var(--neon-cyan);
-            background: rgba(0, 240, 255, 0.1);
-            box-shadow: 0 0 15px var(--neon-cyan);
-            transform: translateY(-3px);
-        }
-
-        /* SECTION HEADERS & CONTROLS */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 35px 0 20px 0;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .section-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.35rem;
-            color: var(--neon-cyan);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
-        }
-
-        /* UTILITY LINKS GRID */
-        .utility-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 18px;
-        }
-
-        .link-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 14px 18px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            text-decoration: none;
-            color: var(--text-main);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: var(--glass-blur);
-        }
-
-        .link-card:hover {
-            border-color: var(--neon-cyan);
-            background: rgba(0, 240, 255, 0.06);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
-            transform: translateY(-3px);
-        }
-
-        .link-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            overflow: hidden;
-        }
-
-        .link-left i {
-            color: var(--neon-cyan);
-            font-size: 1.2rem;
-        }
-
-        .link-title {
-            font-size: 0.95rem;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* SEARCH & FILTER CONTROLS */
-        .controls-bar {
-            display: flex;
-            gap: 18px;
-            flex-wrap: wrap;
-            margin-bottom: 25px;
-        }
-
-        .search-box {
-            flex: 1;
-            min-width: 240px;
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 12px 18px 12px 45px;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 10px;
-            color: #fff;
-            outline: none;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-
-        .search-box input:focus {
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
-        }
-
-        .search-box i {
+        .status-indicator-dot {
             position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 1.1rem;
+            bottom: 2px;
+            right: 2px;
+            width: 15px;
+            height: 15px;
+            background-color: #10B981;
+            border: 2px solid #080B12;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10B981;
+            z-index: 6;
         }
 
-        .filter-tabs {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 5px;
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
-
-        .tab-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-muted);
-            padding: 10px 18px;
-            border-radius: 10px;
-            cursor: pointer;
-            white-space: nowrap;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
+        ::-webkit-scrollbar-track {
+            background: #080B12;
         }
-
-        .tab-btn.active, .tab-btn:hover {
-            border-color: var(--neon-cyan);
-            color: var(--neon-cyan);
-            background: rgba(0, 240, 255, 0.08);
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+        ::-webkit-scrollbar-thumb {
+            background: #1F2937;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 229, 255, 0.2);
         }
-
-        /* FILES GRID */
-        .files-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 22px;
-        }
-
-        .file-card {
-            background: var(--card-bg);
-            backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--card-border);
-            border-radius: 14px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .file-card:hover {
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
-            transform: translateY(-4px);
-        }
-
-        .file-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 14px;
-            margin-bottom: 14px;
-        }
-
-        .file-icon {
-            font-size: 1.8rem;
-            color: var(--neon-cyan);
-            width: 50px;
-            height: 50px;
-            background: rgba(0, 240, 255, 0.08);
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .file-img-preview {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            object-fit: cover;
-            flex-shrink: 0;
-            border: 1px solid var(--card-border);
-        }
-
-        .file-info {
-            overflow: hidden;
-        }
-
-        .file-title {
-            font-weight: 700;
-            font-size: 1.05rem;
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .file-meta {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 4px;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .file-desc {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 15px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            line-height: 1.45;
-        }
-
-        .file-status-badge {
-            display: inline-block;
-            font-size: 0.75rem;
-            padding: 3px 8px;
-            border-radius: 6px;
-            margin-bottom: 12px;
-            font-weight: 700;
-            font-family: 'Rajdhani', sans-serif;
-            letter-spacing: 0.5px;
-        }
-
-        .status-works { background: rgba(0, 255, 102, 0.15); color: var(--neon-green); border: 1px solid var(--neon-green); }
-        .status-updated { background: rgba(0, 240, 255, 0.15); color: var(--neon-cyan); border: 1px solid var(--neon-cyan); }
-        .status-maintenance { background: rgba(255, 0, 127, 0.15); color: var(--neon-magenta); border: 1px solid var(--neon-magenta); }
-
-        .file-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: auto;
-        }
-
-        .btn-action {
-            flex: 1;
-            padding: 9px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-action:hover {
-            background: var(--neon-cyan);
-            color: #000;
-            box-shadow: 0 0 12px var(--neon-cyan);
-        }
-
-        .btn-disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            pointer-events: none;
-            background: rgba(255, 0, 127, 0.1) !important;
-            border-color: var(--neon-magenta) !important;
-            color: var(--neon-magenta) !important;
-        }
-
-        /* MODALS */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.82);
-            backdrop-filter: var(--glass-blur);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: #090d16;
-            border: 1px solid var(--neon-cyan);
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);
-            border-radius: 16px;
-            width: 100%;
-            max-width: 520px;
-            padding: 28px;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.25rem;
-            color: var(--neon-cyan);
-            margin-bottom: 22px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .close-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.4rem;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-        .close-btn:hover { color: var(--neon-magenta); }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 11px 14px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            color: #fff;
-            outline: none;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
-        }
-
-        /* ADMIN CONTROLS PER ITEM */
-        .admin-controls-item {
-            display: none;
-            gap: 6px;
-        }
-
-        body.admin-mode .admin-controls-item {
-            display: flex;
-        }
-
-        @media (max-width: 768px) {
-            header {
-                padding: 12px 4%;
-                gap: 12px;
-            }
-            .logo-title {
-                min-width: 0;
-                font-size: clamp(0.75rem, 3vw, 1.1rem);
-                gap: 8px;
-                letter-spacing: 0.5px;
-            }
-            .admin-status-bar {
-                gap: 8px;
-            }
-            .btn-neon {
-                padding: 8px 12px;
-                letter-spacing: 0.8px;
-            }
-            .main-wrapper {
-                margin: 22px auto;
-                padding: 0 14px;
-            }
-            .glass-card {
-                padding: 24px 18px;
-                margin-bottom: 28px;
-            }
-            .profile-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 20px;
-            }
-            .user-info {
-                width: 100%;
-                min-width: 0;
-            }
-            #bioName {
-                font-size: clamp(2rem, 9vw, 3rem) !important;
-                line-height: 1.1 !important;
-                overflow-wrap: anywhere;
-            }
-            #bioSubtitle,
-            #bioDesc,
-            .henry-gaming {
-                overflow-wrap: anywhere;
-            }
-            .social-links {
-                justify-content: center;
-                gap: 10px;
-            }
-            .glass-card > .admin-controls-item {
-                position: static !important;
-                width: fit-content;
-                margin: 18px 0 0 auto;
-            }
-            .section-header {
-                align-items: flex-start;
-                margin: 28px 0 15px;
-                gap: 12px;
-            }
-            .section-title {
-                min-width: 0;
-                font-size: clamp(1rem, 4.5vw, 1.25rem);
-                gap: 8px;
-            }
-            .section-header > div[style] {
-                flex-wrap: wrap;
-                justify-content: flex-end;
-            }
-            .utility-grid,
-            .files-grid {
-                grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-                gap: 14px;
-            }
-            .controls-bar {
-                gap: 12px;
-                margin-bottom: 18px;
-            }
-            .search-box {
-                min-width: 0;
-                flex-basis: 100%;
-            }
-            .filter-tabs {
-                width: 100%;
-                gap: 8px;
-                scrollbar-width: thin;
-            }
-            .tab-btn {
-                padding: 9px 13px;
-            }
-            .modal {
-                padding: 12px;
-            }
-            .modal-content {
-                padding: 22px 18px;
-                max-height: 92vh;
-            }
-            .modal-header {
-                font-size: 1.05rem;
-                gap: 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            header {
-                flex-wrap: wrap;
-            }
-            .logo-title {
-                font-size: 0.78rem;
-                flex: 1 1 100%;
-            }
-            .admin-status-bar {
-                margin-left: auto;
-            }
-            .main-wrapper {
-                padding: 0 12px;
-            }
-            .glass-card {
-                padding: 22px 14px;
-                border-radius: 16px;
-            }
-            .section-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .section-header > button,
-            .section-header > div {
-                align-self: flex-start;
-            }
-            .section-header > div[style] {
-                justify-content: flex-start;
-            }
-            .utility-grid,
-            .files-grid {
-                grid-template-columns: minmax(0, 1fr);
-            }
-            .file-card {
-                min-width: 0;
-                padding: 16px;
-            }
-            .file-actions {
-                gap: 8px;
-            }
-            .btn-action {
-                min-width: 0;
-                padding: 9px 6px;
-                font-size: 0.78rem;
-            }
-            .modal-content {
-                padding: 20px 15px;
-            }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00E5FF;
         }
     </style>
 </head>
-<body>
+<body class="bg-darkBg text-gray-100 min-h-screen flex flex-col selection:bg-neonCyan selection:text-black">
 
-    <div id="jsi-flying-fish-container"></div>
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col space-y-3 pointer-events-none"></div>
 
-    <!-- BACKGROUND AUDIO -->
-    <audio id="bgMusic" loop>
-        <source src="https://www.image2url.com/r2/default/audio/1792047413537-3ed3e6d1-63de-4165-bfec-8084c93a1fef.mp3" type="audio/mp3">
-    </audio>
+    <!-- Header -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-gray-800 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo & Brand -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-neonCyan to-neonPurple flex items-center justify-center neon-glow">
+                    <i class="fa-solid fa-gamepad text-black text-xl"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-bold tracking-wider text-white font-['Rajdhani']">𝓉ℛ𝑜𝓃𝒢ℒℐ𝒸𝒽 <span class="text-neonCyan">Dev</span></span>
+                    <span class="block text-[10px] text-gray-400 tracking-widest uppercase">Tech Dashboard</span>
+                </div>
+            </div>
 
-    <!-- HEADER & ADMIN CONTROL BAR -->
-    <header>
-        <div class="logo-title">
-            <i class="fa-solid fa-microchip"></i> tRongLich // DASHBOARD
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <a href="#home" class="text-neonCyan transition hover:text-neonCyan">Trang chủ</a>
+                <a href="#resources" class="text-gray-300 hover:text-neonCyan transition">Kho tài nguyên</a>
+                <a href="#utilities" class="text-gray-300 hover:text-neonCyan transition">Tiện ích</a>
+            </nav>
+
+            <!-- Actions -->
+            <div class="flex items-center space-x-4">
+                <div class="relative hidden sm:block">
+                    <input type="text" id="global-search" placeholder="Tìm kiếm nhanh..." class="bg-cardBg text-sm text-gray-200 px-4 py-2 pl-10 rounded-xl border border-gray-700 focus:border-neonCyan focus:outline-none w-48 lg:w-64 transition">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gray-400 text-sm"></i>
+                </div>
+                
+                <button id="view-mode-btn" onclick="toggleGridViewMode()" title="Chuyển đổi giao diện Grid/List" class="p-2.5 rounded-xl bg-cardBg border border-gray-700 text-gray-300 hover:text-neonCyan hover:border-neonCyan transition">
+                    <i id="view-mode-icon" class="fa-solid fa-grip"></i>
+                </button>
+
+                <button id="admin-login-btn" onclick="openAdminLoginModal()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-neonCyan to-neonPurple text-black font-semibold text-sm hover:opacity-90 transition flex items-center space-x-2 neon-glow">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span class="hidden sm:inline">Admin</span>
+                </button>
+
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2.5 rounded-xl bg-cardBg border border-gray-700 text-gray-300 hover:text-neonCyan">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+            </div>
         </div>
-        <div class="admin-status-bar">
-            <span id="adminBadge" style="display: none; color: var(--neon-green); font-size: 0.85rem; font-weight: bold; font-family: 'Rajdhani', sans-serif;">
-                <i class="fa-solid fa-user-shield"></i> ADMIN ACTIVE
-            </span>
-            <button class="btn-neon" id="adminBtn" onclick="toggleAdminAuth()">Đăng Nhập Admin</button>
+
+        <!-- Mobile Nav Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden glass-panel border-t border-gray-800 px-4 pt-2 pb-4 space-y-2">
+            <a href="#home" class="block px-3 py-2 rounded-lg text-base font-medium text-neonCyan bg-gray-800/50">Trang chủ</a>
+            <a href="#resources" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-300 hover:text-neonCyan">Kho tài nguyên</a>
+            <a href="#utilities" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-300 hover:text-neonCyan">Tiện ích</a>
         </div>
     </header>
 
-    <div class="main-wrapper">
-        <!-- PROFILE HEADER BIO -->
-        <div class="glass-card">
-            <div class="profile-header">
-                <div class="avatar-section">
-                    <div class="avatar-wrap">
-                        <img id="bioAvatar" src="" class="avatar-img">
-                        <img src="https://raw.githubusercontent.com/WusThanhDieu/Profile-ThanhDieu.Com-V5-Tester/refs/heads/main/res/v5/img/crown/mong-vuot-rong.png" class="avatar-frame">
-                    </div>
-                    <div class="henry-gaming rainbow-text typing-cursor" id="bioStatus"></div>
-                </div>
-                <div class="user-info">
-                    <h1 class="rainbow-text" id="bioName" style="font-size: 3rem; margin: 0; line-height: 1;"></h1>
-                    <div class="rainbow-text" id="bioSubtitle" style="font-size: 1.1rem; margin: 10px 0; font-weight: 600;"></div>
-                    <p class="rainbow-text" id="bioDesc" style="font-size: 0.8rem; opacity: 0.8; letter-spacing: 1px;"></p>
-                    <div class="social-links" id="socialLinks">
-                        <!-- JS rendered -->
-                    </div>
-                </div>
+    <!-- Admin Control Bar (Hidden by default) -->
+    <div id="admin-control-bar" class="hidden bg-gray-900 border-b border-neonCyan/30 px-4 py-3 sticky top-20 z-30 shadow-2xl">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center space-x-3">
+                <span class="px-2.5 py-1 rounded-md bg-neonCyan/20 text-neonCyan text-xs font-bold tracking-wider uppercase border border-neonCyan/40 animate-pulse">
+                    <i class="fa-solid fa-terminal mr-1"></i> ADMIN FIREBASE SYNC ACTIVE
+                </span>
+                <span id="admin-user-display" class="text-sm text-gray-300 font-medium">Xin chào, Admin</span>
             </div>
-            <div class="jd-music-container">
-                <div id="contribution-grid"></div>
-            </div>
-            <button class="btn-neon admin-controls-item" onclick="openBioConfigModal()" style="position: absolute; top: 15px; right: 15px; font-size: 0.75rem; padding: 6px 12px;">
-                <i class="fa-solid fa-pen"></i> Sửa Bio
-            </button>
-        </div>
-
-        <!-- UTILITY LINKS SECTION -->
-        <div class="section-header">
-            <div class="section-title">
-                <i class="fa-solid fa-link"></i> <span id="utilityTitle">Tiện Ích & Liên Kết</span>
-            </div>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-neon admin-controls-item" onclick="openEditUtilityTitleModal()" style="font-size: 0.8rem;">
-                    <i class="fa-solid fa-pen"></i> Đổi Tên Tiện Ích
+            <div class="flex flex-wrap items-center gap-2">
+                <button onclick="openFileModal()" class="px-3 py-1.5 rounded-lg bg-neonCyan text-black font-semibold text-xs hover:opacity-90 transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-plus"></i><span>Thêm File</span>
                 </button>
-                <button class="btn-neon admin-controls-item" onclick="openAddLinkModal()" style="font-size: 0.8rem;">
-                    <i class="fa-solid fa-plus"></i> Thêm Link
+                <button onclick="openUtilityModal()" class="px-3 py-1.5 rounded-lg bg-neonPurple text-white font-semibold text-xs hover:opacity-90 transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-plus"></i><span>Thêm Tiện ích</span>
+                </button>
+                <button onclick="openCategoryModal()" class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 hover:border-neonCyan font-semibold text-xs transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-folder-tree"></i><span>Danh mục</span>
+                </button>
+                <button onclick="openSocialModal()" class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 hover:border-neonCyan font-semibold text-xs transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-share-nodes"></i><span>Mạng xã hội</span>
+                </button>
+                <button onclick="openBioModal()" class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 hover:border-neonCyan font-semibold text-xs transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-user-pen"></i><span>Sửa Bio</span>
+                </button>
+                <button onclick="openChangePasswordModal()" class="px-3 py-1.5 rounded-lg bg-gray-800 text-warningOrange border border-gray-700 hover:border-warningOrange font-semibold text-xs transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-key"></i><span>Đổi mật khẩu</span>
+                </button>
+                <button onclick="openSettingsModal()" class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 hover:border-neonCyan font-semibold text-xs transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-gear"></i><span>Cài đặt</span>
+                </button>
+                <button onclick="openLogsModal()" class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 hover:border-neonCyan font-semibold text-xs transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-clock-rotate-left"></i><span>Nhật ký</span>
+                </button>
+                <button onclick="adminLogout()" class="px-3 py-1.5 rounded-lg bg-errorRed/20 text-errorRed border border-errorRed/40 font-semibold text-xs hover:bg-errorRed hover:text-white transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-right-from-bracket"></i><span>Đăng xuất</span>
                 </button>
             </div>
         </div>
+    </div>
 
-        <div class="utility-grid" id="utilityGrid">
-            <!-- JS rendered -->
-        </div>
+    <!-- Main Content Container -->
+    <main id="home" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10 w-full">
 
-        <!-- FILE MANAGER SECTION -->
-        <div class="section-header">
-            <div class="section-title">
-                <i class="fa-solid fa-folder-open"></i> Quản Lý File & Tài Nguyên
+        <!-- 4. Profile Header Bio (Horizontal Layout) -->
+        <section class="glass-panel rounded-2xl p-6 sm:p-8 relative overflow-hidden neon-glow-purple">
+            <div class="absolute -right-16 -top-16 w-64 h-64 bg-neonPurple/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-neonCyan/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-6 relative z-10">
+                <!-- Left: Avatar with Crown Frame & Status Dot -->
+                <div class="flex items-center space-x-6 flex-shrink-0">
+                    <div class="avatar-section">
+                        <div class="avatar-wrap">
+                            <img id="bio-avatar" src="" class="avatar-img" alt="Avatar">
+                            <img src="https://raw.githubusercontent.com/WusThanhDieu/Profile-ThanhDieu.Com-V5-Tester/refs/heads/main/res/v5/img/crown/mong-vuot-rong.png" class="avatar-frame" alt="Crown Frame">
+                            <span class="status-indicator-dot" title="Online"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h1 id="bio-name" class="text-2xl sm:text-3xl font-bold text-white font-['Rajdhani']">𝓉ℛ𝑜𝓃𝒢ℒℐ𝒸𝒽</h1>
+                            <i id="bio-verified-badge" class="fa-solid fa-circle-check text-neonCyan text-lg" title="Verified Admin"></i>
+                        </div>
+                        <p id="bio-username" class="text-neonCyan text-sm font-medium">@fffilehub</p>
+                        <p id="bio-description" class="text-gray-300 text-sm mt-1 max-w-md">Gaming Resources • File Manager • Tech Tools. Kho lưu trữ tài nguyên Free Fire chuyên nghiệp và an toàn.</p>
+                    </div>
+                </div>
+
+                <!-- Right: Social Links -->
+                <div class="flex flex-wrap items-center justify-center gap-3">
+                    <div id="social-links-container" class="flex flex-wrap gap-2.5">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
             </div>
-            <button class="btn-neon admin-controls-item" onclick="openFileModal()" style="font-size: 0.8rem;">
-                <i class="fa-solid fa-cloud-arrow-up"></i> Thêm File Mới
-            </button>
-        </div>
 
-        <!-- SEARCH & FILTER BAR -->
-        <div class="controls-bar">
-            <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchInput" placeholder="Tìm kiếm file 3105, file ios, tut trick, ipa ios..." oninput="renderFiles()">
+            <!-- Bottom Stats Bar inside Bio -->
+            <div class="mt-8 pt-6 border-t border-gray-800/80 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+                <div class="bg-gray-900/40 rounded-xl p-3 border border-gray-800">
+                    <span id="stat-total-resources" class="block text-2xl sm:text-3xl font-bold text-neonCyan">0</span>
+                    <span class="text-xs text-gray-400 uppercase tracking-wider">Tổng tài nguyên</span>
+                </div>
+                <div class="bg-gray-900/40 rounded-xl p-3 border border-gray-800">
+                    <span id="stat-active-files" class="block text-2xl sm:text-3xl font-bold text-successGreen">0</span>
+                    <span class="text-xs text-gray-400 uppercase tracking-wider">File hoạt động</span>
+                </div>
+                <div class="bg-gray-900/40 rounded-xl p-3 border border-gray-800">
+                    <span id="stat-utilities" class="block text-2xl sm:text-3xl font-bold text-neonPurple">0</span>
+                    <span class="text-xs text-gray-400 uppercase tracking-wider">Tiện ích & Link</span>
+                </div>
+                <div class="bg-gray-900/40 rounded-xl p-3 border border-gray-800">
+                    <span id="stat-copies" class="block text-2xl sm:text-3xl font-bold text-warningOrange">0</span>
+                    <span class="text-xs text-gray-400 uppercase tracking-wider">Lượt sao chép</span>
+                </div>
             </div>
-            <div class="filter-tabs">
-                <button class="tab-btn active" onclick="filterCategory('all', this)">Tất cả</button>
-                <button class="tab-btn" onclick="filterCategory('file 3105', this)">File 3105</button>
-                <button class="tab-btn" onclick="filterCategory('file ios', this)">File iOS</button>
-                <button class="tab-btn" onclick="filterCategory('tut trick', this)">Tut Trick</button>
-                <button class="tab-btn" onclick="filterCategory('ipa ios', this)">IPA iOS</button>
-            </div>
-        </div>
+        </section>
 
-        <!-- FILE GRID -->
-        <div class="files-grid" id="filesGrid">
-            <!-- JS rendered -->
+        <!-- 6. Kho tài nguyên Free Fire -->
+        <section id="resources" class="space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white flex items-center space-x-3">
+                        <i class="fa-solid fa-folder-open text-neonCyan"></i>
+                        <span>Kho Tài Nguyên Free Fire</span>
+                    </h2>
+                    <p class="text-sm text-gray-400 mt-1">Khám phá các file cấu hình, iOS, IPA và hướng dẫn mới nhất.</p>
+                </div>
+                
+                <!-- Category Tabs -->
+                <div id="category-tabs" class="flex flex-wrap items-center gap-2">
+                    <!-- Dynamic categories -->
+                </div>
+            </div>
+
+            <!-- Search and Filter Bar -->
+            <div class="glass-panel p-4 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="relative w-full md:w-80">
+                    <input type="text" id="resource-search-input" placeholder="Tìm theo tên file, mô tả..." class="w-full bg-cardBg text-sm text-gray-200 px-4 py-2.5 pl-10 rounded-xl border border-gray-700 focus:border-neonCyan focus:outline-none transition">
+                    <i class="fa-solid fa-search absolute left-3.5 top-3.5 text-gray-400 text-sm"></i>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                    <select id="filter-status" onchange="filterAndRenderResources()" class="bg-cardBg text-sm text-gray-300 px-3 py-2.5 rounded-xl border border-gray-700 focus:border-neonCyan focus:outline-none transition">
+                        <option value="all">Tất cả trạng thái</option>
+                        <option value="Available">Available (Có sẵn)</option>
+                        <option value="Updated">Updated (Mới cập nhật)</option>
+                        <option value="Maintenance">Maintenance (Bảo trì)</option>
+                        <option value="Unavailable">Unavailable (Không khả dụng)</option>
+                        <option value="Deprecated">Deprecated (Ngừng hỗ trợ)</option>
+                    </select>
+
+                    <select id="sort-by" onchange="filterAndRenderResources()" class="bg-cardBg text-sm text-gray-300 px-3 py-2.5 rounded-xl border border-gray-700 focus:border-neonCyan focus:outline-none transition">
+                        <option value="newest">Mới nhất</option>
+                        <option value="az">Tên A - Z</option>
+                        <option value="size">Kích thước</option>
+                    </select>
+
+                    <button onclick="resetFilters()" class="px-4 py-2.5 bg-gray-800 text-gray-300 hover:text-neonCyan text-sm rounded-xl border border-gray-700 transition" title="Xóa bộ lọc">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Resources Grid / List Container -->
+            <div id="resources-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-resources" class="hidden text-center py-16 glass-panel rounded-2xl">
+                <i class="fa-solid fa-folder-closed text-5xl text-gray-600 mb-3"></i>
+                <h3 class="text-lg font-semibold text-gray-300">Không tìm thấy tài nguyên nào</h3>
+                <p class="text-sm text-gray-500 mt-1">Hãy thử thay đổi từ khóa tìm kiếm hoặc bộ lọc.</p>
+            </div>
+        </section>
+
+        <!-- 7. Utilities & Link Manager -->
+        <section id="utilities" class="space-y-6 pt-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-white flex items-center space-x-3">
+                        <i class="fa-solid fa-toolbox text-neonPurple"></i>
+                        <span>Tiện Ích & Liên Kết Hệ Thống</span>
+                    </h2>
+                    <p class="text-sm text-gray-400 mt-1">Các công cụ hỗ trợ, liên kết mạng xã hội và tiện ích nhanh.</p>
+                </div>
+            </div>
+
+            <div id="utilities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-20 glass-panel border-t border-gray-800 py-8 text-center text-sm text-gray-400">
+        <div class="max-w-7xl mx-auto px-4 space-y-3">
+            <p>© 2026 <span class="text-white font-semibold">ℋ𝑒𝓁𝓁𝑜 𝑒𝓋𝑒𝓇𝓎𝑜𝓃𝑒. ℐ'𝓂 𝓉ℛ𝑜𝓃𝒢 ℒℐ𝒸𝒽 𝒟𝑒𝓋</span>.ℱ𝓊𝓁𝓁 𝒮𝓉𝒶𝒸𝓀 𝒟𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇 #𝒽𝑒𝓃𝓇𝓎_𝒹𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇_𝒻𝓊𝓁𝓁𝓈𝓉𝒶𝒸𝓀.</p>
+        </div>
+    </footer>
+
+    <!-- MODALS -->
+
+    <!-- 1. Admin Login Modal -->
+    <div id="admin-login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden">
+        <div class="glass-panel w-full max-w-md p-6 rounded-2xl border border-neonCyan/30 relative shadow-2xl">
+            <button onclick="closeModal('admin-login-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 rounded-xl bg-neonCyan/20 text-neonCyan flex items-center justify-center mx-auto mb-3 neon-glow">
+                    <i class="fa-solid fa-shield-halved text-xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">Đăng Nhập Admin</h3>
+            </div>
+            <form id="admin-login-form" onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Tài khoản</label>
+                    <input type="text" id="login-username" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Mật khẩu</label>
+                    <div class="relative">
+                        <input type="password" id="login-password" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-200 focus:border-neonCyan focus:outline-none pr-10">
+                        <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-3 text-gray-400 hover:text-white"><i id="eye-icon" class="fa-solid fa-eye text-sm"></i></button>
+                    </div>
+                </div>
+                <div id="login-error" class="text-xs text-errorRed hidden">Tài khoản hoặc mật khẩu không chính xác!</div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-neonCyan to-neonPurple text-black font-bold text-sm hover:opacity-90 transition neon-glow">Đăng Nhập</button>
+            </form>
         </div>
     </div>
 
-    <!-- MODAL: ADMIN LOGIN -->
-    <div class="modal" id="loginModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span>ĐĂNG NHẬP ADMIN</span>
-                <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
-            </div>
-            <div class="form-group">
-                <label>Mật khẩu Admin</label>
-                <input type="password" id="adminPasswordInput" placeholder="Mật khẩu">
-            </div>
-            <button class="btn-neon" style="width: 100%;" onclick="loginAdmin()">Đăng Nhập</button>
+    <!-- 2. File Editor Modal -->
+    <div id="file-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden overflow-y-auto py-10">
+        <div class="glass-panel w-full max-w-2xl p-6 rounded-2xl border border-neonCyan/30 relative shadow-2xl my-auto">
+            <button onclick="closeModal('file-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 id="file-modal-title" class="text-xl font-bold text-white mb-4">Thêm Tài Nguyên Mới</h3>
+            <form id="file-form" onsubmit="saveFile(event)" class="space-y-4">
+                <input type="hidden" id="file-id">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Tên tài nguyên *</label>
+                        <input type="text" id="file-name" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Danh mục *</label>
+                        <select id="file-category" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Phiên bản</label>
+                        <input type="text" id="file-version" placeholder="v1.0" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Kích thước</label>
+                        <input type="text" id="file-size" placeholder="45 MB" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Trạng thái</label>
+                        <select id="file-status" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                            <option value="Available">Available</option>
+                            <option value="Updated">Updated</option>
+                            <option value="Maintenance">Maintenance</option>
+                            <option value="Unavailable">Unavailable</option>
+                            <option value="Deprecated">Deprecated</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Link tải xuống (URL) *</label>
+                        <input type="url" id="file-download-url" required placeholder="https://..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Link hướng dẫn (URL)</label>
+                        <input type="url" id="file-guide-url" placeholder="https://..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Ảnh Thumbnail URL</label>
+                        <input type="url" id="file-thumb" placeholder="https://..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">FontAwesome Icon</label>
+                        <input type="text" id="file-icon" placeholder="fa-solid fa-file-arrow-down" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Mô tả ngắn</label>
+                    <textarea id="file-desc" rows="2" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none"></textarea>
+                </div>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="closeModal('file-modal')" class="px-4 py-2 rounded-xl bg-gray-800 text-gray-300 text-sm hover:bg-gray-700 transition">Hủy</button>
+                    <button type="submit" class="px-6 py-2 rounded-xl bg-neonCyan text-black font-bold text-sm hover:opacity-90 transition">Lưu Lại</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- MODAL: EDIT BIO & PASSWORD -->
-    <div class="modal" id="bioModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span>CẤU HÌNH BIO & ADMIN</span>
-                <button class="close-btn" onclick="closeModal('bioModal')">&times;</button>
-            </div>
-            <div class="form-group">
-                <label>Tên hiển thị HTML (Tên Bio)</label>
-                <input type="text" id="editBioName">
-            </div>
-            <div class="form-group">
-                <label>Status Badge / Welcome Text</label>
-                <input type="text" id="editBioStatus">
-            </div>
-            <div class="form-group">
-                <label>Avatar Image URL</label>
-                <input type="text" id="editBioAvatar">
-            </div>
-            <div class="form-group">
-                <label>Tiểu sử / Subtitle</label>
-                <input type="text" id="editBioDesc">
-            </div>
-            <div class="form-group">
-                <label>Facebook URL</label>
-                <input type="text" id="editFb">
-            </div>
-            <div class="form-group">
-                <label>Github URL</label>
-                <input type="text" id="editGh">
-            </div>
-            <div class="form-group">
-                <label>Telegram URL</label>
-                <input type="text" id="editTg">
-            </div>
-            <div class="form-group">
-                <label>TikTok URL</label>
-                <input type="text" id="editTikTok">
-            </div>
-            <hr style="border-color: var(--card-border); margin: 18px 0;">
-            <div class="form-group">
-                <label>Mật Khẩu Admin Mới</label>
-                <input type="password" id="editAdminPass" placeholder="Nhập mật khẩu mới nếu muốn đổi">
-            </div>
-            <button class="btn-neon" style="width: 100%;" onclick="saveBioConfig()">Lưu Thay Đổi</button>
+    <!-- 3. Utility Editor Modal -->
+    <div id="utility-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden overflow-y-auto py-10">
+        <div class="glass-panel w-full max-w-md p-6 rounded-2xl border border-neonPurple/30 relative shadow-2xl my-auto">
+            <button onclick="closeModal('utility-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 id="utility-modal-title" class="text-xl font-bold text-white mb-4">Thêm Tiện Ích Mới</h3>
+            <form id="utility-form" onsubmit="saveUtility(event)" class="space-y-4">
+                <input type="hidden" id="utility-id">
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Tên tiện ích *</label>
+                    <input type="text" id="utility-name" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonPurple focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">URL Liên kết *</label>
+                    <input type="url" id="utility-url" required placeholder="https://..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonPurple focus:outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">FontAwesome Icon</label>
+                        <input type="text" id="utility-icon" placeholder="fa-solid fa-link" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonPurple focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Nhãn phân loại</label>
+                        <input type="text" id="utility-category" placeholder="Tool Dev" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonPurple focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Mô tả</label>
+                    <textarea id="utility-desc" rows="2" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonPurple focus:outline-none"></textarea>
+                </div>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="closeModal('utility-modal')" class="px-4 py-2 rounded-xl bg-gray-800 text-gray-300 text-sm hover:bg-gray-700 transition">Hủy</button>
+                    <button type="submit" class="px-6 py-2 rounded-xl bg-neonPurple text-white font-bold text-sm hover:opacity-90 transition">Lưu Lại</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- MODAL: ADD / EDIT FILE -->
-    <div class="modal" id="fileModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span id="fileModalTitle">QUẢN LÝ FILE & TÀI NGUYÊN</span>
-                <button class="close-btn" onclick="closeModal('fileModal')">&times;</button>
-            </div>
-            <input type="hidden" id="editFileId">
-            <div class="form-group">
-                <label>Tên File / Tài Nguyên</label>
-                <input type="text" id="fileNameInput" placeholder="Ví dụ: Bypass Config 3105">
-            </div>
-            <div class="form-group">
-                <label>Thể Loại</label>
-                <select id="fileCategorySelect">
-                    <option value="file 3105">file 3105</option>
-                    <option value="file ios">file ios</option>
-                    <option value="tut trick">tut trick</option>
-                    <option value="ipa ios">ipa ios</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>URL Ảnh Xem Trước / Tình Trạng Tệp (Tùy chọn)</label>
-                <input type="text" id="fileImgInput" placeholder="https://example.com/preview.png">
-            </div>
-            <div class="form-group">
-                <label>Kích Thước (Ví dụ: 18 MB, 1.4 GB)</label>
-                <input type="text" id="fileSizeInput" placeholder="18 MB">
-            </div>
-            <div class="form-group">
-                <label>Tình Trạng File (Status)</label>
-                <select id="fileStatusSelect">
-                    <option value="works">Hoạt động tốt</option>
-                    <option value="updated">Mới cập nhật</option>
-                    <option value="maintenance">Đang bảo trì</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Đường Dẫn Tải / Download URL</label>
-                <input type="text" id="fileUrlInput" placeholder="https://t.me/yourlink">
-            </div>
-            <div class="form-group">
-                <label>Mô Tả Chi Tiết</label>
-                <textarea id="fileDescInput" rows="3" placeholder="Mô tả tính năng hoặc cách sử dụng..."></textarea>
-            </div>
-            <button class="btn-neon" style="width: 100%;" onclick="saveFile()">Lưu File</button>
+    <!-- 4. Bio Editor Modal -->
+    <div id="bio-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden overflow-y-auto py-10">
+        <div class="glass-panel w-full max-w-lg p-6 rounded-2xl border border-neonCyan/30 relative shadow-2xl my-auto">
+            <button onclick="closeModal('bio-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-xl font-bold text-white mb-4">Chỉnh Sửa Thông Tin Bio</h3>
+            <form id="bio-form" onsubmit="saveBio(event)" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Tên hiển thị</label>
+                        <input type="text" id="edit-bio-name" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Username</label>
+                        <input type="text" id="edit-bio-username" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Avatar URL</label>
+                    <input type="url" id="edit-bio-avatar" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Tiểu sử</label>
+                    <textarea id="edit-bio-desc" rows="2" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none"></textarea>
+                </div>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="closeModal('bio-modal')" class="px-4 py-2 rounded-xl bg-gray-800 text-gray-300 text-sm hover:bg-gray-700 transition">Hủy</button>
+                    <button type="submit" class="px-6 py-2 rounded-xl bg-neonCyan text-black font-bold text-sm hover:opacity-90 transition">Lưu Bio</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- MODAL: ADD / EDIT LINK -->
-    <div class="modal" id="linkModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span id="linkModalTitle">QUẢN LÝ LIÊN KẾT PHỤ</span>
-                <button class="close-btn" onclick="closeModal('linkModal')">&times;</button>
+    <!-- 5. Category Manager Modal -->
+    <div id="category-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden overflow-y-auto py-10">
+        <div class="glass-panel w-full max-w-md p-6 rounded-2xl border border-neonCyan/30 relative shadow-2xl my-auto">
+            <button onclick="closeModal('category-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-xl font-bold text-white mb-4">Quản Lý Danh Mục File</h3>
+            <div class="space-y-4">
+                <div class="flex space-x-2">
+                    <input type="text" id="new-category-name" placeholder="Tên danh mục mới..." class="flex-grow bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                    <button onclick="addNewCategory()" class="px-4 py-2 bg-neonCyan text-black font-bold text-sm rounded-xl hover:opacity-90 transition">Thêm</button>
+                </div>
+                <div id="category-list-container" class="space-y-2 max-h-60 overflow-y-auto pr-2">
+                    <!-- Populated by JS -->
+                </div>
             </div>
-            <input type="hidden" id="editLinkId">
-            <div class="form-group">
-                <label>Tên Liên Kết</label>
-                <input type="text" id="linkTitleInput" placeholder="Ví dụ: Kênh Telegram  ">
-            </div>
-            <div class="form-group">
-                <label>Icon Class (FontAwesome)</label>
-                <input type="text" id="linkIconInput" placeholder="fab fa-telegram-plane">
-            </div>
-            <div class="form-group">
-                <label>Đường Dẫn URL</label>
-                <input type="text" id="linkUrlInput" placeholder="https://t.me/...">
-            </div>
-            <button class="btn-neon" style="width: 100%;" onclick="saveLink()">Lưu Liên Kết</button>
         </div>
     </div>
 
-    <!-- FIREBASE & APP LOGIC SCRIPT -->
+    <!-- 6. Social Links Manager Modal -->
+    <div id="social-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden overflow-y-auto py-10">
+        <div class="glass-panel w-full max-w-xl p-6 rounded-2xl border border-neonCyan/30 relative shadow-2xl my-auto space-y-4">
+            <button onclick="closeModal('social-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 id="social-modal-title" class="text-xl font-bold text-white mb-2">Quản Lý Liên Kết Mạng Xã Hội</h3>
+            
+            <form id="social-form" onsubmit="saveSocialLink(event)" class="space-y-3 bg-gray-900 p-4 rounded-xl border border-gray-800">
+                <input type="hidden" id="social-id">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Tên mạng xã hội *</label>
+                        <input type="text" id="social-name" required placeholder="Telegram, Zalo..." class="w-full bg-cardBg border border-gray-700 rounded-xl px-3 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">FontAwesome Icon *</label>
+                        <input type="text" id="social-icon" required placeholder="fa-brands fa-telegram" class="w-full bg-cardBg border border-gray-700 rounded-xl px-3 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Đường dẫn URL *</label>
+                    <input type="url" id="social-url" required placeholder="https://..." class="w-full bg-cardBg border border-gray-700 rounded-xl px-3 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                </div>
+                <div class="flex items-center justify-between pt-1">
+                    <label class="flex items-center space-x-2 cursor-pointer text-xs text-gray-300">
+                        <input type="checkbox" id="social-active" checked class="w-4 h-4 rounded bg-cardBg border-gray-700 text-neonCyan focus:ring-0">
+                        <span>Hiển thị ra ngoài profile</span>
+                    </label>
+                    <div class="space-x-2">
+                        <button type="button" onclick="resetSocialForm()" class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-300 text-xs hover:bg-gray-700 transition">Làm mới</button>
+                        <button type="submit" class="px-4 py-1.5 rounded-lg bg-neonCyan text-black font-bold text-xs hover:opacity-90 transition">Lưu Mạng Xã Hội</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="space-y-2 max-h-60 overflow-y-auto pr-2" id="social-list-container">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: 7. Change Admin Password Modal -->
+    <div id="change-password-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden overflow-y-auto py-10">
+        <div class="glass-panel w-full max-w-md p-6 rounded-2xl border border-warningOrange/30 relative shadow-2xl my-auto">
+            <button onclick="closeModal('change-password-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 rounded-xl bg-warningOrange/20 text-warningOrange flex items-center justify-center mx-auto mb-3">
+                    <i class="fa-solid fa-key text-xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">Đổi Thông Tin Đăng Nhập Admin</h3>
+                <p class="text-xs text-gray-400 mt-1">Cập nhật tài khoản hoặc mật khẩu quản trị mới.</p>
+            </div>
+            <form id="change-password-form" onsubmit="saveAdminCredentials(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Tài khoản Admin mới</label>
+                    <input type="text" id="new-admin-user" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-200 focus:border-warningOrange focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Mật khẩu Admin mới</label>
+                    <input type="password" id="new-admin-pass" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-200 focus:border-warningOrange focus:outline-none">
+                </div>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="closeModal('change-password-modal')" class="px-4 py-2 rounded-xl bg-gray-800 text-gray-300 text-sm hover:bg-gray-700 transition">Hủy</button>
+                    <button type="submit" class="px-6 py-2 rounded-xl bg-warningOrange text-black font-bold text-sm hover:opacity-90 transition">Cập Nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 8. Settings & Backup Modal -->
+    <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden overflow-y-auto py-10">
+        <div class="glass-panel w-full max-w-lg p-6 rounded-2xl border border-neonCyan/30 relative shadow-2xl my-auto space-y-6">
+            <button onclick="closeModal('settings-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-xl font-bold text-white">Cài Đặt & Sao Lưu Dữ Liệu</h3>
+            <div class="space-y-4 border-t border-gray-800 pt-4">
+                <h4 class="text-sm font-semibold text-errorRed">Khôi phục mặc định</h4>
+                <button onclick="resetToDefaultData()" class="w-full px-4 py-2.5 rounded-xl bg-errorRed/20 border border-errorRed/40 text-errorRed text-sm font-semibold hover:bg-errorRed hover:text-white transition">
+                    Đặt lại toàn bộ dữ liệu trên Firebase
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. Activity Logs Modal -->
+    <div id="logs-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden overflow-y-auto py-10">
+        <div class="glass-panel w-full max-w-2xl p-6 rounded-2xl border border-neonCyan/30 relative shadow-2xl my-auto space-y-4">
+            <button onclick="closeModal('logs-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="flex items-center justify-between">
+                <h3 class="text-xl font-bold text-white">Nhật Ký Hoạt Động Admin</h3>
+                <button onclick="clearActivityLogs()" class="px-3 py-1.5 rounded-lg bg-errorRed/20 text-errorRed text-xs hover:bg-errorRed hover:text-white transition">Xóa nhật ký</button>
+            </div>
+            <div id="logs-container" class="space-y-2 max-h-80 overflow-y-auto pr-2 text-xs">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE & APP LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // Cấu hình Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDMfNHEYrfn0FuQx_lIaHAhJ5FNXNC5X94",
             authDomain: "biodashboard-5b443.firebaseapp.com",
@@ -1010,442 +653,824 @@
             measurementId: "G-EVYKTS83T7"
         };
 
-        // Khởi tạo Firebase
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
         const db = getDatabase(app);
 
-        // --- DEFAULT DATA ---
-        const DEFAULT_BIO = {
-            name: "𝓉ℛ𝑜𝓃𝒢<span style='color:#ff416c'>ℒℐ𝒸𝒽</span>",
-            subtitle: "ℱ𝓊𝓁𝓁 𝒮𝓉𝒶𝒸𝓀 𝒟𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇",
-            status: "ℋ𝑒𝓁𝓁𝑜 𝑒𝓋𝑒𝓇𝓎𝑜𝓃𝑒. ℐ'𝓂 𝓉ℛ𝑜𝓃𝒢 ℒℐ𝒸𝒽 𝒟𝑒𝓋",
-            avatar: "https://cdn.phototourl.com/member/2026-10-12-c8fb5492-1608-41a1-b9b5-6a984e34bddb.jpg",
-            desc: "#𝒽𝑒𝓃𝓇𝓎_𝒹𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇_𝒻𝓊𝓁𝓁𝓈𝓉𝒶𝒸𝓀",
-            socials: {
-                facebook: "https://facebook.com",
-                github: "https://github.com",
-                telegram: "https://t.me",
-                tiktok: "https://tiktok.com"
+        const DEFAULT_DATA = {
+            schemaVersion: "1.0",
+            adminAuth: {
+                username: "admin",
+                password: "1"
+            },
+            bio: {
+                name: "𝓉ℛ𝑜𝓃𝒢ℒℐ𝒸𝒽",
+                username: "@fffilehub",
+                description: "Gaming Resources • File Manager • Tech Tools. Kho lưu trữ tài nguyên Free Fire chuyên nghiệp và an toàn.",
+                avatar: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&q=80",
+                verified: true,
+                status: "Online"
+            },
+            socials: [
+                { id: "s1", name: "Telegram", icon: "fa-brands fa-telegram", url: "https://t.me/", active: true },
+                { id: "s2", name: "Zalo", icon: "fa-solid fa-comment-sms", url: "https://zalo.me/", active: true },
+                { id: "s3", name: "Discord", icon: "fa-brands fa-discord", url: "https://discord.com/", active: true },
+                { id: "s4", name: "TikTok", icon: "fa-brands fa-tiktok", url: "https://tiktok.com/", active: true },
+                { id: "s5", name: "Website", icon: "fa-solid fa-globe", url: "https://example.com/", active: true }
+            ],
+            categories: ["File 3105", "File iOS", "Tut Trick", "IPA iOS"],
+            resources: [
+                {
+                    id: "res-1",
+                    name: "Cấu Hình 3105 Fix Lag VIP",
+                    category: "File 3105",
+                    version: "v4.2",
+                    size: "25 MB",
+                    date: "2026-06-01",
+                    desc: "Tối ưu hóa đồ họa, giảm ping và chống văng game cho mọi dòng máy Android.",
+                    downloadUrl: "https://example.com/download-3105",
+                    guideUrl: "https://example.com/guide",
+                    thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80",
+                    icon: "fa-solid fa-gauge-high",
+                    status: "Available"
+                }
+            ],
+            utilities: [
+                {
+                    id: "util-1",
+                    name: "Công Cụ Check Ping",
+                    url: "https://example.com/ping",
+                    icon: "fa-solid fa-wifi",
+                    category: "Tool Dev",
+                    desc: "Kiểm tra độ trễ mạng khi chơi game."
+                }
+            ],
+            logs: [],
+            stats: { totalCopies: 0 },
+            settings: { gridView: true }
+        };
+
+        window.appData = {};
+        window.isAdminLoggedIn = false;
+        window.activeCategoryFilter = 'all';
+
+        const dataRef = ref(db, 'hubData');
+        onValue(dataRef, (snapshot) => {
+            const serverData = snapshot.val();
+            if (serverData) {
+                window.appData = serverData;
+                if (!window.appData.adminAuth) {
+                    window.appData.adminAuth = { username: "admin", password: "1" };
+                }
+            } else {
+                set(dataRef, DEFAULT_DATA);
+                window.appData = DEFAULT_DATA;
+            }
+            renderAll();
+        });
+
+        window.saveDataToFirebase = function() {
+            set(dataRef, window.appData).catch((error) => {
+                showToast("Lỗi đồng bộ Firebase: " + error.message, "error");
+            });
+        };
+
+        window.logActivity = function(action, target, desc) {
+            const logEntry = {
+                time: new Date().toLocaleString('vi-VN'),
+                action: action,
+                target: target,
+                desc: desc
+            };
+            if (!window.appData.logs) window.appData.logs = [];
+            window.appData.logs.unshift(logEntry);
+            if (window.appData.logs.length > 50) window.appData.logs.pop();
+            window.saveDataToFirebase();
+        };
+
+        window.renderAll = function() {
+            renderBio();
+            renderSocials();
+            renderStats();
+            renderCategoryTabs();
+            renderCategorySelectOptions();
+            filterAndRenderResources();
+            renderUtilities();
+            renderCategoryManagerList();
+            renderSocialManagerList();
+            renderActivityLogs();
+        };
+
+        function renderBio() {
+            const bio = window.appData.bio || {};
+            document.getElementById('bio-name').textContent = bio.name || '';
+            document.getElementById('bio-username').textContent = bio.username || '';
+            document.getElementById('bio-description').textContent = bio.description || '';
+            document.getElementById('bio-avatar').src = bio.avatar || '';
+            document.getElementById('bio-verified-badge').style.display = bio.verified ? 'inline-block' : 'none';
+        }
+
+        function renderSocials() {
+            const container = document.getElementById('social-links-container');
+            container.innerHTML = '';
+            (window.appData.socials || []).forEach(s => {
+                if (!s.active) return;
+                const a = document.createElement('a');
+                a.href = s.url;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.className = 'px-4 py-2 rounded-xl bg-cardBg border border-gray-700 hover:border-neonCyan text-gray-200 text-sm font-medium transition flex items-center space-x-2 group';
+                a.innerHTML = `<i class="${s.icon} text-neonCyan group-hover:scale-110 transition"></i><span>${s.name}</span>`;
+                container.appendChild(a);
+            });
+        }
+
+        function renderStats() {
+            const resources = window.appData.resources || [];
+            const activeFiles = resources.filter(r => r.status === 'Available' || r.status === 'Updated').length;
+            const utilitiesCount = (window.appData.utilities || []).length;
+
+            document.getElementById('stat-total-resources').textContent = resources.length;
+            document.getElementById('stat-active-files').textContent = activeFiles;
+            document.getElementById('stat-utilities').textContent = utilitiesCount;
+            document.getElementById('stat-copies').textContent = window.appData.stats?.totalCopies || 0;
+        }
+
+        function renderCategoryTabs() {
+            const container = document.getElementById('category-tabs');
+            container.innerHTML = '';
+
+            const allBtn = document.createElement('button');
+            allBtn.className = `px-4 py-2 rounded-xl text-sm font-medium transition ${window.activeCategoryFilter === 'all' ? 'bg-neonCyan text-black font-bold neon-glow' : 'bg-cardBg text-gray-300 border border-gray-700 hover:border-neonCyan'}`;
+            allBtn.textContent = 'Tất cả';
+            allBtn.onclick = () => { window.activeCategoryFilter = 'all'; renderCategoryTabs(); filterAndRenderResources(); };
+            container.appendChild(allBtn);
+
+            (window.appData.categories || []).forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = `px-4 py-2 rounded-xl text-sm font-medium transition ${window.activeCategoryFilter === cat ? 'bg-neonCyan text-black font-bold neon-glow' : 'bg-cardBg text-gray-300 border border-gray-700 hover:border-neonCyan'}`;
+                btn.textContent = cat;
+                btn.onclick = () => { window.activeCategoryFilter = cat; renderCategoryTabs(); filterAndRenderResources(); };
+                container.appendChild(btn);
+            });
+        }
+
+        function renderCategorySelectOptions() {
+            const select = document.getElementById('file-category');
+            if (!select) return;
+            select.innerHTML = '';
+            (window.appData.categories || []).forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat;
+                opt.textContent = cat;
+                select.appendChild(opt);
+            });
+        }
+
+        window.filterAndRenderResources = function() {
+            const searchVal = document.getElementById('resource-search-input').value.toLowerCase();
+            const statusVal = document.getElementById('filter-status').value;
+            const sortVal = document.getElementById('sort-by').value;
+
+            let list = [...(window.appData.resources || [])];
+
+            if (window.activeCategoryFilter !== 'all') {
+                list = list.filter(r => r.category === window.activeCategoryFilter);
+            }
+
+            if (statusVal !== 'all') {
+                list = list.filter(r => r.status === statusVal);
+            }
+
+            if (searchVal) {
+                list = list.filter(r => r.name.toLowerCase().includes(searchVal) || r.desc.toLowerCase().includes(searchVal));
+            }
+
+            if (sortVal === 'newest') {
+                list.sort((a, b) => new Date(b.date) - new Date(a.date));
+            } else if (sortVal === 'az') {
+                list.sort((a, b) => a.name.localeCompare(b.name));
+            } else if (sortVal === 'size') {
+                list.sort((a, b) => parseInt(a.size) - parseInt(b.size));
+            }
+
+            renderResourcesList(list);
+        };
+
+        function renderResourcesList(list) {
+            const container = document.getElementById('resources-container');
+            const emptyEl = document.getElementById('empty-resources');
+            container.innerHTML = '';
+
+            if (list.length === 0) {
+                emptyEl.classList.remove('hidden');
+                return;
+            }
+            emptyEl.classList.add('hidden');
+
+            const isGrid = window.appData.settings?.gridView ?? true;
+            container.className = isGrid ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4";
+
+            list.forEach(res => {
+                const statusColor = getStatusColor(res.status);
+                const card = document.createElement('div');
+                
+                if (isGrid) {
+                    card.className = "glass-panel rounded-2xl overflow-hidden border border-gray-800 hover:border-neonCyan/50 transition flex flex-col justify-between group";
+                    card.innerHTML = `
+                        <div>
+                            <div class="h-40 relative overflow-hidden bg-gray-900">
+                                <img src="${res.thumb || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80'}" alt="${res.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                <div class="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md text-xs font-semibold text-neonCyan border border-neonCyan/30">
+                                    ${res.category}
+                                </div>
+                                <div class="absolute top-3 right-3 px-2 py-1 rounded-lg text-xs font-bold ${statusColor}">
+                                    ${res.status}
+                                </div>
+                            </div>
+                            <div class="p-5 space-y-3">
+                                <h3 class="font-bold text-lg text-white group-hover:text-neonCyan transition">${res.name}</h3>
+                                <p class="text-xs text-gray-400 line-clamp-2">${res.desc}</p>
+                                <div class="flex items-center justify-between text-xs text-gray-400 pt-2 border-t border-gray-800">
+                                    <span><i class="fa-solid fa-code-branch mr-1"></i>${res.version || 'v1.0'}</span>
+                                    <span><i class="fa-solid fa-hard-drive mr-1"></i>${res.size || 'N/A'}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-5 pt-0 flex items-center gap-2">
+                            <a href="${res.downloadUrl}" target="_blank" onclick="recordCopy('${res.name}')" class="flex-grow py-2.5 rounded-xl bg-neonCyan text-black font-bold text-xs text-center hover:opacity-90 transition neon-glow flex items-center justify-center space-x-1.5">
+                                <i class="fa-solid fa-download"></i><span>Tải xuống</span>
+                            </a>
+                            <button onclick="copyToClipboard('${res.downloadUrl}')" class="p-2.5 rounded-xl bg-gray-800 text-gray-300 hover:text-neonCyan border border-gray-700 transition" title="Sao chép link">
+                                <i class="fa-solid fa-copy"></i>
+                            </button>
+                            ${window.isAdminLoggedIn ? `
+                            <button onclick="openFileModal('${res.id}')" class="p-2.5 rounded-xl bg-gray-800 text-warningOrange border border-gray-700 transition" title="Sửa file"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteFile('${res.id}')" class="p-2.5 rounded-xl bg-gray-800 text-errorRed border border-gray-700 transition" title="Xóa file"><i class="fa-solid fa-trash"></i></button>
+                            ` : ''}
+                        </div>
+                    `;
+                } else {
+                    card.className = "glass-panel rounded-xl p-4 border border-gray-800 hover:border-neonCyan/50 transition flex flex-col sm:flex-row items-center justify-between gap-4";
+                    card.innerHTML = `
+                        <div class="flex items-center space-x-4 w-full sm:w-auto">
+                            <img src="${res.thumb || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=100&q=80'}" class="w-16 h-16 rounded-xl object-cover flex-shrink-0">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <h3 class="font-bold text-base text-white">${res.name}</h3>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold ${statusColor}">${res.status}</span>
+                                </div>
+                                <p class="text-xs text-gray-400 mt-1">${res.desc}</p>
+                                <div class="flex items-center space-x-4 text-xs text-gray-400 mt-2">
+                                    <span class="text-neonCyan"><i class="fa-solid fa-folder mr-1"></i>${res.category}</span>
+                                    <span><i class="fa-solid fa-code-branch mr-1"></i>${res.version || 'v1.0'}</span>
+                                    <span><i class="fa-solid fa-hard-drive mr-1"></i>${res.size || 'N/A'}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                            <a href="${res.downloadUrl}" target="_blank" onclick="recordCopy('${res.name}')" class="px-4 py-2 rounded-xl bg-neonCyan text-black font-bold text-xs hover:opacity-90 transition flex items-center space-x-1.5">
+                                <i class="fa-solid fa-download"></i><span>Tải</span>
+                            </a>
+                            <button onclick="copyToClipboard('${res.downloadUrl}')" class="p-2 rounded-xl bg-gray-800 text-gray-300 hover:text-neonCyan border border-gray-700 transition" title="Sao chép link"><i class="fa-solid fa-copy"></i></button>
+                            ${window.isAdminLoggedIn ? `
+                            <button onclick="openFileModal('${res.id}')" class="p-2 rounded-xl bg-gray-800 text-warningOrange border border-gray-700 transition"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteFile('${res.id}')" class="p-2 rounded-xl bg-gray-800 text-errorRed border border-gray-700 transition"><i class="fa-solid fa-trash"></i></button>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+                container.appendChild(card);
+            });
+        }
+
+        function renderUtilities() {
+            const container = document.getElementById('utilities-container');
+            container.innerHTML = '';
+            (window.appData.utilities || []).forEach(util => {
+                const card = document.createElement('div');
+                card.className = "glass-panel rounded-2xl p-5 border border-gray-800 hover:border-neonPurple/50 transition flex flex-col justify-between group";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="w-10 h-10 rounded-xl bg-neonPurple/20 text-neonPurple flex items-center justify-center neon-glow-purple">
+                                <i class="${util.icon || 'fa-solid fa-link'} text-lg"></i>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-md bg-gray-800 text-xs font-semibold text-gray-300 border border-gray-700">${util.category}</span>
+                        </div>
+                        <h3 class="font-bold text-base text-white group-hover:text-neonPurple transition">${util.name}</h3>
+                        <p class="text-xs text-gray-400 mt-1">${util.desc || 'Không có mô tả.'}</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 mt-4 border-t border-gray-800">
+                        <a href="${util.url}" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-neonPurple hover:underline flex items-center space-x-1">
+                            <span>Truy cập</span><i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                        ${window.isAdminLoggedIn ? `
+                        <div class="flex space-x-1">
+                            <button onclick="openUtilityModal('${util.id}')" class="p-1.5 rounded-lg bg-gray-800 text-warningOrange"><i class="fa-solid fa-pen text-xs"></i></button>
+                            <button onclick="deleteUtility('${util.id}')" class="p-1.5 rounded-lg bg-gray-800 text-errorRed"><i class="fa-solid fa-trash text-xs"></i></button>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderCategoryManagerList() {
+            const container = document.getElementById('category-list-container');
+            if (!container) return;
+            container.innerHTML = '';
+            (window.appData.categories || []).forEach((cat, index) => {
+                const item = document.createElement('div');
+                item.className = "flex items-center justify-between bg-gray-900 px-3 py-2 rounded-xl border border-gray-800";
+                item.innerHTML = `
+                    <span class="text-sm text-gray-200 font-medium">${cat}</span>
+                    <button onclick="deleteCategory(${index})" class="text-errorRed hover:opacity-80 p-1"><i class="fa-solid fa-trash text-xs"></i></button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderSocialManagerList() {
+            const container = document.getElementById('social-list-container');
+            if (!container) return;
+            container.innerHTML = '';
+            (window.appData.socials || []).forEach(s => {
+                const item = document.createElement('div');
+                item.className = "flex items-center justify-between bg-cardBg px-3 py-2.5 rounded-xl border border-gray-800 text-xs gap-2";
+                item.innerHTML = `
+                    <div class="flex items-center space-x-2 truncate">
+                        <i class="${s.icon} text-neonCyan text-base"></i>
+                        <span class="font-bold text-white">${s.name}</span>
+                        <span class="text-gray-400 truncate max-w-[150px] sm:max-w-xs">(${s.url})</span>
+                        <span class="px-2 py-0.5 rounded text-[10px] ${s.active ? 'bg-successGreen/20 text-successGreen' : 'bg-gray-800 text-gray-500'}">${s.active ? 'Hiển thị' : 'Ẩn'}</span>
+                    </div>
+                    <div class="flex items-center space-x-1 flex-shrink-0">
+                        <button onclick="editSocialLink('${s.id}')" class="p-1.5 rounded-lg bg-gray-800 text-warningOrange hover:bg-gray-700"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteSocialLink('${s.id}')" class="p-1.5 rounded-lg bg-gray-800 text-errorRed hover:bg-gray-700"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        window.openSocialModal = function() {
+            resetSocialForm();
+            renderSocialManagerList();
+            document.getElementById('social-modal').classList.remove('hidden');
+        };
+
+        window.resetSocialForm = function() {
+            document.getElementById('social-form').reset();
+            document.getElementById('social-id').value = '';
+            document.getElementById('social-active').checked = true;
+            document.getElementById('social-modal-title').textContent = "Thêm / Quản Lý Mạng Xã Hội";
+        };
+
+        window.editSocialLink = function(id) {
+            const s = (window.appData.socials || []).find(item => item.id === id);
+            if (s) {
+                document.getElementById('social-id').value = s.id;
+                document.getElementById('social-name').value = s.name;
+                document.getElementById('social-icon').value = s.icon;
+                document.getElementById('social-url').value = s.url;
+                document.getElementById('social-active').checked = s.active;
+                document.getElementById('social-modal-title').textContent = `Đang sửa: ${s.name}`;
             }
         };
 
-        const DEFAULT_FILES = [
-            { id: 1, name: "Bypass iOS Config 3105 Pro", category: "file 3105", size: "14.2 MB", status: "works", img: "", url: "https://t.me", desc: "Tệp tối ưu hóa cấu hình hệ thống chuyên dụng cho phân vùng 3105." },
-            { id: 2, name: "IPA Tweak Client v3.4", category: "ipa ios", size: "48.5 MB", status: "updated", img: "", url: "https://t.me", desc: "Ứng dụng IPA đã mod tính năng tối ưu trải nghiệm trên thiết bị iOS." },
-            { id: 3, name: "Tut Trick Overclock & Fix Lag", category: "tut trick", size: "3.1 MB", status: "maintenance", img: "", url: "https://t.me", desc: "Hướng dẫn thao tác lệnh thủ thuật xử lý độ trễ phần cứng." }
-        ];
+        window.saveSocialLink = function(e) {
+            e.preventDefault();
+            const id = document.getElementById('social-id').value;
+            const socialData = {
+                id: id || 's-' + Date.now(),
+                name: document.getElementById('social-name').value,
+                icon: document.getElementById('social-icon').value,
+                url: document.getElementById('social-url').value,
+                active: document.getElementById('social-active').checked
+            };
 
-        const DEFAULT_LINKS = [
-            { id: 1, title: "Kênh Telegram Chính Thức", icon: "fab fa-telegram-plane", url: "https://t.me" },
-            { id: 2, title: "Facebook cá nhân", icon: "fab fa-facebook-f", url: "https://facebook.com" }
-        ];
-
-        // --- APPLICATION STATE ---
-        let bioData = DEFAULT_BIO;
-        let filesData = DEFAULT_FILES;
-        let linksData = DEFAULT_LINKS;
-        let adminPass = "1";
-        let utilityTitle = "Tiện Ích & Liên Kết";
-        
-        let isAdmin = false;
-        let currentCategory = 'all';
-
-        // --- TYPEWRITER EFFECT LOGIC ---
-        let typingTimeout = null;
-        let charIndex = 0;
-        let isDeleting = false;
-
-        function startTypewriter(textToType) {
-            if (typingTimeout) clearTimeout(typingTimeout);
-            const statusEl = document.getElementById('bioStatus');
-            if (!statusEl) return;
-
-            const text = textToType || "ℋ𝑒𝓁𝓁𝑜 𝑒𝓋𝑒𝓇𝓎𝑜𝓃𝑒. ℐ'𝓂 𝓉ℛ𝑜𝓃𝒢 ℒℐ𝒸𝒽 𝒟𝑒𝓋";
-            const typingSpeed = 100;
-            const deletingSpeed = 50;
-            const delayEnd = 2000;
-
-            function typeStep() {
-                if (!isDeleting && charIndex <= text.length) {
-                    statusEl.innerText = text.substring(0, charIndex);
-                    charIndex++;
-                    typingTimeout = setTimeout(typeStep, typingSpeed);
-                } else if (!isDeleting && charIndex > text.length) {
-                    isDeleting = true;
-                    typingTimeout = setTimeout(typeStep, delayEnd);
-                } else if (isDeleting && charIndex >= 0) {
-                    statusEl.innerText = text.substring(0, charIndex);
-                    charIndex--;
-                    typingTimeout = setTimeout(typeStep, deletingSpeed);
-                } else {
-                    isDeleting = false;
-                    charIndex = 0;
-                    typingTimeout = setTimeout(typeStep, 500);
-                }
-            }
-
-            charIndex = 0;
-            isDeleting = false;
-            typeStep();
-        }
-
-        // --- INITIALIZATION & FIREBASE REAL-TIME LISTENER ---
-        function initApp() {
-            initBackgroundMusic();
-
-            const dbRef = ref(db, 'dashboard');
-            onValue(dbRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    bioData = data.bio || DEFAULT_BIO;
-                    filesData = data.files || DEFAULT_FILES;
-                    linksData = data.links || DEFAULT_LINKS;
-                    adminPass = data.adminPass || "1";
-                    utilityTitle = data.utilityTitle || "Tiện Ích & Liên Kết";
-                } else {
-                    set(dbRef, {
-                        bio: DEFAULT_BIO,
-                        files: DEFAULT_FILES,
-                        links: DEFAULT_LINKS,
-                        adminPass: "1",
-                        utilityTitle: "Tiện Ích & Liên Kết"
-                    });
-                }
-                renderBio();
-                renderLinks();
-                renderFiles();
-                document.getElementById('utilityTitle').innerText = utilityTitle;
-            });
-        }
-
-        // --- BACKGROUND MUSIC AUTO-PLAY ON LOAD ---
-        function initBackgroundMusic() {
-            const music = document.getElementById('bgMusic');
-            if (music) {
-                music.volume = 0.5;
-                music.play().catch(() => {
-                    const autoPlayHandler = () => {
-                        music.play().catch(e => console.log("Autoplay blocked:", e));
-                        document.removeEventListener('click', autoPlayHandler);
-                        document.removeEventListener('keydown', autoPlayHandler);
-                        document.removeEventListener('touchstart', autoPlayHandler);
-                    };
-                    document.addEventListener('click', autoPlayHandler);
-                    document.addEventListener('keydown', autoPlayHandler);
-                    document.addEventListener('touchstart', autoPlayHandler);
-                });
-            }
-        }
-
-        // --- SAVE DATA TO FIREBASE REALTIME DATABASE ---
-        function saveData() {
-            const dbRef = ref(db, 'dashboard');
-            set(dbRef, {
-                bio: bioData,
-                files: filesData,
-                links: linksData,
-                adminPass: adminPass,
-                utilityTitle: utilityTitle
-            }).catch((error) => {
-                console.error("Lỗi khi lưu dữ liệu lên Firebase:", error);
-                alert("Không thể lưu thay đổi lên cơ sở dữ liệu!");
-            });
-        }
-
-        // --- RENDER BIO REAL-TIME ---
-        window.renderBio = function() {
-            document.getElementById('bioName').innerHTML = bioData.name;
-            document.getElementById('bioSubtitle').innerHTML = bioData.subtitle || "ℱ𝓊𝓁𝓁 𝒮𝓉𝒶𝒸𝓀 𝒟𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇";
-            document.getElementById('bioAvatar').src = bioData.avatar;
-            document.getElementById('bioDesc').innerText = bioData.desc;
-
-            // Kích hoạt hiệu ứng gõ chữ
-            startTypewriter(bioData.status);
-
-            const socialsContainer = document.getElementById('socialLinks');
-            socialsContainer.innerHTML = `
-                <a href="${bioData.socials.facebook || '#'}" target="_blank" class="social-item"><i class="fab fa-facebook-f"></i></a>
-                <a href="${bioData.socials.github || '#'}" target="_blank" class="social-item"><i class="fab fa-github"></i></a>
-                <a href="${bioData.socials.telegram || '#'}" target="_blank" class="social-item"><i class="fab fa-telegram-plane"></i></a>
-                <a href="${bioData.socials.tiktok || '#'}" target="_blank" class="social-item"><i class="fab fa-tiktok"></i></a>
-                <a href="#" class="social-item"><i class="fas fa-code-compare"></i></a>
-            `;
-        }
-
-        // --- RENDER LINKS REAL-TIME ---
-        window.renderLinks = function() {
-            const grid = document.getElementById('utilityGrid');
-            grid.innerHTML = '';
-            linksData.forEach(link => {
-                const card = document.createElement('div');
-                card.className = 'link-card';
-                card.innerHTML = `
-                    <a href="${link.url}" target="_blank" class="link-left" style="text-decoration:none; color:inherit; flex:1; overflow:hidden;">
-                        <i class="${link.icon}"></i>
-                        <span class="link-title">${link.title}</span>
-                    </a>
-                    <div class="admin-controls-item">
-                        <button onclick="editLink(${link.id})" style="background:none; border:none; color:var(--neon-cyan); cursor:pointer; padding:4px;"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deleteLink(${link.id})" style="background:none; border:none; color:var(--neon-magenta); cursor:pointer; padding:4px;"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        // --- RENDER FILES REAL-TIME WITH MAINTENANCE LOCK ---
-        window.renderFiles = function() {
-            const grid = document.getElementById('filesGrid');
-            const searchInputEl = document.getElementById('searchInput');
-            const searchVal = searchInputEl ? searchInputEl.value.toLowerCase() : '';
-            grid.innerHTML = '';
-
-            const filtered = filesData.filter(file => {
-                const matchesCat = (currentCategory === 'all') || (file.category.toLowerCase() === currentCategory);
-                const matchesSearch = file.name.toLowerCase().includes(searchVal) || file.desc.toLowerCase().includes(searchVal);
-                return matchesCat && matchesSearch;
-            });
-
-            filtered.forEach(file => {
-                let statusClass = 'status-works';
-                let statusText = 'Hoạt động tốt';
-                let isMaintenance = file.status === 'maintenance';
-
-                if(file.status === 'updated') { statusClass = 'status-updated'; statusText = 'Mới Cập Nhật'; }
-                if(isMaintenance) { statusClass = 'status-maintenance'; statusText = 'Đang Bảo Trì'; }
-
-                const card = document.createElement('div');
-                card.className = 'file-card';
-                card.innerHTML = `
-                    <div>
-                        <div class="file-header">
-                            ${file.img ? `<img src="${file.img}" class="file-img-preview" alt="Preview">` : `<div class="file-icon"><i class="fa-solid fa-file-code"></i></div>`}
-                            <div class="file-info">
-                                <div class="file-title">${file.name}</div>
-                                <div class="file-meta">${file.category.toUpperCase()} • ${file.size}</div>
-                            </div>
-                        </div>
-                        <span class="file-status-badge ${statusClass}">${statusText}</span>
-                        <div class="file-desc">${file.desc}</div>
-                    </div>
-                    <div>
-                        <div class="file-actions">
-                            ${isMaintenance 
-                                ? `<span class="btn-action btn-disabled"><i class="fa-solid fa-ban"></i> Đang bảo trì</span>`
-                                : `<a href="${file.url}" target="_blank" class="btn-action"><i class="fa-solid fa-download"></i> Tải Về</a>`
-                            }
-                            <button onclick="copyToClipboard('${file.url}')" class="btn-action ${isMaintenance ? 'btn-disabled' : ''}"><i class="fa-solid fa-copy"></i> Sao Chép</button>
-                        </div>
-                        <div class="admin-controls-item" style="margin-top: 10px; justify-content: flex-end;">
-                            <button class="btn-neon" onclick="editFile(${file.id})" style="font-size: 0.7rem; padding: 4px 10px;"><i class="fa-solid fa-pen"></i> Sửa</button>
-                            <button class="btn-neon btn-danger" onclick="deleteFile(${file.id})" style="font-size: 0.7rem; padding: 4px 10px;"><i class="fa-solid fa-trash"></i> Xóa</button>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        // --- FILTER CATEGORY ---
-        window.filterCategory = function(cat, btn) {
-            currentCategory = cat;
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderFiles();
-        }
-
-        // --- ADMIN AUTH ---
-        window.toggleAdminAuth = function() {
-            if(isAdmin) {
-                isAdmin = false;
-                document.body.classList.remove('admin-mode');
-                document.getElementById('adminBadge').style.display = 'none';
-                document.getElementById('adminBtn').innerText = 'Đăng Nhập Admin';
+            if (!window.appData.socials) window.appData.socials = [];
+            if (id) {
+                const index = window.appData.socials.findIndex(item => item.id === id);
+                if (index !== -1) window.appData.socials[index] = socialData;
+                window.logActivity('UPDATE', 'Social', `Cập nhật MXH: ${socialData.name}`);
+                showToast("Cập nhật mạng xã hội thành công!", "success");
             } else {
-                openModal('loginModal');
-            }
-        }
-
-        window.loginAdmin = function() {
-            const pass = document.getElementById('adminPasswordInput').value;
-            if(pass === adminPass) {
-                isAdmin = true;
-                document.body.classList.add('admin-mode');
-                document.getElementById('adminBadge').style.display = 'inline-block';
-                document.getElementById('adminBtn').innerText = 'Đăng Xuất';
-                closeModal('loginModal');
-                document.getElementById('adminPasswordInput').value = '';
-            } else {
-                alert('Mật khẩu Admin không chính xác!');
-            }
-        }
-
-        // --- ADMIN: BIO CONFIG REAL-TIME ---
-        window.openBioConfigModal = function() {
-            document.getElementById('editBioName').value = bioData.name;
-            document.getElementById('editBioStatus').value = bioData.status;
-            document.getElementById('editBioAvatar').value = bioData.avatar;
-            document.getElementById('editBioDesc').value = bioData.desc;
-            document.getElementById('editFb').value = bioData.socials.facebook || '';
-            document.getElementById('editGh').value = bioData.socials.github || '';
-            document.getElementById('editTg').value = bioData.socials.telegram || '';
-            document.getElementById('editTikTok').value = bioData.socials.tiktok || '';
-            openModal('bioModal');
-        }
-
-        window.saveBioConfig = function() {
-            bioData.name = document.getElementById('editBioName').value;
-            bioData.status = document.getElementById('editBioStatus').value;
-            bioData.avatar = document.getElementById('editBioAvatar').value;
-            bioData.desc = document.getElementById('editBioDesc').value;
-            bioData.socials.facebook = document.getElementById('editFb').value;
-            bioData.socials.github = document.getElementById('editGh').value;
-            bioData.socials.telegram = document.getElementById('editTg').value;
-            bioData.socials.tiktok = document.getElementById('editTikTok').value;
-
-            const newPass = document.getElementById('editAdminPass').value;
-            if(newPass.trim() !== "") {
-                adminPass = newPass;
-                alert("Đã cập nhật mật khẩu Admin mới!");
+                window.appData.socials.push(socialData);
+                window.logActivity('CREATE', 'Social', `Thêm MXH mới: ${socialData.name}`);
+                showToast("Thêm mạng xã hội thành công!", "success");
             }
 
-            saveData();
-            renderBio();
-            closeModal('bioModal');
-        }
+            window.saveDataToFirebase();
+            resetSocialForm();
+            renderSocialManagerList();
+        };
 
-        window.openEditUtilityTitleModal = function() {
-            const newTitle = prompt("Nhập tên hiển thị mới cho tiện ích:", utilityTitle);
-            if(newTitle) {
-                utilityTitle = newTitle;
-                document.getElementById('utilityTitle').innerText = utilityTitle;
-                saveData();
+        window.deleteSocialLink = function(id) {
+            if (confirm("Bạn có chắc chắn muốn xóa liên kết mạng xã hội này?")) {
+                window.appData.socials = (window.appData.socials || []).filter(item => item.id !== id);
+                window.logActivity('DELETE', 'Social', `Xóa MXH ID: ${id}`);
+                window.saveDataToFirebase();
+                renderSocialManagerList();
+                showToast("Đã xóa mạng xã hội", "success");
             }
-        }
+        };
 
-        // --- ADMIN: FILES MANAGEMENT REAL-TIME ---
-        window.openFileModal = function() {
-            document.getElementById('editFileId').value = '';
-            document.getElementById('fileNameInput').value = '';
-            document.getElementById('fileImgInput').value = '';
-            document.getElementById('fileSizeInput').value = '';
-            document.getElementById('fileUrlInput').value = '';
-            document.getElementById('fileDescInput').value = '';
-            openModal('fileModal');
-        }
+        // --- CHANGE ADMIN PASSWORD LOGIC ---
+        window.openChangePasswordModal = function() {
+            const auth = window.appData.adminAuth || { username: "admin", password: "1" };
+            document.getElementById('new-admin-user').value = auth.username;
+            document.getElementById('new-admin-pass').value = auth.password;
+            document.getElementById('change-password-modal').classList.remove('hidden');
+        };
 
-        window.editFile = function(id) {
-            const file = filesData.find(f => f.id === id);
-            if(!file) return;
-            document.getElementById('editFileId').value = file.id;
-            document.getElementById('fileNameInput').value = file.name;
-            document.getElementById('fileCategorySelect').value = file.category;
-            document.getElementById('fileImgInput').value = file.img || '';
-            document.getElementById('fileSizeInput').value = file.size;
-            document.getElementById('fileStatusSelect').value = file.status;
-            document.getElementById('fileUrlInput').value = file.url;
-            document.getElementById('fileDescInput').value = file.desc;
-            openModal('fileModal');
-        }
-
-        window.saveFile = function() {
-            const id = document.getElementById('editFileId').value;
-            const name = document.getElementById('fileNameInput').value;
-            const category = document.getElementById('fileCategorySelect').value;
-            const img = document.getElementById('fileImgInput').value;
-            const size = document.getElementById('fileSizeInput').value;
-            const status = document.getElementById('fileStatusSelect').value;
-            const url = document.getElementById('fileUrlInput').value;
-            const desc = document.getElementById('fileDescInput').value;
-
-            if(!name || !url) {
-                alert('Vui lòng nhập Tên file và Đường dẫn URL!');
+        window.saveAdminCredentials = function(e) {
+            e.preventDefault();
+            const newUser = document.getElementById('new-admin-user').value.trim();
+            const newPass = document.getElementById('new-admin-pass').value.trim();
+            
+            if (!newUser || !newPass) {
+                showToast("Vui lòng nhập đầy đủ tài khoản và mật khẩu!", "error");
                 return;
             }
 
-            if(id) {
-                const index = filesData.findIndex(f => f.id == id);
-                filesData[index] = { id: parseInt(id), name, category, img, size, status, url, desc };
+            if (!window.appData.adminAuth) window.appData.adminAuth = {};
+            window.appData.adminAuth.username = newUser;
+            window.appData.adminAuth.password = newPass;
+
+            window.logActivity('UPDATE', 'AdminAuth', 'Thay đổi thông tin tài khoản quản trị');
+            window.saveDataToFirebase();
+            window.closeModal('change-password-modal');
+            showToast("Đổi thông tin đăng nhập thành công!", "success");
+        };
+
+        function renderActivityLogs() {
+            const container = document.getElementById('logs-container');
+            if (!container) return;
+            container.innerHTML = '';
+            const logs = window.appData.logs || [];
+            if (logs.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-4">Chưa có nhật ký hoạt động nào.</p>';
+                return;
+            }
+            logs.forEach(log => {
+                const div = document.createElement('div');
+                div.className = "bg-gray-900 p-2.5 rounded-xl border border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between gap-1";
+                div.innerHTML = `
+                    <div>
+                        <span class="text-neonCyan font-bold mr-2">[${log.action}]</span>
+                        <span class="text-gray-200">${log.desc}</span>
+                    </div>
+                    <span class="text-gray-500 text-[10px]">${log.time}</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function getStatusColor(status) {
+            switch(status) {
+                case 'Available': return 'bg-successGreen/20 text-successGreen border border-successGreen/30';
+                case 'Updated': return 'bg-neonCyan/20 text-neonCyan border border-neonCyan/30';
+                case 'Maintenance': return 'bg-warningOrange/20 text-warningOrange border border-warningOrange/30';
+                default: return 'bg-errorRed/20 text-errorRed border border-errorRed/30';
+            }
+        }
+
+        window.toggleGridViewMode = function() {
+            if (!window.appData.settings) window.appData.settings = {};
+            window.appData.settings.gridView = !window.appData.settings.gridView;
+            window.saveDataToFirebase();
+            const icon = document.getElementById('view-mode-icon');
+            icon.className = window.appData.settings.gridView ? "fa-solid fa-grip" : "fa-solid fa-list";
+            filterAndRenderResources();
+            showToast("Đã đổi chế độ xem giao diện", "success");
+        };
+
+        window.toggleMobileMenu = function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        };
+
+        window.copyToClipboard = function(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                if (!window.appData.stats) window.appData.stats = { totalCopies: 0 };
+                window.appData.stats.totalCopies = (window.appData.stats.totalCopies || 0) + 1;
+                window.saveDataToFirebase();
+                showToast("Đã sao chép liên kết vào bộ nhớ tạm!", "success");
+            }).catch(() => {
+                showToast("Không thể sao chép liên kết!", "error");
+            });
+        };
+
+        window.recordCopy = function(name) {
+            if (!window.appData.stats) window.appData.stats = { totalCopies: 0 };
+            window.appData.stats.totalCopies = (window.appData.stats.totalCopies || 0) + 1;
+            window.saveDataToFirebase();
+        };
+
+        window.resetFilters = function() {
+            document.getElementById('resource-search-input').value = '';
+            document.getElementById('filter-status').value = 'all';
+            document.getElementById('sort-by').value = 'newest';
+            window.activeCategoryFilter = 'all';
+            renderCategoryTabs();
+            filterAndRenderResources();
+            showToast("Đã đặt lại bộ lọc", "success");
+        };
+
+        window.openAdminLoginModal = function() {
+            if (window.isAdminLoggedIn) {
+                showToast("Bạn đã đăng nhập quản trị rồi!", "success");
+                return;
+            }
+            document.getElementById('admin-login-modal').classList.remove('hidden');
+        };
+
+        window.togglePasswordVisibility = function() {
+            const input = document.getElementById('login-password');
+            const icon = document.getElementById('eye-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = "fa-solid fa-eye-slash text-sm";
             } else {
-                filesData.push({ id: Date.now(), name, category, img, size, status, url, desc });
+                input.type = 'password';
+                icon.className = "fa-solid fa-eye text-sm";
+            }
+        };
+
+        window.handleAdminLogin = function(e) {
+            e.preventDefault();
+            const user = document.getElementById('login-username').value;
+            const pass = document.getElementById('login-password').value;
+            
+            const currentAuth = window.appData.adminAuth || { username: "admin", password: "1" };
+
+            if (user === currentAuth.username && pass === currentAuth.password) {
+                window.isAdminLoggedIn = true;
+                closeModal('admin-login-modal');
+                document.getElementById('admin-control-bar').classList.remove('hidden');
+                document.getElementById('admin-login-btn').innerHTML = `<i class="fa-solid fa-user-shield"></i><span class="hidden sm:inline">Admin Active</span>`;
+                window.logActivity('LOGIN', 'Admin', 'Đăng nhập quản trị thành công');
+                showToast("Đăng nhập Admin thành công!", "success");
+                window.renderAll();
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
+            }
+        };
+
+        window.adminLogout = function() {
+            window.isAdminLoggedIn = false;
+            document.getElementById('admin-control-bar').classList.add('hidden');
+            document.getElementById('admin-login-btn').innerHTML = `<i class="fa-solid fa-shield-halved"></i><span class="hidden sm:inline">Admin</span>`;
+            window.logActivity('LOGOUT', 'Admin', 'Đăng xuất khỏi hệ thống');
+            showToast("Đã đăng xuất quản trị", "success");
+            window.renderAll();
+        };
+
+        window.closeModal = function(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        };
+
+        window.openFileModal = function(id = null) {
+            renderCategorySelectOptions();
+            const form = document.getElementById('file-form');
+            form.reset();
+            if (id) {
+                document.getElementById('file-modal-title').textContent = "Chỉnh Sửa Tài Nguyên";
+                const res = (window.appData.resources || []).find(r => r.id === id);
+                if (res) {
+                    document.getElementById('file-id').value = res.id;
+                    document.getElementById('file-name').value = res.name;
+                    document.getElementById('file-category').value = res.category;
+                    document.getElementById('file-version').value = res.version;
+                    document.getElementById('file-size').value = res.size;
+                    document.getElementById('file-status').value = res.status;
+                    document.getElementById('file-download-url').value = res.downloadUrl;
+                    document.getElementById('file-guide-url').value = res.guideUrl;
+                    document.getElementById('file-thumb').value = res.thumb;
+                    document.getElementById('file-icon').value = res.icon;
+                    document.getElementById('file-desc').value = res.desc;
+                }
+            } else {
+                document.getElementById('file-modal-title').textContent = "Thêm Tài Nguyên Mới";
+                document.getElementById('file-id').value = '';
+            }
+            document.getElementById('file-modal').classList.remove('hidden');
+        };
+
+        window.saveFile = function(e) {
+            e.preventDefault();
+            const id = document.getElementById('file-id').value;
+            const fileData = {
+                id: id || 'res-' + Date.now(),
+                name: document.getElementById('file-name').value,
+                category: document.getElementById('file-category').value,
+                version: document.getElementById('file-version').value || 'v1.0',
+                size: document.getElementById('file-size').value || 'N/A',
+                status: document.getElementById('file-status').value,
+                downloadUrl: document.getElementById('file-download-url').value,
+                guideUrl: document.getElementById('file-guide-url').value,
+                thumb: document.getElementById('file-thumb').value,
+                icon: document.getElementById('file-icon').value || 'fa-solid fa-file',
+                desc: document.getElementById('file-desc').value,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            if (!window.appData.resources) window.appData.resources = [];
+            if (id) {
+                const index = window.appData.resources.findIndex(r => r.id === id);
+                if (index !== -1) window.appData.resources[index] = fileData;
+                window.logActivity('UPDATE', 'File', `Cập nhật tài nguyên: ${fileData.name}`);
+                showToast("Cập nhật tài nguyên thành công!", "success");
+            } else {
+                window.appData.resources.unshift(fileData);
+                window.logActivity('CREATE', 'File', `Thêm tài nguyên mới: ${fileData.name}`);
+                showToast("Thêm tài nguyên thành công!", "success");
             }
 
-            saveData();
-            renderFiles();
-            closeModal('fileModal');
-        }
+            window.saveDataToFirebase();
+            window.closeModal('file-modal');
+        };
 
         window.deleteFile = function(id) {
-            if(confirm('Bạn có chắc chắn muốn xóa file này?')) {
-                filesData = filesData.filter(f => f.id !== id);
-                saveData();
-                renderFiles();
+            if (confirm("Bạn có chắc chắn muốn xóa tài nguyên này?")) {
+                window.appData.resources = (window.appData.resources || []).filter(r => r.id !== id);
+                window.logActivity('DELETE', 'File', `Xóa tài nguyên ID: ${id}`);
+                window.saveDataToFirebase();
+                showToast("Đã xóa tài nguyên", "success");
             }
-        }
+        };
 
-        // --- ADMIN: LINKS MANAGEMENT REAL-TIME ---
-        window.openAddLinkModal = function() {
-            document.getElementById('editLinkId').value = '';
-            document.getElementById('linkTitleInput').value = '';
-            document.getElementById('linkIconInput').value = 'fab fa-telegram-plane';
-            document.getElementById('linkUrlInput').value = '';
-            openModal('linkModal');
-        }
-
-        window.editLink = function(id) {
-            const link = linksData.find(l => l.id === id);
-            if(!link) return;
-            document.getElementById('editLinkId').value = id;
-            document.getElementById('linkTitleInput').value = link.title;
-            document.getElementById('linkIconInput').value = link.icon;
-            document.getElementById('linkUrlInput').value = link.url;
-            openModal('linkModal');
-        }
-
-        window.saveLink = function() {
-            const id = document.getElementById('editLinkId').value;
-            const title = document.getElementById('linkTitleInput').value;
-            const icon = document.getElementById('linkIconInput').value;
-            const url = document.getElementById('linkUrlInput').value;
-
-            if(!title || !url) {
-                alert('Vui lòng điền đầy đủ Tên và URL liên kết!');
-                return;
-            }
-
-            if(id) {
-                const index = linksData.findIndex(l => l.id == id);
-                if(index !== -1) {
-                    linksData[index] = { id: parseInt(id), title, icon, url };
+        window.openUtilityModal = function(id = null) {
+            const form = document.getElementById('utility-form');
+            form.reset();
+            if (id) {
+                document.getElementById('utility-modal-title').textContent = "Chỉnh Sửa Tiện Ích";
+                const util = (window.appData.utilities || []).find(u => u.id === id);
+                if (util) {
+                    document.getElementById('utility-id').value = util.id;
+                    document.getElementById('utility-name').value = util.name;
+                    document.getElementById('utility-url').value = util.url;
+                    document.getElementById('utility-icon').value = util.icon;
+                    document.getElementById('utility-category').value = util.category;
+                    document.getElementById('utility-desc').value = util.desc;
                 }
             } else {
-                linksData.push({ id: Date.now(), title, icon, url });
+                document.getElementById('utility-modal-title').textContent = "Thêm Tiện Ích Mới";
+                document.getElementById('utility-id').value = '';
+            }
+            document.getElementById('utility-modal').classList.remove('hidden');
+        };
+
+        window.saveUtility = function(e) {
+            e.preventDefault();
+            const id = document.getElementById('utility-id').value;
+            const utilData = {
+                id: id || 'util-' + Date.now(),
+                name: document.getElementById('utility-name').value,
+                url: document.getElementById('utility-url').value,
+                icon: document.getElementById('utility-icon').value || 'fa-solid fa-link',
+                category: document.getElementById('utility-category').value || 'Tiện ích',
+                desc: document.getElementById('utility-desc').value
+            };
+
+            if (!window.appData.utilities) window.appData.utilities = [];
+            if (id) {
+                const index = window.appData.utilities.findIndex(u => u.id === id);
+                if (index !== -1) window.appData.utilities[index] = utilData;
+                window.logActivity('UPDATE', 'Utility', `Cập nhật tiện ích: ${utilData.name}`);
+                showToast("Cập nhật tiện ích thành công!", "success");
+            } else {
+                window.appData.utilities.push(utilData);
+                window.logActivity('CREATE', 'Utility', `Thêm tiện ích mới: ${utilData.name}`);
+                showToast("Thêm tiện ích thành công!", "success");
             }
 
-            saveData();
-            renderLinks();
-            closeModal('linkModal');
-        }
+            window.saveDataToFirebase();
+            window.closeModal('utility-modal');
+        };
 
-        window.deleteLink = function(id) {
-            if(confirm('Bạn có muốn xóa liên kết này?')) {
-                linksData = linksData.filter(l => l.id !== id);
-                saveData();
-                renderLinks();
+        window.deleteUtility = function(id) {
+            if (confirm("Bạn có chắc chắn muốn xóa tiện ích này?")) {
+                window.appData.utilities = (window.appData.utilities || []).filter(u => u.id !== id);
+                window.logActivity('DELETE', 'Utility', `Xóa tiện ích ID: ${id}`);
+                window.saveDataToFirebase();
+                showToast("Đã xóa tiện ích", "success");
             }
-        }
+        };
 
-        // --- UTILS ---
-        window.copyToClipboard = function(text) {
-            navigator.clipboard.writeText(text);
-            alert('Đã sao chép liên kết!');
-        }
+        window.openBioModal = function() {
+            const bio = window.appData.bio || {};
+            document.getElementById('edit-bio-name').value = bio.name || '';
+            document.getElementById('edit-bio-username').value = bio.username || '';
+            document.getElementById('edit-bio-avatar').value = bio.avatar || '';
+            document.getElementById('edit-bio-desc').value = bio.description || '';
+            document.getElementById('bio-modal').classList.remove('hidden');
+        };
 
-        window.openModal = function(id) { document.getElementById(id).classList.add('active'); }
-        window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); }
+        window.saveBio = function(e) {
+            e.preventDefault();
+            if (!window.appData.bio) window.appData.bio = {};
+            window.appData.bio.name = document.getElementById('edit-bio-name').value;
+            window.appData.bio.username = document.getElementById('edit-bio-username').value;
+            window.appData.bio.avatar = document.getElementById('edit-bio-avatar').value;
+            window.appData.bio.description = document.getElementById('edit-bio-desc').value;
 
-        window.onload = initApp;
+            window.logActivity('UPDATE', 'Bio', 'Cập nhật thông tin Profile Bio');
+            window.saveDataToFirebase();
+            window.closeModal('bio-modal');
+            showToast("Cập nhật Bio thành công!", "success");
+        };
+
+        window.openCategoryModal = function() {
+            renderCategoryManagerList();
+            document.getElementById('category-modal').classList.remove('hidden');
+        };
+
+        window.addNewCategory = function() {
+            const name = document.getElementById('new-category-name').value.trim();
+            if (!name) return;
+            if (!window.appData.categories) window.appData.categories = [];
+            if (window.appData.categories.includes(name)) {
+                showToast("Danh mục đã tồn tại!", "error");
+                return;
+            }
+            window.appData.categories.push(name);
+            document.getElementById('new-category-name').value = '';
+            window.logActivity('CREATE', 'Category', `Thêm danh mục mới: ${name}`);
+            window.saveDataToFirebase();
+            renderCategoryManagerList();
+            showToast("Thêm danh mục thành công!", "success");
+        };
+
+        window.deleteCategory = function(index) {
+            const cat = window.appData.categories[index];
+            const hasFiles = (window.appData.resources || []).some(r => r.category === cat);
+            if (hasFiles) {
+                showToast("Không thể xóa danh mục đang có tài nguyên phụ thuộc!", "error");
+                return;
+            }
+            if (confirm(`Xóa danh mục "${cat}"?`)) {
+                window.appData.categories.splice(index, 1);
+                window.logActivity('DELETE', 'Category', `Xóa danh mục: ${cat}`);
+                window.saveDataToFirebase();
+                renderCategoryManagerList();
+                showToast("Đã xóa danh mục", "success");
+            }
+        };
+
+        window.openSettingsModal = function() {
+            document.getElementById('settings-modal').classList.remove('hidden');
+        };
+
+        window.resetToDefaultData = function() {
+            if (confirm("CẢNH BÁO: Thao tác này sẽ đặt lại toàn bộ dữ liệu trên Firebase về mặc định!")) {
+                window.appData = DEFAULT_DATA;
+                window.saveDataToFirebase();
+                window.closeModal('settings-modal');
+                showToast("Đã khôi phục dữ liệu gốc", "success");
+            }
+        };
+
+        window.openLogsModal = function() {
+            renderActivityLogs();
+            document.getElementById('logs-modal').classList.remove('hidden');
+        };
+
+        window.clearActivityLogs = function() {
+            if (confirm("Xóa toàn bộ nhật ký hoạt động?")) {
+                window.appData.logs = [];
+                window.saveDataToFirebase();
+                renderActivityLogs();
+                showToast("Đã xóa nhật ký", "success");
+            }
+        };
+
+        window.showToast = function(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const borderColor = type === 'success' ? 'border-successGreen text-successGreen' : 'border-errorRed text-errorRed';
+            const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
+
+            toast.className = `glass-panel px-4 py-3 rounded-xl border ${borderColor} flex items-center space-x-3 shadow-2xl pointer-events-auto transition transform translate-y-2 opacity-0`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-lg"></i><span class="text-sm text-gray-200 font-medium">${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        };
+
+        document.getElementById('global-search').addEventListener('input', function(e) {
+            document.getElementById('resource-search-input').value = e.target.value;
+            window.filterAndRenderResources();
+        });
+
+        document.getElementById('resource-search-input').addEventListener('input', function() {
+            window.filterAndRenderResources();
+        });
     </script>
 </body>
 </html>
