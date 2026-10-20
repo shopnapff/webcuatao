@@ -83,6 +83,18 @@
             to { background-position: 200% center; }
         }
 
+        /* Hiệu ứng con trỏ nhấp nháy cho chữ gõ lặp lại */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 0.7s infinite;
+            -webkit-text-fill-color: #ff4757;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
         .profile-header-bio {
             display: flex;
             align-items: center;
@@ -130,10 +142,11 @@
         .henry-gaming {
             margin-top: 15px;
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             letter-spacing: 1px;
             text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
             text-align: center;
+            min-height: 24px;
         }
 
         .social-links-bio {
@@ -211,7 +224,7 @@
 
 <body class="bg-slate-100 text-slate-800 antialiased flex h-screen overflow-hidden">
 
-    <!-- OVERLAY FOR MOBILE SIDEBAR -->
+    <!-- OVERLAY CHO MOBILE SIDEBAR -->
     <div id="sidebarOverlay" onclick="window.toggleSidebar()" class="fixed inset-0 bg-slate-900/60 z-30 opacity-0 pointer-events-none transition-opacity duration-300 md:hidden"></div>
 
     <!-- SIDEBAR -->
@@ -235,15 +248,15 @@
 
         <div class="flex-1 overflow-y-auto hide-scrollbar py-4 px-3 space-y-6">
             <div>
-                <p class="sidebar-text px-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Tổng quan & File</p>
+                <p class="sidebar-text px-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Trang Chủ & File</p>
                 <nav class="space-y-1">
-                    <a href="#" onclick="window.switchTab('dashboard')" id="nav-dashboard" class="nav-item active flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-slate-800 text-white border-l-4 border-orange-500">
-                        <i class="fa-solid fa-chart-pie text-lg text-orange-400 w-6 text-center"></i>
-                        <span class="sidebar-text">Dashboard</span>
-                    </a>
-                    <a href="#" onclick="window.switchTab('files')" id="nav-files" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
+                    <a href="#" onclick="window.switchTab('files')" id="nav-files" class="nav-item active flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-slate-800 text-white border-l-4 border-orange-500">
                         <i class="fa-solid fa-folder-open text-lg text-indigo-400 w-6 text-center"></i>
-                        <span class="sidebar-text">Kho File</span>
+                        <span class="sidebar-text">Kho File (Trang Chủ)</span>
+                    </a>
+                    <a href="#" onclick="window.switchTab('dashboard')" id="nav-dashboard" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
+                        <i class="fa-solid fa-chart-pie text-lg text-orange-400 w-6 text-center"></i>
+                        <span class="sidebar-text">Dashboard Tổng quan</span>
                     </a>
                     <a href="#" onclick="window.switchTab('stats')" id="nav-stats" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-chart-line text-lg text-emerald-400 w-6 text-center"></i>
@@ -265,7 +278,7 @@
                 <nav class="space-y-1">
                     <a href="#" onclick="window.checkAdminTab('file-management')" id="nav-file-management" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-list-check text-lg text-cyan-400 w-6 text-center"></i>
-                        <span class="sidebar-text">Quản lý File & Tut</span>
+                        <span class="sidebar-text">Quản lý File & Link (CRUD)</span>
                     </a>
                     <a href="#" onclick="window.checkAdminTab('categories-management')" id="nav-categories-management" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-tags text-lg text-emerald-400 w-6 text-center"></i>
@@ -273,11 +286,11 @@
                     </a>
                     <a href="#" onclick="window.checkAdminTab('bio-admin')" id="nav-bio-admin" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-user-gear text-lg text-purple-400 w-6 text-center"></i>
-                        <span class="sidebar-text">Chỉnh sửa Bio Cá nhân</span>
+                        <span class="sidebar-text">Cấu hình Bio & Mạng XH</span>
                     </a>
                     <a href="#" onclick="window.checkAdminTab('settings')" id="nav-settings" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-sliders text-lg text-yellow-400 w-6 text-center"></i>
-                        <span class="sidebar-text">Cài đặt Hệ thống</span>
+                        <span class="sidebar-text">Đổi Mật Khẩu & Hệ thống</span>
                     </a>
                 </nav>
             </div>
@@ -303,7 +316,7 @@
                     <img id="adminAvatarSmall" src="https://placehold.co/100x100/1e293b/ffffff?text=Admin" class="w-8 h-8 rounded-full border border-orange-500 object-cover">
                     <div class="sidebar-text overflow-hidden">
                         <p id="adminNameSmall" class="text-xs font-semibold text-white truncate">Admin 𝓉ℛ𝑜𝓃𝒢ℒℐ𝒸𝒽</p>
-                        <p class="text-[10px] text-emerald-400 flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1 animate-pulse"></span> Quyền Quản trị</p>
+                        <p class="text-[10px] text-emerald-400 flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1 animate-pulse"></span> Quản trị viên</p>
                     </div>
                 </div>
                 <button onclick="window.logoutAdmin()" class="sidebar-text text-slate-400 hover:text-red-400 p-1.5 rounded-md transition" title="Đăng xuất">
@@ -322,7 +335,7 @@
                     <i class="fa-solid fa-bars text-xl"></i>
                 </button>
                 <div class="hidden sm:block">
-                    <h2 id="topbarTitle" class="text-base font-bold text-slate-800">Dashboard Báo cáo & Tổng quan</h2>
+                    <h2 id="topbarTitle" class="text-base font-bold text-slate-800">Kho File Free Fire / iOS Mod</h2>
                 </div>
             </div>
 
@@ -332,7 +345,7 @@
                     <span>Firebase Live</span>
                 </div>
                 <a href="#" onclick="window.switchTab('bio-preview')" class="hidden sm:flex items-center space-x-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs px-3 py-2 rounded-lg font-medium transition">
-                    <i class="fa-solid fa-globe text-indigo-500"></i>
+                    <i class="fa-solid fa-globe text-pink-500"></i>
                     <span>Xem Bio Page</span>
                 </a>
                 <div id="topbarLoginBtn">
@@ -346,12 +359,33 @@
 
         <main class="flex-1 overflow-y-auto bg-slate-50 p-4 sm:p-6 hide-scrollbar">
 
-            <!-- TAB 1: DASHBOARD -->
-            <section id="tab-dashboard" class="tab-content space-y-6">
+            <!-- TAB 1: KHO FILE FREE FIRE / MOD -->
+            <section id="tab-files" class="tab-content space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800">Kho File Free Fire / iOS IPA / Tut Trick</h2>
+                        <p class="text-xs text-slate-500">Tải xuống tệp Miễn phí hoặc Mua file bản quyền cao cấp</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="text" id="publicSearchInput" oninput="window.renderPublicFiles()" placeholder="Tìm kiếm file, tut..." class="bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 w-48 sm:w-64 shadow-sm">
+                        <!-- PHÂN LOẠI THỂ LOẠI -->
+                        <select id="publicFilterCategory" onchange="window.renderPublicFiles()" class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-sm cursor-pointer">
+                            <!-- Dynamic Options -->
+                        </select>
+                    </div>
+                </div>
+
+                <div id="publicFilesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <!-- Dynamic Render -->
+                </div>
+            </section>
+
+            <!-- TAB 2: DASHBOARD -->
+            <section id="tab-dashboard" class="tab-content hidden space-y-6">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
                         <div>
-                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tổng tải file </p>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tổng tải file</p>
                             <h3 id="statTotalDownloads" class="text-2xl font-black text-slate-800 mt-1">0</h3>
                             <span class="inline-flex items-center text-xs font-semibold text-emerald-500 mt-1">
                                 <i class="fa-solid fa-arrow-trend-up mr-1"></i> Đồng bộ thời gian thực
@@ -426,54 +460,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                    <div class="p-5 border-b border-slate-100 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-slate-800 text-base">File & Mod Tải Nổi Bật</h3>
-                            <p class="text-xs text-slate-400">Các tệp có lượt truy cập lớn nhất</p>
-                        </div>
-                        <button onclick="window.switchTab('files')" class="text-xs text-orange-500 font-bold hover:underline">
-                            Xem tất cả <i class="fa-solid fa-arrow-right ml-1"></i>
-                        </button>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm text-slate-600">
-                            <thead class="bg-slate-50 text-xs font-semibold uppercase text-slate-400 border-b border-slate-100">
-                                <tr>
-                                    <th class="px-5 py-3">Tên File / Link</th>
-                                    <th class="px-5 py-3">Loại</th>
-                                    <th class="px-5 py-3">Trạng thái</th>
-                                    <th class="px-5 py-3">Lượt tải</th>
-                                    <th class="px-5 py-3 text-right">Tải về</th>
-                                </tr>
-                            </thead>
-                            <tbody id="dashboardFileTable" class="divide-y divide-slate-100">
-                                <!-- Dynamic Insert -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 2: KHO FILE FREE FIRE / MOD (PUBLIC VIEW) -->
-            <section id="tab-files" class="tab-content hidden space-y-6">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                        <h2 class="text-xl font-bold text-slate-800">Kho File Free Fire / iOS IPA / Tut Trick</h2>
-                        <p class="text-xs text-slate-500">Tải xuống các tệp Mod, Hack Headshot, Config, Obb mới nhất</p>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <input type="text" id="publicSearchInput" oninput="window.renderPublicFiles()" placeholder="Tìm kiếm file, tut..." class="bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 w-48 sm:w-64 shadow-sm">
-                        <select id="publicFilterCategory" onchange="window.renderPublicFiles()" class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-sm">
-                            <!-- Dynamic Options -->
-                        </select>
-                    </div>
-                </div>
-
-                <div id="publicFilesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                    <!-- Dynamic Render -->
-                </div>
             </section>
 
             <!-- TAB 3: THỐNG KÊ & BÁO CÁO DETAIL -->
@@ -482,11 +468,6 @@
                     <div>
                         <h2 class="text-lg font-bold text-slate-800">Báo cáo Thống kê Chuyên sâu</h2>
                         <p class="text-xs text-slate-500">Phân tích lượt tải tệp, thiết bị truy cập và hiệu suất link</p>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <button class="bg-slate-100 hover:bg-slate-200 text-xs px-3 py-1.5 rounded-lg font-medium">Hôm nay</button>
-                        <button class="bg-navy-900 text-white text-xs px-3 py-1.5 rounded-lg font-medium">7 Ngày</button>
-                        <button class="bg-slate-100 hover:bg-slate-200 text-xs px-3 py-1.5 rounded-lg font-medium">30 Ngày</button>
                     </div>
                 </div>
 
@@ -498,7 +479,7 @@
                         </div>
                     </div>
                     <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-                        <h3 class="font-bold text-slate-800 text-sm mb-4">Top File Tải Nhiều Nhất (Tháng này)</h3>
+                        <h3 class="font-bold text-slate-800 text-sm mb-4">Top File Tải Nhiều Nhất</h3>
                         <div class="space-y-4" id="topDownloadProgressList">
                             <!-- Dynamic Content -->
                         </div>
@@ -513,10 +494,11 @@
                         <div class="profile-header-bio">
                             <div class="avatar-section-bio">
                                 <div class="avatar-wrap-bio">
-                                    <img id="bioAvatarPreview" src="https://cdn.phototourl.com/member/2026-10-12-c8fb5492-1608-41a1-b9b5-6a984e34bddb.jpg" class="avatar-img-bio" alt="Avatar">
+                                    <img id="bioAvatarPreview" src="https://placehold.co/100x100/1e293b/ffffff?text=Avatar" class="avatar-img-bio" alt="Avatar">
                                     <img src="https://raw.githubusercontent.com/WusThanhDieu/Profile-ThanhDieu.Com-V5-Tester/refs/heads/main/res/v5/img/crown/mong-vuot-rong.png" class="avatar-frame-bio" alt="Crown">
                                 </div>
-                                <div id="bioGamingText" class="henry-gaming rainbow-text">ℋ𝑒𝓁𝓁𝑜 𝑒𝓋𝑒𝓇𝓎𝑜𝓃𝑒. ℐ'𝓂 𝓉ℛ𝑜𝓃𝒢 ℒℐ𝒸𝒽 𝒟𝑒𝓋</div>
+                                <!-- HIỆU ỨNG NHẬP CHỮ GÕ LẶP LẠI -->
+                                <div id="bioGamingText" class="henry-gaming rainbow-text typing-cursor"></div>
                             </div>
                             <div class="user-info-bio">
                                 <h1 id="bioNamePreview" class="rainbow-text" style="font-size: 2.5rem; margin: 0; line-height: 1;">𝓉ℛ𝑜𝓃𝒢<span style="color:#ff416c">ℒℐ𝒸𝒽</span></h1>
@@ -534,7 +516,7 @@
 
                     <!-- Dynamic Bio Links Section -->
                     <div class="glass-card-bio">
-                        <h3 class="rainbow-text text-base font-bold mb-4">Kho Tệp & Liên Kết Tải Nổi Bật</h3>
+                        <h3 class="rainbow-text text-base font-bold mb-4">Kho Tệp Tải & Cửa Hàng Bản Quyền</h3>
                         <div id="bioLinksContainer" class="space-y-3">
                             <!-- Dynamic Links -->
                         </div>
@@ -542,12 +524,12 @@
                 </div>
             </section>
 
-            <!-- TAB 5: QUẢN LÝ FILE & TUT (ADMIN ONLY) -->
+            <!-- TAB 5: QUẢN LÝ FILE & LINK (ADMIN ONLY) -->
             <section id="tab-file-management" class="tab-content hidden space-y-6">
                 <div class="flex items-center justify-between bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
                     <div>
-                        <h2 class="text-lg font-bold text-slate-800">Quản lý Kho File & Link Mod</h2>
-                        <p class="text-xs text-slate-500">Thêm, sửa, xóa file Free Fire, Tut Trick, iOS IPA</p>
+                        <h2 class="text-lg font-bold text-slate-800">Quản lý Kho File, Tải Miễn Phí & Bán File (CRUD)</h2>
+                        <p class="text-xs text-slate-500">Thêm tệp miễn phí hoặc thiết lập giá bán tệp bản quyền VNĐ</p>
                     </div>
                     <button onclick="window.openAddFileModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs px-4 py-2.5 rounded-xl font-bold flex items-center space-x-2 shadow-md shadow-emerald-500/20 transition">
                         <i class="fa-solid fa-plus"></i>
@@ -562,10 +544,9 @@
                                 <tr>
                                     <th class="px-5 py-3.5">Ảnh</th>
                                     <th class="px-5 py-3.5">Tên File</th>
-                                    <th class="px-5 py-3.5">Danh mục</th>
-                                    <th class="px-5 py-3.5">Dung lượng</th>
-                                    <th class="px-5 py-3.5">Trạng thái</th>
-                                    <th class="px-5 py-3.5">Lượt tải</th>
+                                    <th class="px-5 py-3.5">Loại (Miễn phí / Bán)</th>
+                                    <th class="px-5 py-3.5">Giá / Dung lượng</th>
+                                    <th class="px-5 py-3.5">Lượt tải / Bán</th>
                                     <th class="px-5 py-3.5 text-right">Thao tác Admin</th>
                                 </tr>
                             </thead>
@@ -614,11 +595,11 @@
                 </div>
             </section>
 
-            <!-- TAB 7: CHỈNH SỬA BIO CÁ NHÂN (ADMIN ONLY) -->
+            <!-- TAB 7: CHỈNH SỬA BIO & MẠNG XÃ HỘI (ADMIN ONLY) -->
             <section id="tab-bio-admin" class="tab-content hidden max-w-3xl mx-auto space-y-6">
                 <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                    <h2 class="text-lg font-bold text-slate-800 mb-1">Cấu hình Trang Bio Cá nhân</h2>
-                    <p class="text-xs text-slate-500 mb-6">Thay đổi avatar, thông tin và liên kết hiển thị Bio (Tự động đồng bộ lên Firebase)</p>
+                    <h2 class="text-lg font-bold text-slate-800 mb-1">Cấu hình Trang Bio & Mạng Xã Hội</h2>
+                    <p class="text-xs text-slate-500 mb-6">Thay đổi Tên, Avatar URL, Tiểu sử và 4 đường dẫn mạng xã hội</p>
 
                     <form id="bioAdminForm" onsubmit="window.saveBioSettings(event)" class="space-y-4">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -633,51 +614,55 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Mô tả ngắn (Tagline)</label>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Tiểu sử / Tagline</label>
                             <input type="text" id="bioInputTagline" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">URL Avatar (Link ảnh)</label>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Avatar URL (Đường dẫn ảnh đại diện)</label>
                             <input type="text" id="bioInputAvatar" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
                         </div>
 
                         <hr class="my-4 border-slate-100">
-                        <h3 class="font-bold text-sm text-slate-800">Liên kết Mạng Xã Hội</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <h3 class="font-bold text-sm text-slate-800">Đường Dẫn 4 Mạng Xã Hội</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">TikTok Link</label>
-                                <input type="text" id="bioInputTiktok" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
+                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">1. TikTok Link</label>
+                                <input type="text" id="bioInputTiktok" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none" placeholder="https://tiktok.com/...">
                             </div>
                             <div>
-                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">YouTube Link</label>
-                                <input type="text" id="bioInputYoutube" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
+                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">2. YouTube Link</label>
+                                <input type="text" id="bioInputYoutube" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none" placeholder="https://youtube.com/...">
                             </div>
                             <div>
-                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Zalo Link</label>
-                                <input type="text" id="bioInputZalo" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
+                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">3. Zalo Link</label>
+                                <input type="text" id="bioInputZalo" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none" placeholder="https://zalo.me/...">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">4. Mạng Xã Hội Khác</label>
+                                <input type="text" id="bioInputSocial4" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none" placeholder="https://facebook.com/...">
                             </div>
                         </div>
 
                         <div class="pt-4 flex justify-end">
                             <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-md shadow-orange-500/20 transition">
-                                <i class="fa-solid fa-floppy-disk mr-1"></i> Lưu Firebase Realtime
+                                <i class="fa-solid fa-floppy-disk mr-1"></i> Lưu Cấu Hình Lên Firebase
                             </button>
                         </div>
                     </form>
                 </div>
             </section>
 
-            <!-- TAB 8: CÀI ĐẶT HỆ THỐNG (ADMIN ONLY) -->
+            <!-- TAB 8: CÀI ĐẶT HỆ THỐNG & ĐỔI MẬT KHẨU (ADMIN ONLY) -->
             <section id="tab-settings" class="tab-content hidden max-w-3xl mx-auto space-y-6">
                 <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-6">
                     <div>
                         <h2 class="text-lg font-bold text-slate-800">Cài đặt Mật khẩu Admin & Hệ thống</h2>
-                        <p class="text-xs text-slate-500">Quản lý bảo mật tài khoản admin và cấu hình chung</p>
+                        <p class="text-xs text-slate-500">Quản lý bảo mật tài khoản quản trị trực tiếp trên cơ sở dữ liệu</p>
                     </div>
 
                     <form id="passwordAdminForm" onsubmit="window.changeAdminPassword(event)" class="space-y-4">
-                        <h3 class="font-bold text-sm text-slate-800 border-b border-slate-100 pb-2">Đổi Mật khẩu Quản trị</h3>
+                        <h3 class="font-bold text-sm text-slate-800 border-b border-slate-100 pb-2">Đổi Mật Khẩu Quản Trị</h3>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Mật khẩu Hiện tại</label>
                             <input type="password" id="inputOldPassword" required class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
@@ -694,7 +679,7 @@
                         </div>
                         <div class="flex justify-end">
                             <button type="submit" class="bg-navy-900 hover:bg-slate-800 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition">
-                                Đổi Mật Khẩu
+                                Cập Nhật Mật Khẩu
                             </button>
                         </div>
                     </form>
@@ -702,7 +687,7 @@
                     <hr class="border-slate-100">
 
                     <div class="space-y-3">
-                        <h3 class="font-bold text-sm text-slate-800">Cấu Hình Dữ Liệu Ban Đầu Firebase</h3>
+                        <h3 class="font-bold text-sm text-slate-800">Khôi Phục Dữ Liệu Gốc</h3>
                         <p class="text-xs text-slate-500">Ghi lại toàn bộ dữ liệu mẫu mặc định lên Firebase Realtime Database nếu cần làm sạch</p>
                         <button onclick="window.resetSystemData()" class="bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs px-4 py-2 rounded-xl transition">
                             <i class="fa-solid fa-rotate-left mr-1"></i> Khôi phục Dữ liệu Mẫu lên Firebase
@@ -725,7 +710,7 @@
             </div>
             <form onsubmit="window.handleLoginSubmit(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Mật khẩu</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Mật khẩu Quản trị</label>
                     <input type="password" id="loginPasswordInput" required placeholder="Nhập mật khẩu..." class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
                 </div>
                 <div id="loginErrorMsg" class="hidden text-xs text-red-500 font-semibold text-center">
@@ -749,23 +734,36 @@
             <form id="fileForm" onsubmit="window.handleFileFormSubmit(event)" class="space-y-3">
                 <input type="hidden" id="fileFormId">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Tên File / Tệp Mod</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Tên Tệp / Item</label>
                     <input type="text" id="fileFormName" required placeholder="Ví dụ: Headshot VIP V10 VIP.zip" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Danh mục</label>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Thể loại (Danh mục)</label>
                         <select id="fileFormCategory" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
                             <!-- Dynamic Options -->
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Dung lượng</label>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Kích thước (Dung lượng)</label>
                         <input type="text" id="fileFormSize" required placeholder="25 MB" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
                     </div>
                 </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Hình thức (Tải / Bán file)</label>
+                        <select id="fileFormSaleType" onchange="window.togglePriceInput()" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
+                            <option value="free">Tải Miễn Phí</option>
+                            <option value="paid">Bán File (Trả Phí)</option>
+                        </select>
+                    </div>
+                    <div id="priceInputWrapper" class="hidden">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Giá Tiền (VNĐ)</label>
+                        <input type="number" id="fileFormPrice" placeholder="50000" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
+                    </div>
+                </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Trạng thái File</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Trạng thái Item</label>
                     <select id="fileFormStatus" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
                         <option value="Hoạt động">Hoạt động / Clean</option>
                         <option value="Bảo trì">Bảo trì / Updating</option>
@@ -773,20 +771,20 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Link Download (Drive/Mediafire/Mega)</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">URL (Đường dẫn tải file / thanh toán)</label>
                     <input type="url" id="fileFormLink" required placeholder="https://..." class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Link Ảnh Mô Tả File (URL hình ảnh)</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Icon / Ảnh URL Thumbnail</label>
                     <input type="url" id="fileFormImage" placeholder="https://imgur.com/... hoặc link ảnh..." class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Mô tả ngắn</label>
-                    <input type="text" id="fileFormDesc" placeholder="Tính năng nổi bật..." class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Mô tả chi tiết</label>
+                    <input type="text" id="fileFormDesc" placeholder="Tính năng nổi bật của tệp..." class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
                 </div>
                 <div class="flex justify-end space-x-2 pt-3">
                     <button type="button" onclick="window.closeFileModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs px-4 py-2 rounded-xl transition">Hủy</button>
-                    <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-5 py-2 rounded-xl shadow-md transition">Lưu File Đồng Bộ</button>
+                    <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-5 py-2 rounded-xl shadow-md transition">Lưu Thay Đổi</button>
                 </div>
             </form>
         </div>
@@ -819,13 +817,11 @@
             measurementId: "G-EVYKTS83T7"
         };
 
-        // Initialize Firebase Apps
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const db = getDatabase(app);
 
-        // Application Global State
-        const DEFAULT_PASSWORD = "admin123";
+        let currentAdminPassword = "admin123";
         let isAdminLoggedIn = false;
         let isSidebarCollapsed = false;
 
@@ -838,11 +834,10 @@
         let doughnutChart = null;
         let barChart = null;
 
-        // Initial Seed Payload
         const initialSeedData = {
-            adminPass: DEFAULT_PASSWORD,
+            adminPass: "admin123",
             bioViews: 128400,
-            categories: ["Free Fire", "iOS IPA", "Tut Trick", "Mod Menu"],
+            categories: ["Free Fire", "iOS IPA", "Tut Trick", "Mod Menu", "Bán File VIP"],
             bio: {
                 name: "𝓉ℛ𝑜𝓃𝒢<span style='color:#ff416c'>ℒℐ𝒸𝒽</span>",
                 badge: "ℱ𝓊𝓁𝓁 𝒮𝓉𝒶𝒸𝓀 𝒟𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇",
@@ -850,19 +845,17 @@
                 avatar: "https://cdn.phototourl.com/member/2026-10-12-c8fb5492-1608-41a1-b9b5-6a984e34bddb.jpg",
                 tiktok: "https://tiktok.com",
                 youtube: "https://youtube.com",
-                zalo: "https://zalo.me"
+                zalo: "https://zalo.me",
+                social4: "https://facebook.com"
             },
             files: {
-                "file_1": { name: "Config Headshot Auto Lock 99% FF OB43", category: "Free Fire", size: "12 MB", status: "Hoạt động", downloads: 14200, link: "https://drive.google.com", image: "https://placehold.co/400x250/ff4757/ffffff?text=Config+FF", desc: "Tăng độ nhạy, khóa tâm êm ái không khóa acc." },
-                "file_2": { name: "Free Fire IPA iOS Mod Auto Aim Direct", category: "iOS IPA", size: "850 MB", status: "Hoạt động", downloads: 9800, link: "https://mediafire.com", image: "https://placehold.co/400x250/007aff/ffffff?text=iOS+IPA", desc: "Tệp IPA trực tiếp cài qua Esign/Scarlet." },
-                "file_3": { name: "Tut Bật 120 FPS Free Fire Max Android", category: "Tut Trick", size: "2 MB", status: "Hoạt động", downloads: 6500, link: "https://mega.nz", image: "https://placehold.co/400x250/10b981/ffffff?text=120+FPS", desc: "Mẹo unlock cấu hình siêu mượt không giật lag." },
-                "file_4": { name: "Mod Menu Regedit FF VIP V12", category: "Mod Menu", size: "45 MB", status: "Bảo trì", downloads: 15300, link: "https://drive.google.com", image: "https://placehold.co/400x250/8b5cf6/ffffff?text=Mod+Menu", desc: "Đang cập nhật phiên bản OB mới nhất." }
+                "file_1": { name: "Config Headshot Auto Lock 99% FF OB43", category: "Free Fire", size: "12 MB", status: "Hoạt động", downloads: 14200, saleType: "free", price: 0, link: "https://drive.google.com", image: "https://placehold.co/400x250/ff4757/ffffff?text=Config+FF", desc: "Tăng độ nhạy, khóa tâm êm ái không khóa acc." },
+                "file_2": { name: "Free Fire IPA iOS Mod Auto Aim Direct", category: "iOS IPA", size: "850 MB", status: "Hoạt động", downloads: 9800, saleType: "free", price: 0, link: "https://mediafire.com", image: "https://placehold.co/400x250/007aff/ffffff?text=iOS+IPA", desc: "Tệp IPA trực tiếp cài qua Esign/Scarlet." },
+                "file_3": { name: "Mã Nguồn Full Stack Top-Up Portal Pro", category: "Bán File VIP", size: "15 MB", status: "Hoạt động", downloads: 340, saleType: "paid", price: 150000, link: "https://zalo.me/", image: "https://placehold.co/400x250/8b5cf6/ffffff?text=Source+VIP", desc: "Full Source code giao diện nạp thẻ tự động, UID check." }
             }
         };
 
-        // Initialize Realtime Database Listeners
         function setupFirebaseRealtimeListeners() {
-            // 1. Connection Status Check
             const connectedRef = ref(db, ".info/connected");
             onValue(connectedRef, (snap) => {
                 const statusEl = document.getElementById("connectionStatus");
@@ -871,7 +864,15 @@
                 }
             });
 
-            // 2. Categories Listener
+            onValue(ref(db, "adminPass"), (snapshot) => {
+                const pass = snapshot.val();
+                if (pass) {
+                    currentAdminPassword = pass;
+                } else {
+                    set(ref(db, "adminPass"), "admin123");
+                }
+            });
+
             onValue(ref(db, "categories"), (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
@@ -886,7 +887,6 @@
                 updateCharts();
             });
 
-            // 3. Bio Profile Listener
             onValue(ref(db, "bio"), (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
@@ -899,7 +899,6 @@
                 populateBioForm();
             });
 
-            // 4. Bio Views Counter Listener
             onValue(ref(db, "bioViews"), (snapshot) => {
                 const val = snapshot.val();
                 statsBioViews = (val !== null) ? val : initialSeedData.bioViews;
@@ -907,7 +906,6 @@
                 if (viewEl) viewEl.innerText = statsBioViews.toLocaleString();
             });
 
-            // 5. Files Listener
             onValue(ref(db, "files"), (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
@@ -927,16 +925,63 @@
                 updateCharts();
             });
 
-            // Increment Bio View Counter once per session
             runTransaction(ref(db, "bioViews"), (current) => {
                 return (current || 0) + 1;
             });
         }
 
-        // --- Render UI Functions ---
+        // --- HIỆU ỨNG GÕ CHỮ LẶP LẠI CHO BIO ---
+        let typingTimeout = null;
+        function initTypingEffect() {
+            const element = document.getElementById('bioGamingText');
+            if (!element) return;
+
+            const phrases = [
+                "ℋ𝑒𝓁𝓁𝑜 𝑒𝓋𝑒𝓇𝓎𝑜𝓃𝑒.",
+                "ℐ'𝓂 𝓉ℛ𝑜𝓃𝒢 ℒℐ𝒸𝒽 𝒟𝑒𝓋"
+            ];
+
+            let phraseIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            let countPerPhrase = 0;
+
+            function typeLoop() {
+                const fullText = phrases[phraseIndex];
+
+                if (!isDeleting) {
+                    element.innerText = fullText.substring(0, charIndex + 1);
+                    charIndex++;
+                    if (charIndex === fullText.length) {
+                        typingTimeout = setTimeout(() => {
+                            isDeleting = true;
+                            typeLoop();
+                        }, 1500);
+                        return;
+                    }
+                } else {
+                    element.innerText = fullText.substring(0, charIndex - 1);
+                    charIndex--;
+                    if (charIndex === 0) {
+                        isDeleting = false;
+                        countPerPhrase++;
+                        if (countPerPhrase >= 2) {
+                            countPerPhrase = 0;
+                            phraseIndex = (phraseIndex + 1) % phrases.length;
+                        }
+                    }
+                }
+
+                const speed = isDeleting ? 60 : 120;
+                typingTimeout = setTimeout(typeLoop, speed);
+            }
+
+            typeLoop();
+        }
+
         function renderCategorySelects() {
             const publicSelect = document.getElementById('publicFilterCategory');
-            let publicOptions = `<option value="ALL">Tất cả loại</option>`;
+            let publicOptions = `<option value="ALL">Tất cả thể loại</option>`;
             categoriesData.forEach(cat => {
                 publicOptions += `<option value="${cat}">${cat}</option>`;
             });
@@ -981,24 +1026,29 @@
             document.getElementById('adminAvatarSmall').src = bioData.avatar || '';
 
             document.getElementById('bioSocialsContainer').innerHTML = `
-                <a href="${bioData.tiktok || '#'}" target="_blank" class="social-item-bio"><i class="fab fa-tiktok"></i></a>
-                <a href="${bioData.youtube || '#'}" target="_blank" class="social-item-bio"><i class="fab fa-youtube"></i></a>
-                <a href="${bioData.zalo || '#'}" target="_blank" class="social-item-bio"><i class="fas fa-comment-dots"></i></a>
+                <a href="${bioData.tiktok || '#'}" target="_blank" class="social-item-bio" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                <a href="${bioData.youtube || '#'}" target="_blank" class="social-item-bio" title="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="${bioData.zalo || '#'}" target="_blank" class="social-item-bio" title="Zalo"><i class="fas fa-comment-dots"></i></a>
+                <a href="${bioData.social4 || '#'}" target="_blank" class="social-item-bio" title="Mạng XH Khác"><i class="fas fa-globe"></i></a>
             `;
 
             let bioLinksHTML = '';
             filesData.slice(0, 5).forEach(file => {
                 const imgThumb = file.image ? file.image : 'https://placehold.co/100x100/1e293b/ffffff?text=File';
+                const isPaid = file.saleType === 'paid';
+                const priceText = isPaid ? `<span class="text-amber-400 font-bold">${Number(file.price || 0).toLocaleString()} VNĐ</span>` : `<span class="text-emerald-400 font-bold">Miễn phí</span>`;
+                const actionLabel = isPaid ? 'Mua File' : 'Tải Về';
+
                 bioLinksHTML += `
                     <a href="${file.link}" target="_blank" onclick="window.incrementDownload('${file.id}')" class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 transition group text-decoration-none">
                         <div class="flex items-center space-x-3">
                             <img src="${imgThumb}" class="w-10 h-10 rounded-xl object-cover border border-slate-700 flex-shrink-0" alt="Thumb">
                             <div class="text-left overflow-hidden">
                                 <p class="text-xs font-bold text-white group-hover:text-orange-400 transition truncate mb-0">${file.name}</p>
-                                <p class="text-[10px] text-slate-400 mb-0">${file.category} • ${file.size}</p>
+                                <p class="text-[10px] text-slate-400 mb-0">${file.category} • ${priceText}</p>
                             </div>
                         </div>
-                        <i class="fa-solid fa-chevron-right text-slate-500 text-xs flex-shrink-0 ml-2"></i>
+                        <span class="text-[11px] font-bold bg-orange-500/20 text-orange-400 px-2.5 py-1 rounded-lg flex-shrink-0 ml-2">${actionLabel}</span>
                     </a>
                 `;
             });
@@ -1035,7 +1085,8 @@
             tbody.innerHTML = html;
         }
 
-        function renderPublicFiles() {
+        // HÀM LỌC TỆP THEO THỂ LOẠI & HIỂN THỊ DANH SÁCH FILE MIỄN PHÍ / BÁN FILE
+        window.renderPublicFiles = function() {
             const grid = document.getElementById('publicFilesGrid');
             if (!grid) return;
             const searchInput = document.getElementById('publicSearchInput');
@@ -1050,29 +1101,32 @@
             });
 
             if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 font-medium">Không tìm thấy tệp phù hợp trên Firebase</div>`;
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 font-medium">Không tìm thấy tệp phù hợp trong thể loại này</div>`;
                 return;
             }
 
             let html = '';
             filtered.forEach(file => {
-                let badgeClass = "bg-emerald-500/10 text-emerald-600 border-emerald-200";
-                if (file.status === "Bảo trì") badgeClass = "bg-yellow-500/10 text-yellow-600 border-yellow-200";
-                if (file.status === "Cần VIP") badgeClass = "bg-purple-500/10 text-purple-600 border-purple-200";
+                const isPaid = file.saleType === 'paid';
+                const priceBadge = isPaid 
+                    ? `<span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-md text-[10px] font-bold border bg-amber-500/90 text-white backdrop-blur-sm"><i class="fa-solid fa-crown mr-1"></i>${Number(file.price || 0).toLocaleString()} VNĐ</span>`
+                    : `<span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-md text-[10px] font-bold border bg-emerald-500/90 text-white backdrop-blur-sm"><i class="fa-solid fa-download mr-1"></i>Miễn Phí</span>`;
 
-                const fileImg = file.image ? file.image : 'https://placehold.co/400x250/1e293b/ffffff?text=Free+Fire+Mod';
+                const btnClass = isPaid ? 'bg-amber-500 hover:bg-amber-600' : 'bg-slate-900 hover:bg-orange-500';
+                const btnLabel = isPaid ? '<i class="fa-solid fa-cart-shopping mr-1"></i> Mua Ngay' : '<i class="fa-solid fa-download mr-1"></i> Tải Tệp';
+                const fileImg = file.image ? file.image : 'https://placehold.co/400x250/1e293b/ffffff?text=File+Mod';
 
                 html += `
                     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition overflow-hidden">
                         <div>
                             <div class="h-36 w-full relative overflow-hidden bg-slate-100">
                                 <img src="${fileImg}" class="w-full h-full object-cover" alt="File Image">
-                                <span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-md text-[10px] font-bold border ${badgeClass} bg-white/90 backdrop-blur-sm">${file.status}</span>
+                                ${priceBadge}
                             </div>
                             <div class="p-5">
                                 <div class="flex items-center justify-between mb-1.5">
                                     <span class="text-[11px] font-semibold text-orange-500 uppercase tracking-wider">${file.category}</span>
-                                    <span class="text-[10px] font-medium text-slate-400"><i class="fa-solid fa-download mr-1"></i>${(file.downloads || 0).toLocaleString()}</span>
+                                    <span class="text-[10px] font-medium text-slate-400"><i class="fa-solid fa-fire mr-1"></i>${(file.downloads || 0).toLocaleString()} lượt</span>
                                 </div>
                                 <h3 class="font-bold text-slate-800 text-sm mb-1 line-clamp-1">${file.name}</h3>
                                 <p class="text-xs text-slate-500 line-clamp-2 mb-3">${file.desc || 'Không có mô tả'}</p>
@@ -1080,8 +1134,8 @@
                         </div>
                         <div class="px-5 pb-5 pt-0 flex items-center justify-between border-t border-slate-50 pt-3">
                             <span class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-hard-drive mr-1"></i> ${file.size}</span>
-                            <a href="${file.link}" target="_blank" onclick="window.incrementDownload('${file.id}')" class="bg-slate-900 hover:bg-orange-500 text-white text-xs px-3.5 py-1.5 rounded-xl font-bold transition">
-                                Tải Tệp
+                            <a href="${file.link}" target="_blank" onclick="window.incrementDownload('${file.id}')" class="${btnClass} text-white text-xs px-3.5 py-1.5 rounded-xl font-bold transition">
+                                ${btnLabel}
                             </a>
                         </div>
                     </div>
@@ -1095,15 +1149,19 @@
             if (!tbody) return;
             let html = '';
             filesData.forEach(file => {
+                const isPaid = file.saleType === 'paid';
+                const typeBadge = isPaid 
+                    ? `<span class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-amber-100 text-amber-700">Trả phí (${Number(file.price || 0).toLocaleString()}đ)</span>`
+                    : `<span class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-emerald-100 text-emerald-700">Miễn Phí</span>`;
+
                 html += `
                     <tr class="hover:bg-slate-50 transition">
                         <td class="px-5 py-3.5">
                             <img src="${file.image || 'https://placehold.co/60x60/cbd5e1/ffffff?text=No+Img'}" class="w-10 h-10 rounded-xl object-cover border border-slate-200">
                         </td>
                         <td class="px-5 py-3.5 font-bold text-slate-800">${file.name}</td>
-                        <td class="px-5 py-3.5 text-xs text-slate-500">${file.category}</td>
+                        <td class="px-5 py-3.5">${typeBadge}</td>
                         <td class="px-5 py-3.5 text-xs text-slate-500">${file.size}</td>
-                        <td class="px-5 py-3.5"><span class="px-2 py-1 rounded-md text-[10px] font-bold bg-slate-100 text-slate-700">${file.status}</span></td>
                         <td class="px-5 py-3.5 text-xs font-semibold text-slate-700">${(file.downloads || 0).toLocaleString()}</td>
                         <td class="px-5 py-3.5 text-right space-x-1">
                             <button onclick="window.editFile('${file.id}')" class="text-indigo-600 hover:bg-indigo-50 p-2 rounded-lg transition" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></button>
@@ -1154,9 +1212,9 @@
             if (document.getElementById('bioInputTiktok')) document.getElementById('bioInputTiktok').value = bioData.tiktok || '';
             if (document.getElementById('bioInputYoutube')) document.getElementById('bioInputYoutube').value = bioData.youtube || '';
             if (document.getElementById('bioInputZalo')) document.getElementById('bioInputZalo').value = bioData.zalo || '';
+            if (document.getElementById('bioInputSocial4')) document.getElementById('bioInputSocial4').value = bioData.social4 || '';
         }
 
-        // --- Window Export Functions (For Event Handlers) ---
         window.switchTab = function(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             const target = document.getElementById('tab-' + tabId);
@@ -1173,14 +1231,14 @@
             }
 
             const titles = {
+                'files': 'Kho File Tải & Bán Bản Quyền',
                 'dashboard': 'Dashboard Báo cáo & Tổng quan',
-                'files': 'Kho File Free Fire / iOS Mod / Tut Trick',
                 'stats': 'Thống kê Báo cáo Chi tiết',
                 'bio-preview': 'Trang Bio Cá nhân Public',
-                'file-management': 'Quản lý Kho File & Tệp Mod',
+                'file-management': 'Quản lý Kho File, Tải & Bán File (CRUD)',
                 'categories-management': 'Quản lý Danh mục File & Mod',
-                'bio-admin': 'Chỉnh sửa Cấu hình Bio',
-                'settings': 'Cài đặt Mật khẩu & Hệ thống'
+                'bio-admin': 'Cấu hình Bio & Mạng XH',
+                'settings': 'Đổi Mật Khẩu & Hệ thống'
             };
             document.getElementById('topbarTitle').innerText = titles[tabId] || 'Admin Dashboard';
 
@@ -1239,7 +1297,7 @@
         window.handleLoginSubmit = function(e) {
             e.preventDefault();
             const pass = document.getElementById('loginPasswordInput').value;
-            if (pass === DEFAULT_PASSWORD || pass === "1") {
+            if (pass === currentAdminPassword) {
                 isAdminLoggedIn = true;
                 window.closeLoginModal();
                 updateAdminStateUI();
@@ -1252,7 +1310,7 @@
         window.logoutAdmin = function() {
             isAdminLoggedIn = false;
             updateAdminStateUI();
-            window.switchTab('dashboard');
+            window.switchTab('files');
         };
 
         function updateAdminStateUI() {
@@ -1283,7 +1341,6 @@
             }
         }
 
-        // --- Firebase CRUD Operations ---
         window.handleAddCategory = function(e) {
             e.preventDefault();
             const input = document.getElementById('newCategoryInput');
@@ -1309,6 +1366,7 @@
             document.getElementById('fileModalTitle').innerText = "Thêm File Mới";
             document.getElementById('fileFormId').value = "";
             document.getElementById('fileForm').reset();
+            window.togglePriceInput();
             document.getElementById('fileModal').classList.remove('opacity-0', 'pointer-events-none');
         };
 
@@ -1316,14 +1374,29 @@
             document.getElementById('fileModal').classList.add('opacity-0', 'pointer-events-none');
         };
 
+        window.togglePriceInput = function() {
+            const type = document.getElementById('fileFormSaleType').value;
+            const priceWrapper = document.getElementById('priceInputWrapper');
+            if (type === 'paid') {
+                priceWrapper.classList.remove('hidden');
+                document.getElementById('fileFormPrice').required = true;
+            } else {
+                priceWrapper.classList.add('hidden');
+                document.getElementById('fileFormPrice').required = false;
+            }
+        };
+
         window.editFile = function(id) {
             const f = filesData.find(item => item.id === id);
             if (!f) return;
-            document.getElementById('fileModalTitle').innerText = "Chỉnh sửa File";
+            document.getElementById('fileModalTitle').innerText = "Chỉnh sửa Chi tiết File";
             document.getElementById('fileFormId').value = f.id;
             document.getElementById('fileFormName').value = f.name || '';
             document.getElementById('fileFormCategory').value = f.category || categoriesData[0];
             document.getElementById('fileFormSize').value = f.size || '';
+            document.getElementById('fileFormSaleType').value = f.saleType || 'free';
+            window.togglePriceInput();
+            document.getElementById('fileFormPrice').value = f.price || 0;
             document.getElementById('fileFormStatus').value = f.status || 'Hoạt động';
             document.getElementById('fileFormLink').value = f.link || '';
             document.getElementById('fileFormImage').value = f.image || '';
@@ -1334,10 +1407,13 @@
         window.handleFileFormSubmit = function(e) {
             e.preventDefault();
             const id = document.getElementById('fileFormId').value;
+            const saleType = document.getElementById('fileFormSaleType').value;
             const filePayload = {
                 name: document.getElementById('fileFormName').value,
                 category: document.getElementById('fileFormCategory').value,
                 size: document.getElementById('fileFormSize').value,
+                saleType: saleType,
+                price: saleType === 'paid' ? Number(document.getElementById('fileFormPrice').value) || 0 : 0,
                 status: document.getElementById('fileFormStatus').value,
                 link: document.getElementById('fileFormLink').value,
                 image: document.getElementById('fileFormImage').value,
@@ -1345,10 +1421,8 @@
             };
 
             if (id) {
-                // Update existing file on Firebase
                 update(ref(db, `files/${id}`), filePayload);
             } else {
-                // Push new file to Firebase
                 filePayload.downloads = 0;
                 push(ref(db, "files"), filePayload);
             }
@@ -1376,16 +1450,34 @@
                 avatar: document.getElementById('bioInputAvatar').value,
                 tiktok: document.getElementById('bioInputTiktok').value,
                 youtube: document.getElementById('bioInputYoutube').value,
-                zalo: document.getElementById('bioInputZalo').value
+                zalo: document.getElementById('bioInputZalo').value,
+                social4: document.getElementById('bioInputSocial4').value
             };
             set(ref(db, "bio"), bioPayload);
-            alert("Đã đồng bộ thông tin Bio lên Firebase thành công!");
+            alert("Đã đồng bộ thông tin Bio & Mạng xã hội lên Firebase thành công!");
         };
 
         window.changeAdminPassword = function(e) {
             e.preventDefault();
-            alert("Đổi mật khẩu thành công!");
-            document.getElementById('passwordAdminForm').reset();
+            const oldPass = document.getElementById('inputOldPassword').value;
+            const newPass = document.getElementById('inputNewPassword').value;
+            const confirmPass = document.getElementById('inputConfirmPassword').value;
+
+            if (oldPass !== currentAdminPassword) {
+                alert("Mật khẩu hiện tại không chính xác!");
+                return;
+            }
+            if (newPass !== confirmPass) {
+                alert("Mật khẩu mới và xác nhận mật khẩu không khớp!");
+                return;
+            }
+
+            set(ref(db, "adminPass"), newPass).then(() => {
+                alert("Đổi mật khẩu thành công! Mật khẩu cũ đã vô hiệu hóa hoàn toàn.");
+                document.getElementById('passwordAdminForm').reset();
+            }).catch((error) => {
+                alert("Lỗi khi cập nhật: " + error.message);
+            });
         };
 
         window.resetSystemData = function() {
@@ -1394,7 +1486,6 @@
             }
         };
 
-        // --- Chart Management ---
         function initCharts() {
             const ctx1 = document.getElementById('lineChartDownloads').getContext('2d');
             lineChart = new Chart(ctx1, {
@@ -1468,12 +1559,13 @@
             grid.innerHTML = html;
         }
 
-        // Window Load Bootstrapper
         window.addEventListener('DOMContentLoaded', () => {
             initCharts();
             initContributionGrid();
+            initTypingEffect();
             setupFirebaseRealtimeListeners();
             updateAdminStateUI();
+            window.switchTab('files');
         });
     </script>
 </body>
