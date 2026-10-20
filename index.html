@@ -1,647 +1,813 @@
 <!DOCTYPE html>
-<html lang="vi" class="dark">
+<html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>𝓉ℛ𝑜𝓃𝒢ℒℐ𝒸𝒽 — Tech Aesthetic Dashboard</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Admin Dashboard & Share File Free Fire / iOS Mod - Firebase Realtime</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts Inter, Montserrat & Orbitron -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;700;800&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        darkBg: '#080B12',
-                        cardBg: '#111827',
-                        neonCyan: '#00E5FF',
-                        neonPurple: '#8B5CF6',
-                        successGreen: '#10B981',
-                        warningOrange: '#F59E0B',
-                        errorRed: '#EF4444'
+                        navy: {
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#020617',
+                        },
+                        brand: {
+                            ff: '#ff4757',
+                            ios: '#007aff',
+                            tut: '#10b981',
+                            mod: '#8b5cf6'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Inter & Rajdhani -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #080B12;
-            color: #F3F4F6;
-        }
-        .glass-panel {
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 229, 255, 0.15);
-        }
-        .neon-glow {
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.25);
-        }
-        .neon-glow-purple {
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
+        :root {
+            --glass: rgba(20, 20, 20, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --rainbow: linear-gradient(90deg, #a8edea, #fed6e3, #fac1ff, #d4fc79, #96e6a1, #a8edea);
+            --jd-gradient: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
         }
 
-        /* --- CĂN CHỈNH KHỚP HOÀN HẢO CHO AVATAR & KHUNG VƯƠNG MIỆN --- */
-        .avatar-section {
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-transition { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Bio Preview Card Styles */
+        .bio-custom-wrapper {
+            font-family: 'Montserrat', sans-serif;
+            color: #fff;
+        }
+
+        .glass-card-bio {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        }
+
+        .rainbow-text {
+            background: var(--rainbow);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbow_move 4s linear infinite;
+            font-weight: 800;
+        }
+
+        @keyframes rainbow_move {
+            to { background-position: 200% center; }
+        }
+
+        .profile-header-bio {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .avatar-section-bio {
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative;
-            padding-top: 18px;
+            flex-shrink: 0;
         }
 
-        .avatar-wrap {
+        .avatar-wrap-bio {
             position: relative;
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar-img-bio {
             width: 100px;
             height: 100px;
-            margin-bottom: 6px;
-        }
-
-        .avatar-img {
-            width: 100%;
-            height: 100%;
+            border-radius: 50%;
+            border: 3px solid #fff;
             object-fit: cover;
-            border-radius: 50%;
-            border: 2px solid #00E5FF;
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+            z-index: 2;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
-        .avatar-frame {
+        .avatar-frame-bio {
             position: absolute;
-            top: -16px;
-            left: -18px;
-            width: 136px;
-            height: 136px;
+            width: 155px;
+            height: 155px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
             pointer-events: none;
-            z-index: 5;
-            max-width: none;
+            object-fit: contain;
         }
 
-        .status-indicator-dot {
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            width: 15px;
-            height: 15px;
-            background-color: #10B981;
-            border: 2px solid #080B12;
-            border-radius: 50%;
-            box-shadow: 0 0 8px #10B981;
-            z-index: 6;
+        .henry-gaming {
+            margin-top: 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+            text-align: center;
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        .social-links-bio {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
         }
-        ::-webkit-scrollbar-track {
-            background: #080B12;
+
+        .social-item-bio {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            color: #fff;
+            border: 1px solid var(--glass-border);
+            transition: 0.4s;
+            text-decoration: none;
+            backdrop-filter: blur(5px);
         }
-        ::-webkit-scrollbar-thumb {
-            background: #1F2937;
-            border-radius: 4px;
-            border: 1px solid rgba(0, 229, 255, 0.2);
+
+        .social-item-bio:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-5px);
+            color: #fff;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #00E5FF;
+
+        .jd-music-container {
+            margin: 30px 0 10px 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+        }
+
+        #contribution-grid {
+            display: grid;
+            grid-template-columns: repeat(52, 1fr);
+            grid-template-rows: repeat(7, 1fr);
+            gap: 3px;
+        }
+
+        .dot {
+            aspect-ratio: 1/1;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .dot.jd-active {
+            background-image: var(--jd-gradient);
+            background-size: 800% 800%;
+            animation: jd_glow 2s linear infinite;
+        }
+
+        @keyframes jd_glow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @media (max-width: 768px) {
+            .profile-header-bio {
+                flex-direction: column;
+                text-align: center;
+            }
+            #contribution-grid {
+                grid-template-columns: repeat(26, 1fr);
+            }
         }
     </style>
 </head>
-<body class="bg-darkBg text-gray-100 min-h-screen flex flex-col selection:bg-neonCyan selection:text-black">
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col space-y-3 pointer-events-none"></div>
+<body class="bg-slate-100 text-slate-800 antialiased flex h-screen overflow-hidden">
 
-    <!-- Header -->
-    <header class="sticky top-0 z-40 glass-panel border-b border-gray-800 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <!-- Logo & Brand -->
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-neonCyan to-neonPurple flex items-center justify-center neon-glow">
-                    <i class="fa-solid fa-gamepad text-black text-xl"></i>
+    <!-- OVERLAY FOR MOBILE SIDEBAR -->
+    <div id="sidebarOverlay" onclick="window.toggleSidebar()" class="fixed inset-0 bg-slate-900/60 z-30 opacity-0 pointer-events-none transition-opacity duration-300 md:hidden"></div>
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar-transition fixed md:static inset-y-0 left-0 z-40 w-64 bg-navy-900 text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0">
+        <div class="h-16 flex items-center justify-between px-4 bg-navy-950 border-b border-slate-800/80">
+            <div class="flex items-center space-x-3 overflow-hidden">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-red-500 to-orange-500 flex items-center justify-center font-black text-white text-lg shadow-lg shadow-red-500/30 flex-shrink-0">
+                    zw
                 </div>
-                <div>
-                    <span class="text-xl font-bold tracking-wider text-white font-['Rajdhani']">𝓉ℛ𝑜𝓃𝒢ℒℐ𝒸𝒽 <span class="text-neonCyan">Dev</span></span>
-                    <span class="block text-[10px] text-gray-400 tracking-widest uppercase">Tech Dashboard</span>
+                <div class="sidebar-text transition-opacity duration-200">
+                    <h1 class="font-bold text-white text-sm leading-tight uppercase tracking-wider">𝓉ℛ𝑜𝓃𝒢ℒℐ𝒸𝒽</h1>
+                    <p class="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Realtime Sync
+                    </p>
                 </div>
             </div>
+            <button onclick="window.toggleSidebar()" class="md:hidden text-slate-400 hover:text-white p-1">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+        </div>
 
-            <!-- Navigation Links -->
-            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
-                <a href="#home" class="text-neonCyan transition hover:text-neonCyan">Trang chủ</a>
-                <a href="#resources" class="text-gray-300 hover:text-neonCyan transition">Kho tài nguyên</a>
-                <a href="#utilities" class="text-gray-300 hover:text-neonCyan transition">Tiện ích</a>
-            </nav>
+        <div class="flex-1 overflow-y-auto hide-scrollbar py-4 px-3 space-y-6">
+            <div>
+                <p class="sidebar-text px-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Tổng quan & File</p>
+                <nav class="space-y-1">
+                    <a href="#" onclick="window.switchTab('dashboard')" id="nav-dashboard" class="nav-item active flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-slate-800 text-white border-l-4 border-orange-500">
+                        <i class="fa-solid fa-chart-pie text-lg text-orange-400 w-6 text-center"></i>
+                        <span class="sidebar-text">Dashboard</span>
+                    </a>
+                    <a href="#" onclick="window.switchTab('files')" id="nav-files" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
+                        <i class="fa-solid fa-folder-open text-lg text-indigo-400 w-6 text-center"></i>
+                        <span class="sidebar-text">Kho File</span>
+                    </a>
+                    <a href="#" onclick="window.switchTab('stats')" id="nav-stats" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
+                        <i class="fa-solid fa-chart-line text-lg text-emerald-400 w-6 text-center"></i>
+                        <span class="sidebar-text">Thống kê & Báo cáo</span>
+                    </a>
+                    <a href="#" onclick="window.switchTab('bio-preview')" id="nav-bio-preview" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
+                        <i class="fa-solid fa-id-card text-lg text-pink-400 w-6 text-center"></i>
+                        <span class="sidebar-text">Trang Bio Public</span>
+                    </a>
+                </nav>
+            </div>
 
-            <!-- Actions -->
-            <div class="flex items-center space-x-4">
-                <div class="relative hidden sm:block">
-                    <input type="text" id="global-search" placeholder="Tìm kiếm nhanh..." class="bg-cardBg text-sm text-gray-200 px-4 py-2 pl-10 rounded-xl border border-gray-700 focus:border-neonCyan focus:outline-none w-48 lg:w-64 transition">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gray-400 text-sm"></i>
+            <!-- NHÓM ADMIN QUẢN LÝ -->
+            <div id="adminGroupSection" class="hidden">
+                <div class="flex items-center justify-between px-3 mb-2">
+                    <p class="sidebar-text text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Admin Quản lý</p>
+                    <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold uppercase">ADMIN</span>
                 </div>
-                
-                <button id="view-mode-btn" onclick="toggleGridViewMode()" title="Chuyển đổi giao diện Grid/List" class="p-2.5 rounded-xl bg-cardBg border border-gray-700 text-gray-300 hover:text-neonCyan hover:border-neonCyan transition">
-                    <i id="view-mode-icon" class="fa-solid fa-grip"></i>
-                </button>
-
-                <button id="admin-login-btn" onclick="openAdminLoginModal()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-neonCyan to-neonPurple text-black font-semibold text-sm hover:opacity-90 transition flex items-center space-x-2 neon-glow">
-                    <i class="fa-solid fa-shield-halved"></i>
-                    <span class="hidden sm:inline">Admin</span>
-                </button>
-
-                <!-- Mobile Menu Button -->
-                <button onclick="toggleMobileMenu()" class="md:hidden p-2.5 rounded-xl bg-cardBg border border-gray-700 text-gray-300 hover:text-neonCyan">
-                    <i class="fa-solid fa-bars text-lg"></i>
-                </button>
+                <nav class="space-y-1">
+                    <a href="#" onclick="window.checkAdminTab('file-management')" id="nav-file-management" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
+                        <i class="fa-solid fa-list-check text-lg text-cyan-400 w-6 text-center"></i>
+                        <span class="sidebar-text">Quản lý File & Tut</span>
+                    </a>
+                    <a href="#" onclick="window.checkAdminTab('categories-management')" id="nav-categories-management" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
+                        <i class="fa-solid fa-tags text-lg text-emerald-400 w-6 text-center"></i>
+                        <span class="sidebar-text">Quản lý Danh mục</span>
+                    </a>
+                    <a href="#" onclick="window.checkAdminTab('bio-admin')" id="nav-bio-admin" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
+                        <i class="fa-solid fa-user-gear text-lg text-purple-400 w-6 text-center"></i>
+                        <span class="sidebar-text">Chỉnh sửa Bio Cá nhân</span>
+                    </a>
+                    <a href="#" onclick="window.checkAdminTab('settings')" id="nav-settings" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
+                        <i class="fa-solid fa-sliders text-lg text-yellow-400 w-6 text-center"></i>
+                        <span class="sidebar-text">Cài đặt Hệ thống</span>
+                    </a>
+                </nav>
             </div>
         </div>
 
-        <!-- Mobile Nav Drawer -->
-        <div id="mobile-menu" class="hidden md:hidden glass-panel border-t border-gray-800 px-4 pt-2 pb-4 space-y-2">
-            <a href="#home" class="block px-3 py-2 rounded-lg text-base font-medium text-neonCyan bg-gray-800/50">Trang chủ</a>
-            <a href="#resources" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-300 hover:text-neonCyan">Kho tài nguyên</a>
-            <a href="#utilities" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-300 hover:text-neonCyan">Tiện ích</a>
-        </div>
-    </header>
+        <div class="p-3 bg-navy-950 border-t border-slate-800/80">
+            <div id="userBoxLoggedOut" class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400">
+                        <i class="fa-solid fa-user-lock"></i>
+                    </div>
+                    <div class="sidebar-text">
+                        <p class="text-xs font-medium text-slate-300">Khách / Viewer</p>
+                    </div>
+                </div>
+                <button onclick="window.openLoginModal()" class="sidebar-text bg-orange-500 hover:bg-orange-600 text-white text-xs px-2.5 py-1.5 rounded-md font-semibold transition">
+                    Đăng nhập
+                </button>
+            </div>
 
-    <!-- Admin Control Bar (Hidden by default) -->
-    <div id="admin-control-bar" class="hidden bg-gray-900 border-b border-neonCyan/30 px-4 py-3 sticky top-20 z-30 shadow-2xl">
-        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+            <div id="userBoxLoggedIn" class="hidden flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <img id="adminAvatarSmall" src="https://placehold.co/100x100/1e293b/ffffff?text=Admin" class="w-8 h-8 rounded-full border border-orange-500 object-cover">
+                    <div class="sidebar-text overflow-hidden">
+                        <p id="adminNameSmall" class="text-xs font-semibold text-white truncate">Admin 𝓉ℛ𝑜𝓃𝒢ℒℐ𝒸𝒽</p>
+                        <p class="text-[10px] text-emerald-400 flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1 animate-pulse"></span> Quyền Quản trị</p>
+                    </div>
+                </div>
+                <button onclick="window.logoutAdmin()" class="sidebar-text text-slate-400 hover:text-red-400 p-1.5 rounded-md transition" title="Đăng xuất">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTAINER -->
+    <div class="flex-1 flex flex-col h-screen overflow-hidden">
+        
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-6 shadow-sm z-20">
             <div class="flex items-center space-x-3">
-                <span class="px-2.5 py-1 rounded-md bg-neonCyan/20 text-neonCyan text-xs font-bold tracking-wider uppercase border border-neonCyan/40 animate-pulse">
-                    <i class="fa-solid fa-terminal mr-1"></i> ADMIN FIREBASE SYNC ACTIVE
-                </span>
-                <span id="admin-user-display" class="text-sm text-gray-300 font-medium">Xin chào, Admin</span>
-            </div>
-            <div class="flex flex-wrap items-center gap-2">
-                <button onclick="openFileModal()" class="px-3 py-1.5 rounded-lg bg-neonCyan text-black font-semibold text-xs hover:opacity-90 transition flex items-center space-x-1.5">
-                    <i class="fa-solid fa-plus"></i><span>Thêm File</span>
+                <button onclick="window.toggleSidebar()" class="p-2.5 rounded-xl text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-orange-500/20 active:scale-95 transition" title="Menu Sidebar">
+                    <i class="fa-solid fa-bars text-xl"></i>
                 </button>
-                <button onclick="openUtilityModal()" class="px-3 py-1.5 rounded-lg bg-neonPurple text-white font-semibold text-xs hover:opacity-90 transition flex items-center space-x-1.5">
-                    <i class="fa-solid fa-plus"></i><span>Thêm Tiện ích</span>
-                </button>
-                <button onclick="openCategoryModal()" class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 hover:border-neonCyan font-semibold text-xs transition flex items-center space-x-1.5">
-                    <i class="fa-solid fa-folder-tree"></i><span>Danh mục</span>
-                </button>
-                <button onclick="openSocialModal()" class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 hover:border-neonCyan font-semibold text-xs transition flex items-center space-x-1.5">
-                    <i class="fa-solid fa-share-nodes"></i><span>Mạng xã hội</span>
-                </button>
-                <button onclick="openBioModal()" class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 hover:border-neonCyan font-semibold text-xs transition flex items-center space-x-1.5">
-                    <i class="fa-solid fa-user-pen"></i><span>Sửa Bio</span>
-                </button>
-                <button onclick="openChangePasswordModal()" class="px-3 py-1.5 rounded-lg bg-gray-800 text-warningOrange border border-gray-700 hover:border-warningOrange font-semibold text-xs transition flex items-center space-x-1.5">
-                    <i class="fa-solid fa-key"></i><span>Đổi mật khẩu</span>
-                </button>
-                <button onclick="openSettingsModal()" class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 hover:border-neonCyan font-semibold text-xs transition flex items-center space-x-1.5">
-                    <i class="fa-solid fa-gear"></i><span>Cài đặt</span>
-                </button>
-                <button onclick="openLogsModal()" class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 hover:border-neonCyan font-semibold text-xs transition flex items-center space-x-1.5">
-                    <i class="fa-solid fa-clock-rotate-left"></i><span>Nhật ký</span>
-                </button>
-                <button onclick="adminLogout()" class="px-3 py-1.5 rounded-lg bg-errorRed/20 text-errorRed border border-errorRed/40 font-semibold text-xs hover:bg-errorRed hover:text-white transition flex items-center space-x-1.5">
-                    <i class="fa-solid fa-right-from-bracket"></i><span>Đăng xuất</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Content Container -->
-    <main id="home" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10 w-full">
-
-        <!-- 4. Profile Header Bio (Horizontal Layout) -->
-        <section class="glass-panel rounded-2xl p-6 sm:p-8 relative overflow-hidden neon-glow-purple">
-            <div class="absolute -right-16 -top-16 w-64 h-64 bg-neonPurple/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-neonCyan/10 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div class="flex flex-col lg:flex-row items-center justify-between gap-6 relative z-10">
-                <!-- Left: Avatar with Crown Frame & Status Dot -->
-                <div class="flex items-center space-x-6 flex-shrink-0">
-                    <div class="avatar-section">
-                        <div class="avatar-wrap">
-                            <img id="bio-avatar" src="" class="avatar-img" alt="Avatar">
-                            <img src="https://raw.githubusercontent.com/WusThanhDieu/Profile-ThanhDieu.Com-V5-Tester/refs/heads/main/res/v5/img/crown/mong-vuot-rong.png" class="avatar-frame" alt="Crown Frame">
-                            <span class="status-indicator-dot" title="Online"></span>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="flex items-center space-x-2">
-                            <h1 id="bio-name" class="text-2xl sm:text-3xl font-bold text-white font-['Rajdhani']">𝓉ℛ𝑜𝓃𝒢ℒℐ𝒸𝒽</h1>
-                            <i id="bio-verified-badge" class="fa-solid fa-circle-check text-neonCyan text-lg" title="Verified Admin"></i>
-                        </div>
-                        <p id="bio-username" class="text-neonCyan text-sm font-medium">@fffilehub</p>
-                        <p id="bio-description" class="text-gray-300 text-sm mt-1 max-w-md">Gaming Resources • File Manager • Tech Tools. Kho lưu trữ tài nguyên Free Fire chuyên nghiệp và an toàn.</p>
-                    </div>
-                </div>
-
-                <!-- Right: Social Links -->
-                <div class="flex flex-wrap items-center justify-center gap-3">
-                    <div id="social-links-container" class="flex flex-wrap gap-2.5">
-                        <!-- Populated by JS -->
-                    </div>
+                <div class="hidden sm:block">
+                    <h2 id="topbarTitle" class="text-base font-bold text-slate-800">Dashboard Báo cáo & Tổng quan</h2>
                 </div>
             </div>
 
-            <!-- Bottom Stats Bar inside Bio -->
-            <div class="mt-8 pt-6 border-t border-gray-800/80 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-                <div class="bg-gray-900/40 rounded-xl p-3 border border-gray-800">
-                    <span id="stat-total-resources" class="block text-2xl sm:text-3xl font-bold text-neonCyan">0</span>
-                    <span class="text-xs text-gray-400 uppercase tracking-wider">Tổng tài nguyên</span>
+            <div class="flex items-center space-x-3">
+                <div id="connectionStatus" class="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 border border-emerald-200">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Firebase Live</span>
                 </div>
-                <div class="bg-gray-900/40 rounded-xl p-3 border border-gray-800">
-                    <span id="stat-active-files" class="block text-2xl sm:text-3xl font-bold text-successGreen">0</span>
-                    <span class="text-xs text-gray-400 uppercase tracking-wider">File hoạt động</span>
-                </div>
-                <div class="bg-gray-900/40 rounded-xl p-3 border border-gray-800">
-                    <span id="stat-utilities" class="block text-2xl sm:text-3xl font-bold text-neonPurple">0</span>
-                    <span class="text-xs text-gray-400 uppercase tracking-wider">Tiện ích & Link</span>
-                </div>
-                <div class="bg-gray-900/40 rounded-xl p-3 border border-gray-800">
-                    <span id="stat-copies" class="block text-2xl sm:text-3xl font-bold text-warningOrange">0</span>
-                    <span class="text-xs text-gray-400 uppercase tracking-wider">Lượt sao chép</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- 6. Kho tài nguyên Free Fire -->
-        <section id="resources" class="space-y-6">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h2 class="text-2xl font-bold text-white flex items-center space-x-3">
-                        <i class="fa-solid fa-folder-open text-neonCyan"></i>
-                        <span>Kho Tài Nguyên Free Fire</span>
-                    </h2>
-                    <p class="text-sm text-gray-400 mt-1">Khám phá các file cấu hình, iOS, IPA và hướng dẫn mới nhất.</p>
-                </div>
-                
-                <!-- Category Tabs -->
-                <div id="category-tabs" class="flex flex-wrap items-center gap-2">
-                    <!-- Dynamic categories -->
-                </div>
-            </div>
-
-            <!-- Search and Filter Bar -->
-            <div class="glass-panel p-4 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4">
-                <div class="relative w-full md:w-80">
-                    <input type="text" id="resource-search-input" placeholder="Tìm theo tên file, mô tả..." class="w-full bg-cardBg text-sm text-gray-200 px-4 py-2.5 pl-10 rounded-xl border border-gray-700 focus:border-neonCyan focus:outline-none transition">
-                    <i class="fa-solid fa-search absolute left-3.5 top-3.5 text-gray-400 text-sm"></i>
-                </div>
-
-                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-                    <select id="filter-status" onchange="filterAndRenderResources()" class="bg-cardBg text-sm text-gray-300 px-3 py-2.5 rounded-xl border border-gray-700 focus:border-neonCyan focus:outline-none transition">
-                        <option value="all">Tất cả trạng thái</option>
-                        <option value="Available">Available (Có sẵn)</option>
-                        <option value="Updated">Updated (Mới cập nhật)</option>
-                        <option value="Maintenance">Maintenance (Bảo trì)</option>
-                        <option value="Unavailable">Unavailable (Không khả dụng)</option>
-                        <option value="Deprecated">Deprecated (Ngừng hỗ trợ)</option>
-                    </select>
-
-                    <select id="sort-by" onchange="filterAndRenderResources()" class="bg-cardBg text-sm text-gray-300 px-3 py-2.5 rounded-xl border border-gray-700 focus:border-neonCyan focus:outline-none transition">
-                        <option value="newest">Mới nhất</option>
-                        <option value="az">Tên A - Z</option>
-                        <option value="size">Kích thước</option>
-                    </select>
-
-                    <button onclick="resetFilters()" class="px-4 py-2.5 bg-gray-800 text-gray-300 hover:text-neonCyan text-sm rounded-xl border border-gray-700 transition" title="Xóa bộ lọc">
-                        <i class="fa-solid fa-rotate-right"></i>
+                <a href="#" onclick="window.switchTab('bio-preview')" class="hidden sm:flex items-center space-x-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs px-3 py-2 rounded-lg font-medium transition">
+                    <i class="fa-solid fa-globe text-indigo-500"></i>
+                    <span>Xem Bio Page</span>
+                </a>
+                <div id="topbarLoginBtn">
+                    <button onclick="window.openLoginModal()" class="flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-xs px-3.5 py-2 rounded-lg font-bold shadow-md shadow-orange-500/20 transition">
+                        <i class="fa-solid fa-lock"></i>
+                        <span>Admin Login</span>
                     </button>
                 </div>
             </div>
+        </header>
 
-            <!-- Resources Grid / List Container -->
-            <div id="resources-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Dynamically populated -->
-            </div>
+        <main class="flex-1 overflow-y-auto bg-slate-50 p-4 sm:p-6 hide-scrollbar">
 
-            <!-- Empty State -->
-            <div id="empty-resources" class="hidden text-center py-16 glass-panel rounded-2xl">
-                <i class="fa-solid fa-folder-closed text-5xl text-gray-600 mb-3"></i>
-                <h3 class="text-lg font-semibold text-gray-300">Không tìm thấy tài nguyên nào</h3>
-                <p class="text-sm text-gray-500 mt-1">Hãy thử thay đổi từ khóa tìm kiếm hoặc bộ lọc.</p>
-            </div>
-        </section>
+            <!-- TAB 1: DASHBOARD -->
+            <section id="tab-dashboard" class="tab-content space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tổng tải file </p>
+                            <h3 id="statTotalDownloads" class="text-2xl font-black text-slate-800 mt-1">0</h3>
+                            <span class="inline-flex items-center text-xs font-semibold text-emerald-500 mt-1">
+                                <i class="fa-solid fa-arrow-trend-up mr-1"></i> Đồng bộ thời gian thực
+                            </span>
+                        </div>
+                        <div class="w-12 h-12 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center text-xl shadow-inner">
+                            <i class="fa-solid fa-fire"></i>
+                        </div>
+                    </div>
 
-        <!-- 7. Utilities & Link Manager -->
-        <section id="utilities" class="space-y-6 pt-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h2 class="text-2xl font-bold text-white flex items-center space-x-3">
-                        <i class="fa-solid fa-toolbox text-neonPurple"></i>
-                        <span>Tiện Ích & Liên Kết Hệ Thống</span>
-                    </h2>
-                    <p class="text-sm text-gray-400 mt-1">Các công cụ hỗ trợ, liên kết mạng xã hội và tiện ích nhanh.</p>
-                </div>
-            </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">File iOS / IPA</p>
+                            <h3 id="statIosDownloads" class="text-2xl font-black text-slate-800 mt-1">0</h3>
+                            <span class="inline-flex items-center text-xs font-semibold text-blue-500 mt-1">
+                                <i class="fa-solid fa-apple-whole mr-1"></i> IPA Direct Sign
+                            </span>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-xl shadow-inner">
+                            <i class="fa-brands fa-apple"></i>
+                        </div>
+                    </div>
 
-            <div id="utilities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Dynamically populated -->
-            </div>
-        </section>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Lượt Xem Bio</p>
+                            <h3 id="statBioViews" class="text-2xl font-black text-slate-800 mt-1">0</h3>
+                            <span class="inline-flex items-center text-xs font-semibold text-purple-500 mt-1">
+                                <i class="fa-solid fa-eye mr-1"></i> Realtime Traffic
+                            </span>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-50 text-purple-500 rounded-2xl flex items-center justify-center text-xl shadow-inner">
+                            <i class="fa-solid fa-chart-simple"></i>
+                        </div>
+                    </div>
 
-    </main>
-
-    <!-- Footer -->
-    <footer class="mt-20 glass-panel border-t border-gray-800 py-8 text-center text-sm text-gray-400">
-        <div class="max-w-7xl mx-auto px-4 space-y-3">
-            <p>© 2026 <span class="text-white font-semibold">ℋ𝑒𝓁𝓁𝑜 𝑒𝓋𝑒𝓇𝓎𝑜𝓃𝑒. ℐ'𝓂 𝓉ℛ𝑜𝓃𝒢 ℒℐ𝒸𝒽 𝒟𝑒𝓋</span>.ℱ𝓊𝓁𝓁 𝒮𝓉𝒶𝒸𝓀 𝒟𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇 #𝒽𝑒𝓃𝓇𝓎_𝒹𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇_𝒻𝓊𝓁𝓁𝓈𝓉𝒶𝒸𝓀.</p>
-        </div>
-    </footer>
-
-    <!-- MODALS -->
-
-    <!-- 1. Admin Login Modal -->
-    <div id="admin-login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden">
-        <div class="glass-panel w-full max-w-md p-6 rounded-2xl border border-neonCyan/30 relative shadow-2xl">
-            <button onclick="closeModal('admin-login-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <div class="text-center mb-6">
-                <div class="w-12 h-12 rounded-xl bg-neonCyan/20 text-neonCyan flex items-center justify-center mx-auto mb-3 neon-glow">
-                    <i class="fa-solid fa-shield-halved text-xl"></i>
-                </div>
-                <h3 class="text-xl font-bold text-white">Đăng Nhập Admin</h3>
-            </div>
-            <form id="admin-login-form" onsubmit="handleAdminLogin(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-medium text-gray-300 mb-1">Tài khoản</label>
-                    <input type="text" id="login-username" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-300 mb-1">Mật khẩu</label>
-                    <div class="relative">
-                        <input type="password" id="login-password" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-200 focus:border-neonCyan focus:outline-none pr-10">
-                        <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-3 text-gray-400 hover:text-white"><i id="eye-icon" class="fa-solid fa-eye text-sm"></i></button>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tổng Tệp / Tut</p>
+                            <h3 id="statTotalFiles" class="text-2xl font-black text-slate-800 mt-1">0</h3>
+                            <span class="inline-flex items-center text-xs font-semibold text-emerald-500 mt-1">
+                                <i class="fa-solid fa-check-circle mr-1"></i> Đang hoạt động
+                            </span>
+                        </div>
+                        <div class="w-12 h-12 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center text-xl shadow-inner">
+                            <i class="fa-solid fa-box-archive"></i>
+                        </div>
                     </div>
                 </div>
-                <div id="login-error" class="text-xs text-errorRed hidden">Tài khoản hoặc mật khẩu không chính xác!</div>
-                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-neonCyan to-neonPurple text-black font-bold text-sm hover:opacity-90 transition neon-glow">Đăng Nhập</button>
-            </form>
-        </div>
-    </div>
 
-    <!-- 2. File Editor Modal -->
-    <div id="file-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden overflow-y-auto py-10">
-        <div class="glass-panel w-full max-w-2xl p-6 rounded-2xl border border-neonCyan/30 relative shadow-2xl my-auto">
-            <button onclick="closeModal('file-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 id="file-modal-title" class="text-xl font-bold text-white mb-4">Thêm Tài Nguyên Mới</h3>
-            <form id="file-form" onsubmit="saveFile(event)" class="space-y-4">
-                <input type="hidden" id="file-id">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-300 mb-1">Tên tài nguyên *</label>
-                        <input type="text" id="file-name" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-base">Thống kê Lượt tải 7 ngày qua</h3>
+                                <p class="text-xs text-slate-500">Theo dõi sự tăng trưởng lượt tải Android & iOS</p>
+                            </div>
+                            <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-medium">Auto Updates</span>
+                        </div>
+                        <div class="h-64 relative">
+                            <canvas id="lineChartDownloads"></canvas>
+                        </div>
                     </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                        <div class="mb-4">
+                            <h3 class="font-bold text-slate-800 text-base">Phân bổ Danh mục File</h3>
+                            <p class="text-xs text-slate-500">Tỷ lệ lượt quan tâm theo danh mục</p>
+                        </div>
+                        <div class="h-64 relative flex items-center justify-center">
+                            <canvas id="doughnutChartCategories"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base">File & Mod Tải Nổi Bật</h3>
+                            <p class="text-xs text-slate-400">Các tệp có lượt truy cập lớn nhất</p>
+                        </div>
+                        <button onclick="window.switchTab('files')" class="text-xs text-orange-500 font-bold hover:underline">
+                            Xem tất cả <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-600">
+                            <thead class="bg-slate-50 text-xs font-semibold uppercase text-slate-400 border-b border-slate-100">
+                                <tr>
+                                    <th class="px-5 py-3">Tên File / Link</th>
+                                    <th class="px-5 py-3">Loại</th>
+                                    <th class="px-5 py-3">Trạng thái</th>
+                                    <th class="px-5 py-3">Lượt tải</th>
+                                    <th class="px-5 py-3 text-right">Tải về</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashboardFileTable" class="divide-y divide-slate-100">
+                                <!-- Dynamic Insert -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: KHO FILE FREE FIRE / MOD (PUBLIC VIEW) -->
+            <section id="tab-files" class="tab-content hidden space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <label class="block text-xs font-medium text-gray-300 mb-1">Danh mục *</label>
-                        <select id="file-category" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
-                            <!-- Populated dynamically -->
+                        <h2 class="text-xl font-bold text-slate-800">Kho File Free Fire / iOS IPA / Tut Trick</h2>
+                        <p class="text-xs text-slate-500">Tải xuống các tệp Mod, Hack Headshot, Config, Obb mới nhất</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="text" id="publicSearchInput" oninput="window.renderPublicFiles()" placeholder="Tìm kiếm file, tut..." class="bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 w-48 sm:w-64 shadow-sm">
+                        <select id="publicFilterCategory" onchange="window.renderPublicFiles()" class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-sm">
+                            <!-- Dynamic Options -->
                         </select>
                     </div>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+                <div id="publicFilesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <!-- Dynamic Render -->
+                </div>
+            </section>
+
+            <!-- TAB 3: THỐNG KÊ & BÁO CÁO DETAIL -->
+            <section id="tab-stats" class="tab-content hidden space-y-6">
+                <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div>
-                        <label class="block text-xs font-medium text-gray-300 mb-1">Phiên bản</label>
-                        <input type="text" id="file-version" placeholder="v1.0" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                        <h2 class="text-lg font-bold text-slate-800">Báo cáo Thống kê Chuyên sâu</h2>
+                        <p class="text-xs text-slate-500">Phân tích lượt tải tệp, thiết bị truy cập và hiệu suất link</p>
                     </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-300 mb-1">Kích thước</label>
-                        <input type="text" id="file-size" placeholder="45 MB" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                    <div class="flex items-center space-x-2">
+                        <button class="bg-slate-100 hover:bg-slate-200 text-xs px-3 py-1.5 rounded-lg font-medium">Hôm nay</button>
+                        <button class="bg-navy-900 text-white text-xs px-3 py-1.5 rounded-lg font-medium">7 Ngày</button>
+                        <button class="bg-slate-100 hover:bg-slate-200 text-xs px-3 py-1.5 rounded-lg font-medium">30 Ngày</button>
                     </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                        <h3 class="font-bold text-slate-800 text-sm mb-4">Tỷ lệ Hệ điều hành Người dùng</h3>
+                        <div class="h-60">
+                            <canvas id="barChartDevice"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                        <h3 class="font-bold text-slate-800 text-sm mb-4">Top File Tải Nhiều Nhất (Tháng này)</h3>
+                        <div class="space-y-4" id="topDownloadProgressList">
+                            <!-- Dynamic Content -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: BIO PUBLIC PREVIEW PAGE -->
+            <section id="tab-bio-preview" class="tab-content hidden max-w-3xl mx-auto space-y-6 py-4">
+                <div class="bio-custom-wrapper">
+                    <div class="glass-card-bio">
+                        <div class="profile-header-bio">
+                            <div class="avatar-section-bio">
+                                <div class="avatar-wrap-bio">
+                                    <img id="bioAvatarPreview" src="https://cdn.phototourl.com/member/2026-10-12-c8fb5492-1608-41a1-b9b5-6a984e34bddb.jpg" class="avatar-img-bio" alt="Avatar">
+                                    <img src="https://raw.githubusercontent.com/WusThanhDieu/Profile-ThanhDieu.Com-V5-Tester/refs/heads/main/res/v5/img/crown/mong-vuot-rong.png" class="avatar-frame-bio" alt="Crown">
+                                </div>
+                                <div id="bioGamingText" class="henry-gaming rainbow-text">ℋ𝑒𝓁𝓁𝑜 𝑒𝓋𝑒𝓇𝓎𝑜𝓃𝑒. ℐ'𝓂 𝓉ℛ𝑜𝓃𝒢 ℒℐ𝒸𝒽 𝒟𝑒𝓋</div>
+                            </div>
+                            <div class="user-info-bio">
+                                <h1 id="bioNamePreview" class="rainbow-text" style="font-size: 2.5rem; margin: 0; line-height: 1;">𝓉ℛ𝑜𝓃𝒢<span style="color:#ff416c">ℒℐ𝒸𝒽</span></h1>
+                                <div id="bioBadgePreview" class="rainbow-text" style="font-size: 1.1rem; margin: 10px 0; font-weight: 600;">ℱ𝓊𝓁𝓁 𝒮𝓉𝒶𝒸𝓀 𝒟𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇</div>
+                                <p id="bioTaglinePreview" class="rainbow-text" style="font-size: 0.8rem; opacity: 0.8; letter-spacing: 1px;">#𝒽𝑒𝓃𝓇𝓎_𝒹𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇_𝒻𝓊𝓁𝓁𝓈𝓉𝒶𝒸𝓀</p>
+                                <div id="bioSocialsContainer" class="social-links-bio">
+                                    <!-- Dynamic Socials -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="jd-music-container">
+                            <div id="contribution-grid"></div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Bio Links Section -->
+                    <div class="glass-card-bio">
+                        <h3 class="rainbow-text text-base font-bold mb-4">Kho Tệp & Liên Kết Tải Nổi Bật</h3>
+                        <div id="bioLinksContainer" class="space-y-3">
+                            <!-- Dynamic Links -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: QUẢN LÝ FILE & TUT (ADMIN ONLY) -->
+            <section id="tab-file-management" class="tab-content hidden space-y-6">
+                <div class="flex items-center justify-between bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
                     <div>
-                        <label class="block text-xs font-medium text-gray-300 mb-1">Trạng thái</label>
-                        <select id="file-status" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
-                            <option value="Available">Available</option>
-                            <option value="Updated">Updated</option>
-                            <option value="Maintenance">Maintenance</option>
-                            <option value="Unavailable">Unavailable</option>
-                            <option value="Deprecated">Deprecated</option>
+                        <h2 class="text-lg font-bold text-slate-800">Quản lý Kho File & Link Mod</h2>
+                        <p class="text-xs text-slate-500">Thêm, sửa, xóa file Free Fire, Tut Trick, iOS IPA</p>
+                    </div>
+                    <button onclick="window.openAddFileModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs px-4 py-2.5 rounded-xl font-bold flex items-center space-x-2 shadow-md shadow-emerald-500/20 transition">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Thêm File Mới</span>
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-600">
+                            <thead class="bg-slate-50 text-xs font-semibold uppercase text-slate-400 border-b border-slate-100">
+                                <tr>
+                                    <th class="px-5 py-3.5">Ảnh</th>
+                                    <th class="px-5 py-3.5">Tên File</th>
+                                    <th class="px-5 py-3.5">Danh mục</th>
+                                    <th class="px-5 py-3.5">Dung lượng</th>
+                                    <th class="px-5 py-3.5">Trạng thái</th>
+                                    <th class="px-5 py-3.5">Lượt tải</th>
+                                    <th class="px-5 py-3.5 text-right">Thao tác Admin</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminFileTable" class="divide-y divide-slate-100">
+                                <!-- Dynamic Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 6: QUẢN LÝ DANH MỤC (ADMIN ONLY) -->
+            <section id="tab-categories-management" class="tab-content hidden space-y-6 max-w-4xl mx-auto">
+                <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                    <h2 class="text-lg font-bold text-slate-800 mb-1">Thêm Danh Mục Mới</h2>
+                    <p class="text-xs text-slate-500 mb-4">Tạo mới các danh mục dành cho File & Mod</p>
+                    
+                    <form onsubmit="window.handleAddCategory(event)" class="flex flex-col sm:flex-row gap-3">
+                        <input type="text" id="newCategoryInput" required placeholder="Nhập tên danh mục mới..." class="flex-1 border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                        <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-md shadow-emerald-500/20 transition flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Thêm Danh Mục</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                    <div class="p-5 border-b border-slate-100">
+                        <h3 class="font-bold text-slate-800 text-base">Danh Sách Danh Mục Hiện Có</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-600">
+                            <thead class="bg-slate-50 text-xs font-semibold uppercase text-slate-400 border-b border-slate-100">
+                                <tr>
+                                    <th class="px-5 py-3.5">#</th>
+                                    <th class="px-5 py-3.5">Tên Danh Mục</th>
+                                    <th class="px-5 py-3.5">Số Lượng Tệp</th>
+                                    <th class="px-5 py-3.5 text-right">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminCategoriesTable" class="divide-y divide-slate-100">
+                                <!-- Dynamic Insert -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 7: CHỈNH SỬA BIO CÁ NHÂN (ADMIN ONLY) -->
+            <section id="tab-bio-admin" class="tab-content hidden max-w-3xl mx-auto space-y-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                    <h2 class="text-lg font-bold text-slate-800 mb-1">Cấu hình Trang Bio Cá nhân</h2>
+                    <p class="text-xs text-slate-500 mb-6">Thay đổi avatar, thông tin và liên kết hiển thị Bio (Tự động đồng bộ lên Firebase)</p>
+
+                    <form id="bioAdminForm" onsubmit="window.saveBioSettings(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Tên Bio / Brand</label>
+                                <input type="text" id="bioInputName" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Badge Hiển thị</label>
+                                <input type="text" id="bioInputBadge" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Mô tả ngắn (Tagline)</label>
+                            <input type="text" id="bioInputTagline" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">URL Avatar (Link ảnh)</label>
+                            <input type="text" id="bioInputAvatar" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                        </div>
+
+                        <hr class="my-4 border-slate-100">
+                        <h3 class="font-bold text-sm text-slate-800">Liên kết Mạng Xã Hội</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">TikTok Link</label>
+                                <input type="text" id="bioInputTiktok" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">YouTube Link</label>
+                                <input type="text" id="bioInputYoutube" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Zalo Link</label>
+                                <input type="text" id="bioInputZalo" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
+                            </div>
+                        </div>
+
+                        <div class="pt-4 flex justify-end">
+                            <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-md shadow-orange-500/20 transition">
+                                <i class="fa-solid fa-floppy-disk mr-1"></i> Lưu Firebase Realtime
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- TAB 8: CÀI ĐẶT HỆ THỐNG (ADMIN ONLY) -->
+            <section id="tab-settings" class="tab-content hidden max-w-3xl mx-auto space-y-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">Cài đặt Mật khẩu Admin & Hệ thống</h2>
+                        <p class="text-xs text-slate-500">Quản lý bảo mật tài khoản admin và cấu hình chung</p>
+                    </div>
+
+                    <form id="passwordAdminForm" onsubmit="window.changeAdminPassword(event)" class="space-y-4">
+                        <h3 class="font-bold text-sm text-slate-800 border-b border-slate-100 pb-2">Đổi Mật khẩu Quản trị</h3>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Mật khẩu Hiện tại</label>
+                            <input type="password" id="inputOldPassword" required class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Mật khẩu Mới</label>
+                                <input type="password" id="inputNewPassword" required class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Xác nhận Mật khẩu Mới</label>
+                                <input type="password" id="inputConfirmPassword" required class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="submit" class="bg-navy-900 hover:bg-slate-800 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition">
+                                Đổi Mật Khẩu
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr class="border-slate-100">
+
+                    <div class="space-y-3">
+                        <h3 class="font-bold text-sm text-slate-800">Cấu Hình Dữ Liệu Ban Đầu Firebase</h3>
+                        <p class="text-xs text-slate-500">Ghi lại toàn bộ dữ liệu mẫu mặc định lên Firebase Realtime Database nếu cần làm sạch</p>
+                        <button onclick="window.resetSystemData()" class="bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs px-4 py-2 rounded-xl transition">
+                            <i class="fa-solid fa-rotate-left mr-1"></i> Khôi phục Dữ liệu Mẫu lên Firebase
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODAL: LOGIN ADMIN -->
+    <div id="loginModal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl transform scale-95 transition-transform duration-300 id-modal-box">
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-orange-100 text-orange-500 rounded-2xl flex items-center justify-center text-xl mx-auto mb-2">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800">Đăng nhập Admin</h3>
+            </div>
+            <form onsubmit="window.handleLoginSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Mật khẩu</label>
+                    <input type="password" id="loginPasswordInput" required placeholder="Nhập mật khẩu..." class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                </div>
+                <div id="loginErrorMsg" class="hidden text-xs text-red-500 font-semibold text-center">
+                    Mật khẩu không chính xác!
+                </div>
+                <div class="flex space-x-2 pt-2">
+                    <button type="button" onclick="window.closeLoginModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs py-2.5 rounded-xl transition">Hủy</button>
+                    <button type="submit" class="w-1/2 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold text-xs py-2.5 rounded-xl shadow-md transition">Xác Nhận</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD / EDIT FILE -->
+    <div id="fileModal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl transform scale-95 transition-transform duration-300">
+            <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                <h3 id="fileModalTitle" class="text-base font-bold text-slate-800">Thêm File Mới</h3>
+                <button onclick="window.closeFileModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="fileForm" onsubmit="window.handleFileFormSubmit(event)" class="space-y-3">
+                <input type="hidden" id="fileFormId">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Tên File / Tệp Mod</label>
+                    <input type="text" id="fileFormName" required placeholder="Ví dụ: Headshot VIP V10 VIP.zip" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Danh mục</label>
+                        <select id="fileFormCategory" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
+                            <!-- Dynamic Options -->
                         </select>
                     </div>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-medium text-gray-300 mb-1">Link tải xuống (URL) *</label>
-                        <input type="url" id="file-download-url" required placeholder="https://..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-300 mb-1">Link hướng dẫn (URL)</label>
-                        <input type="url" id="file-guide-url" placeholder="https://..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-300 mb-1">Ảnh Thumbnail URL</label>
-                        <input type="url" id="file-thumb" placeholder="https://..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-300 mb-1">FontAwesome Icon</label>
-                        <input type="text" id="file-icon" placeholder="fa-solid fa-file-arrow-down" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Dung lượng</label>
+                        <input type="text" id="fileFormSize" required placeholder="25 MB" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-gray-300 mb-1">Mô tả ngắn</label>
-                    <textarea id="file-desc" rows="2" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none"></textarea>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Trạng thái File</label>
+                    <select id="fileFormStatus" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
+                        <option value="Hoạt động">Hoạt động / Clean</option>
+                        <option value="Bảo trì">Bảo trì / Updating</option>
+                        <option value="Cần VIP">Cần VIP / Key</option>
+                    </select>
                 </div>
-                <div class="flex justify-end space-x-3 pt-2">
-                    <button type="button" onclick="closeModal('file-modal')" class="px-4 py-2 rounded-xl bg-gray-800 text-gray-300 text-sm hover:bg-gray-700 transition">Hủy</button>
-                    <button type="submit" class="px-6 py-2 rounded-xl bg-neonCyan text-black font-bold text-sm hover:opacity-90 transition">Lưu Lại</button>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Link Download (Drive/Mediafire/Mega)</label>
+                    <input type="url" id="fileFormLink" required placeholder="https://..." class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Link Ảnh Mô Tả File (URL hình ảnh)</label>
+                    <input type="url" id="fileFormImage" placeholder="https://imgur.com/... hoặc link ảnh..." class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Mô tả ngắn</label>
+                    <input type="text" id="fileFormDesc" placeholder="Tính năng nổi bật..." class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
+                </div>
+                <div class="flex justify-end space-x-2 pt-3">
+                    <button type="button" onclick="window.closeFileModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs px-4 py-2 rounded-xl transition">Hủy</button>
+                    <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-5 py-2 rounded-xl shadow-md transition">Lưu File Đồng Bộ</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- 3. Utility Editor Modal -->
-    <div id="utility-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden overflow-y-auto py-10">
-        <div class="glass-panel w-full max-w-md p-6 rounded-2xl border border-neonPurple/30 relative shadow-2xl my-auto">
-            <button onclick="closeModal('utility-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 id="utility-modal-title" class="text-xl font-bold text-white mb-4">Thêm Tiện Ích Mới</h3>
-            <form id="utility-form" onsubmit="saveUtility(event)" class="space-y-4">
-                <input type="hidden" id="utility-id">
-                <div>
-                    <label class="block text-xs font-medium text-gray-300 mb-1">Tên tiện ích *</label>
-                    <input type="text" id="utility-name" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonPurple focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-300 mb-1">URL Liên kết *</label>
-                    <input type="url" id="utility-url" required placeholder="https://..." class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonPurple focus:outline-none">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-300 mb-1">FontAwesome Icon</label>
-                        <input type="text" id="utility-icon" placeholder="fa-solid fa-link" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonPurple focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-300 mb-1">Nhãn phân loại</label>
-                        <input type="text" id="utility-category" placeholder="Tool Dev" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonPurple focus:outline-none">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-300 mb-1">Mô tả</label>
-                    <textarea id="utility-desc" rows="2" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonPurple focus:outline-none"></textarea>
-                </div>
-                <div class="flex justify-end space-x-3 pt-2">
-                    <button type="button" onclick="closeModal('utility-modal')" class="px-4 py-2 rounded-xl bg-gray-800 text-gray-300 text-sm hover:bg-gray-700 transition">Hủy</button>
-                    <button type="submit" class="px-6 py-2 rounded-xl bg-neonPurple text-white font-bold text-sm hover:opacity-90 transition">Lưu Lại</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- 4. Bio Editor Modal -->
-    <div id="bio-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden overflow-y-auto py-10">
-        <div class="glass-panel w-full max-w-lg p-6 rounded-2xl border border-neonCyan/30 relative shadow-2xl my-auto">
-            <button onclick="closeModal('bio-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 class="text-xl font-bold text-white mb-4">Chỉnh Sửa Thông Tin Bio</h3>
-            <form id="bio-form" onsubmit="saveBio(event)" class="space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-300 mb-1">Tên hiển thị</label>
-                        <input type="text" id="edit-bio-name" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-300 mb-1">Username</label>
-                        <input type="text" id="edit-bio-username" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-300 mb-1">Avatar URL</label>
-                    <input type="url" id="edit-bio-avatar" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-300 mb-1">Tiểu sử</label>
-                    <textarea id="edit-bio-desc" rows="2" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none"></textarea>
-                </div>
-                <div class="flex justify-end space-x-3 pt-2">
-                    <button type="button" onclick="closeModal('bio-modal')" class="px-4 py-2 rounded-xl bg-gray-800 text-gray-300 text-sm hover:bg-gray-700 transition">Hủy</button>
-                    <button type="submit" class="px-6 py-2 rounded-xl bg-neonCyan text-black font-bold text-sm hover:opacity-90 transition">Lưu Bio</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- 5. Category Manager Modal -->
-    <div id="category-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden overflow-y-auto py-10">
-        <div class="glass-panel w-full max-w-md p-6 rounded-2xl border border-neonCyan/30 relative shadow-2xl my-auto">
-            <button onclick="closeModal('category-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 class="text-xl font-bold text-white mb-4">Quản Lý Danh Mục File</h3>
-            <div class="space-y-4">
-                <div class="flex space-x-2">
-                    <input type="text" id="new-category-name" placeholder="Tên danh mục mới..." class="flex-grow bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
-                    <button onclick="addNewCategory()" class="px-4 py-2 bg-neonCyan text-black font-bold text-sm rounded-xl hover:opacity-90 transition">Thêm</button>
-                </div>
-                <div id="category-list-container" class="space-y-2 max-h-60 overflow-y-auto pr-2">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 6. Social Links Manager Modal -->
-    <div id="social-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden overflow-y-auto py-10">
-        <div class="glass-panel w-full max-w-xl p-6 rounded-2xl border border-neonCyan/30 relative shadow-2xl my-auto space-y-4">
-            <button onclick="closeModal('social-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 id="social-modal-title" class="text-xl font-bold text-white mb-2">Quản Lý Liên Kết Mạng Xã Hội</h3>
-            
-            <form id="social-form" onsubmit="saveSocialLink(event)" class="space-y-3 bg-gray-900 p-4 rounded-xl border border-gray-800">
-                <input type="hidden" id="social-id">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-300 mb-1">Tên mạng xã hội *</label>
-                        <input type="text" id="social-name" required placeholder="Telegram, Zalo..." class="w-full bg-cardBg border border-gray-700 rounded-xl px-3 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-300 mb-1">FontAwesome Icon *</label>
-                        <input type="text" id="social-icon" required placeholder="fa-brands fa-telegram" class="w-full bg-cardBg border border-gray-700 rounded-xl px-3 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-300 mb-1">Đường dẫn URL *</label>
-                    <input type="url" id="social-url" required placeholder="https://..." class="w-full bg-cardBg border border-gray-700 rounded-xl px-3 py-2 text-sm text-gray-200 focus:border-neonCyan focus:outline-none">
-                </div>
-                <div class="flex items-center justify-between pt-1">
-                    <label class="flex items-center space-x-2 cursor-pointer text-xs text-gray-300">
-                        <input type="checkbox" id="social-active" checked class="w-4 h-4 rounded bg-cardBg border-gray-700 text-neonCyan focus:ring-0">
-                        <span>Hiển thị ra ngoài profile</span>
-                    </label>
-                    <div class="space-x-2">
-                        <button type="button" onclick="resetSocialForm()" class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-300 text-xs hover:bg-gray-700 transition">Làm mới</button>
-                        <button type="submit" class="px-4 py-1.5 rounded-lg bg-neonCyan text-black font-bold text-xs hover:opacity-90 transition">Lưu Mạng Xã Hội</button>
-                    </div>
-                </div>
-            </form>
-
-            <div class="space-y-2 max-h-60 overflow-y-auto pr-2" id="social-list-container">
-                <!-- Populated by JS -->
-            </div>
-        </div>
-    </div>
-
-    <!-- NEW: 7. Change Admin Password Modal -->
-    <div id="change-password-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden overflow-y-auto py-10">
-        <div class="glass-panel w-full max-w-md p-6 rounded-2xl border border-warningOrange/30 relative shadow-2xl my-auto">
-            <button onclick="closeModal('change-password-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <div class="text-center mb-6">
-                <div class="w-12 h-12 rounded-xl bg-warningOrange/20 text-warningOrange flex items-center justify-center mx-auto mb-3">
-                    <i class="fa-solid fa-key text-xl"></i>
-                </div>
-                <h3 class="text-xl font-bold text-white">Đổi Thông Tin Đăng Nhập Admin</h3>
-                <p class="text-xs text-gray-400 mt-1">Cập nhật tài khoản hoặc mật khẩu quản trị mới.</p>
-            </div>
-            <form id="change-password-form" onsubmit="saveAdminCredentials(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-medium text-gray-300 mb-1">Tài khoản Admin mới</label>
-                    <input type="text" id="new-admin-user" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-200 focus:border-warningOrange focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-300 mb-1">Mật khẩu Admin mới</label>
-                    <input type="password" id="new-admin-pass" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-200 focus:border-warningOrange focus:outline-none">
-                </div>
-                <div class="flex justify-end space-x-3 pt-2">
-                    <button type="button" onclick="closeModal('change-password-modal')" class="px-4 py-2 rounded-xl bg-gray-800 text-gray-300 text-sm hover:bg-gray-700 transition">Hủy</button>
-                    <button type="submit" class="px-6 py-2 rounded-xl bg-warningOrange text-black font-bold text-sm hover:opacity-90 transition">Cập Nhật</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- 8. Settings & Backup Modal -->
-    <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden overflow-y-auto py-10">
-        <div class="glass-panel w-full max-w-lg p-6 rounded-2xl border border-neonCyan/30 relative shadow-2xl my-auto space-y-6">
-            <button onclick="closeModal('settings-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 class="text-xl font-bold text-white">Cài Đặt & Sao Lưu Dữ Liệu</h3>
-            <div class="space-y-4 border-t border-gray-800 pt-4">
-                <h4 class="text-sm font-semibold text-errorRed">Khôi phục mặc định</h4>
-                <button onclick="resetToDefaultData()" class="w-full px-4 py-2.5 rounded-xl bg-errorRed/20 border border-errorRed/40 text-errorRed text-sm font-semibold hover:bg-errorRed hover:text-white transition">
-                    Đặt lại toàn bộ dữ liệu trên Firebase
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 9. Activity Logs Modal -->
-    <div id="logs-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden overflow-y-auto py-10">
-        <div class="glass-panel w-full max-w-2xl p-6 rounded-2xl border border-neonCyan/30 relative shadow-2xl my-auto space-y-4">
-            <button onclick="closeModal('logs-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <div class="flex items-center justify-between">
-                <h3 class="text-xl font-bold text-white">Nhật Ký Hoạt Động Admin</h3>
-                <button onclick="clearActivityLogs()" class="px-3 py-1.5 rounded-lg bg-errorRed/20 text-errorRed text-xs hover:bg-errorRed hover:text-white transition">Xóa nhật ký</button>
-            </div>
-            <div id="logs-container" class="space-y-2 max-h-80 overflow-y-auto pr-2 text-xs">
-                <!-- Populated by JS -->
-            </div>
-        </div>
-    </div>
-
-    <!-- FIREBASE & APP LOGIC -->
+    <!-- FIREBASE MODULE LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+        import { 
+            getDatabase, 
+            ref, 
+            onValue, 
+            set, 
+            push, 
+            update, 
+            remove, 
+            runTransaction 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDMfNHEYrfn0FuQx_lIaHAhJ5FNXNC5X94",
             authDomain: "biodashboard-5b443.firebaseapp.com",
@@ -653,823 +819,661 @@
             measurementId: "G-EVYKTS83T7"
         };
 
+        // Initialize Firebase Apps
         const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
         const db = getDatabase(app);
 
-        const DEFAULT_DATA = {
-            schemaVersion: "1.0",
-            adminAuth: {
-                username: "admin",
-                password: "1"
-            },
+        // Application Global State
+        const DEFAULT_PASSWORD = "admin123";
+        let isAdminLoggedIn = false;
+        let isSidebarCollapsed = false;
+
+        let categoriesData = [];
+        let bioData = {};
+        let filesData = [];
+        let statsBioViews = 0;
+
+        let lineChart = null;
+        let doughnutChart = null;
+        let barChart = null;
+
+        // Initial Seed Payload
+        const initialSeedData = {
+            adminPass: DEFAULT_PASSWORD,
+            bioViews: 128400,
+            categories: ["Free Fire", "iOS IPA", "Tut Trick", "Mod Menu"],
             bio: {
-                name: "𝓉ℛ𝑜𝓃𝒢ℒℐ𝒸𝒽",
-                username: "@fffilehub",
-                description: "Gaming Resources • File Manager • Tech Tools. Kho lưu trữ tài nguyên Free Fire chuyên nghiệp và an toàn.",
-                avatar: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&q=80",
-                verified: true,
-                status: "Online"
+                name: "𝓉ℛ𝑜𝓃𝒢<span style='color:#ff416c'>ℒℐ𝒸𝒽</span>",
+                badge: "ℱ𝓊𝓁𝓁 𝒮𝓉𝒶𝒸𝓀 𝒟𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇",
+                tagline: "#𝒽𝑒𝓃𝓇𝓎_𝒹𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇_𝒻𝓊𝓁𝓁𝓈𝓉𝒶𝒸𝓀",
+                avatar: "https://cdn.phototourl.com/member/2026-10-12-c8fb5492-1608-41a1-b9b5-6a984e34bddb.jpg",
+                tiktok: "https://tiktok.com",
+                youtube: "https://youtube.com",
+                zalo: "https://zalo.me"
             },
-            socials: [
-                { id: "s1", name: "Telegram", icon: "fa-brands fa-telegram", url: "https://t.me/", active: true },
-                { id: "s2", name: "Zalo", icon: "fa-solid fa-comment-sms", url: "https://zalo.me/", active: true },
-                { id: "s3", name: "Discord", icon: "fa-brands fa-discord", url: "https://discord.com/", active: true },
-                { id: "s4", name: "TikTok", icon: "fa-brands fa-tiktok", url: "https://tiktok.com/", active: true },
-                { id: "s5", name: "Website", icon: "fa-solid fa-globe", url: "https://example.com/", active: true }
-            ],
-            categories: ["File 3105", "File iOS", "Tut Trick", "IPA iOS"],
-            resources: [
-                {
-                    id: "res-1",
-                    name: "Cấu Hình 3105 Fix Lag VIP",
-                    category: "File 3105",
-                    version: "v4.2",
-                    size: "25 MB",
-                    date: "2026-06-01",
-                    desc: "Tối ưu hóa đồ họa, giảm ping và chống văng game cho mọi dòng máy Android.",
-                    downloadUrl: "https://example.com/download-3105",
-                    guideUrl: "https://example.com/guide",
-                    thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80",
-                    icon: "fa-solid fa-gauge-high",
-                    status: "Available"
+            files: {
+                "file_1": { name: "Config Headshot Auto Lock 99% FF OB43", category: "Free Fire", size: "12 MB", status: "Hoạt động", downloads: 14200, link: "https://drive.google.com", image: "https://placehold.co/400x250/ff4757/ffffff?text=Config+FF", desc: "Tăng độ nhạy, khóa tâm êm ái không khóa acc." },
+                "file_2": { name: "Free Fire IPA iOS Mod Auto Aim Direct", category: "iOS IPA", size: "850 MB", status: "Hoạt động", downloads: 9800, link: "https://mediafire.com", image: "https://placehold.co/400x250/007aff/ffffff?text=iOS+IPA", desc: "Tệp IPA trực tiếp cài qua Esign/Scarlet." },
+                "file_3": { name: "Tut Bật 120 FPS Free Fire Max Android", category: "Tut Trick", size: "2 MB", status: "Hoạt động", downloads: 6500, link: "https://mega.nz", image: "https://placehold.co/400x250/10b981/ffffff?text=120+FPS", desc: "Mẹo unlock cấu hình siêu mượt không giật lag." },
+                "file_4": { name: "Mod Menu Regedit FF VIP V12", category: "Mod Menu", size: "45 MB", status: "Bảo trì", downloads: 15300, link: "https://drive.google.com", image: "https://placehold.co/400x250/8b5cf6/ffffff?text=Mod+Menu", desc: "Đang cập nhật phiên bản OB mới nhất." }
+            }
+        };
+
+        // Initialize Realtime Database Listeners
+        function setupFirebaseRealtimeListeners() {
+            // 1. Connection Status Check
+            const connectedRef = ref(db, ".info/connected");
+            onValue(connectedRef, (snap) => {
+                const statusEl = document.getElementById("connectionStatus");
+                if (snap.val() === true && statusEl) {
+                    statusEl.classList.remove("hidden");
                 }
-            ],
-            utilities: [
-                {
-                    id: "util-1",
-                    name: "Công Cụ Check Ping",
-                    url: "https://example.com/ping",
-                    icon: "fa-solid fa-wifi",
-                    category: "Tool Dev",
-                    desc: "Kiểm tra độ trễ mạng khi chơi game."
-                }
-            ],
-            logs: [],
-            stats: { totalCopies: 0 },
-            settings: { gridView: true }
-        };
-
-        window.appData = {};
-        window.isAdminLoggedIn = false;
-        window.activeCategoryFilter = 'all';
-
-        const dataRef = ref(db, 'hubData');
-        onValue(dataRef, (snapshot) => {
-            const serverData = snapshot.val();
-            if (serverData) {
-                window.appData = serverData;
-                if (!window.appData.adminAuth) {
-                    window.appData.adminAuth = { username: "admin", password: "1" };
-                }
-            } else {
-                set(dataRef, DEFAULT_DATA);
-                window.appData = DEFAULT_DATA;
-            }
-            renderAll();
-        });
-
-        window.saveDataToFirebase = function() {
-            set(dataRef, window.appData).catch((error) => {
-                showToast("Lỗi đồng bộ Firebase: " + error.message, "error");
             });
-        };
 
-        window.logActivity = function(action, target, desc) {
-            const logEntry = {
-                time: new Date().toLocaleString('vi-VN'),
-                action: action,
-                target: target,
-                desc: desc
-            };
-            if (!window.appData.logs) window.appData.logs = [];
-            window.appData.logs.unshift(logEntry);
-            if (window.appData.logs.length > 50) window.appData.logs.pop();
-            window.saveDataToFirebase();
-        };
-
-        window.renderAll = function() {
-            renderBio();
-            renderSocials();
-            renderStats();
-            renderCategoryTabs();
-            renderCategorySelectOptions();
-            filterAndRenderResources();
-            renderUtilities();
-            renderCategoryManagerList();
-            renderSocialManagerList();
-            renderActivityLogs();
-        };
-
-        function renderBio() {
-            const bio = window.appData.bio || {};
-            document.getElementById('bio-name').textContent = bio.name || '';
-            document.getElementById('bio-username').textContent = bio.username || '';
-            document.getElementById('bio-description').textContent = bio.description || '';
-            document.getElementById('bio-avatar').src = bio.avatar || '';
-            document.getElementById('bio-verified-badge').style.display = bio.verified ? 'inline-block' : 'none';
-        }
-
-        function renderSocials() {
-            const container = document.getElementById('social-links-container');
-            container.innerHTML = '';
-            (window.appData.socials || []).forEach(s => {
-                if (!s.active) return;
-                const a = document.createElement('a');
-                a.href = s.url;
-                a.target = '_blank';
-                a.rel = 'noopener noreferrer';
-                a.className = 'px-4 py-2 rounded-xl bg-cardBg border border-gray-700 hover:border-neonCyan text-gray-200 text-sm font-medium transition flex items-center space-x-2 group';
-                a.innerHTML = `<i class="${s.icon} text-neonCyan group-hover:scale-110 transition"></i><span>${s.name}</span>`;
-                container.appendChild(a);
-            });
-        }
-
-        function renderStats() {
-            const resources = window.appData.resources || [];
-            const activeFiles = resources.filter(r => r.status === 'Available' || r.status === 'Updated').length;
-            const utilitiesCount = (window.appData.utilities || []).length;
-
-            document.getElementById('stat-total-resources').textContent = resources.length;
-            document.getElementById('stat-active-files').textContent = activeFiles;
-            document.getElementById('stat-utilities').textContent = utilitiesCount;
-            document.getElementById('stat-copies').textContent = window.appData.stats?.totalCopies || 0;
-        }
-
-        function renderCategoryTabs() {
-            const container = document.getElementById('category-tabs');
-            container.innerHTML = '';
-
-            const allBtn = document.createElement('button');
-            allBtn.className = `px-4 py-2 rounded-xl text-sm font-medium transition ${window.activeCategoryFilter === 'all' ? 'bg-neonCyan text-black font-bold neon-glow' : 'bg-cardBg text-gray-300 border border-gray-700 hover:border-neonCyan'}`;
-            allBtn.textContent = 'Tất cả';
-            allBtn.onclick = () => { window.activeCategoryFilter = 'all'; renderCategoryTabs(); filterAndRenderResources(); };
-            container.appendChild(allBtn);
-
-            (window.appData.categories || []).forEach(cat => {
-                const btn = document.createElement('button');
-                btn.className = `px-4 py-2 rounded-xl text-sm font-medium transition ${window.activeCategoryFilter === cat ? 'bg-neonCyan text-black font-bold neon-glow' : 'bg-cardBg text-gray-300 border border-gray-700 hover:border-neonCyan'}`;
-                btn.textContent = cat;
-                btn.onclick = () => { window.activeCategoryFilter = cat; renderCategoryTabs(); filterAndRenderResources(); };
-                container.appendChild(btn);
-            });
-        }
-
-        function renderCategorySelectOptions() {
-            const select = document.getElementById('file-category');
-            if (!select) return;
-            select.innerHTML = '';
-            (window.appData.categories || []).forEach(cat => {
-                const opt = document.createElement('option');
-                opt.value = cat;
-                opt.textContent = cat;
-                select.appendChild(opt);
-            });
-        }
-
-        window.filterAndRenderResources = function() {
-            const searchVal = document.getElementById('resource-search-input').value.toLowerCase();
-            const statusVal = document.getElementById('filter-status').value;
-            const sortVal = document.getElementById('sort-by').value;
-
-            let list = [...(window.appData.resources || [])];
-
-            if (window.activeCategoryFilter !== 'all') {
-                list = list.filter(r => r.category === window.activeCategoryFilter);
-            }
-
-            if (statusVal !== 'all') {
-                list = list.filter(r => r.status === statusVal);
-            }
-
-            if (searchVal) {
-                list = list.filter(r => r.name.toLowerCase().includes(searchVal) || r.desc.toLowerCase().includes(searchVal));
-            }
-
-            if (sortVal === 'newest') {
-                list.sort((a, b) => new Date(b.date) - new Date(a.date));
-            } else if (sortVal === 'az') {
-                list.sort((a, b) => a.name.localeCompare(b.name));
-            } else if (sortVal === 'size') {
-                list.sort((a, b) => parseInt(a.size) - parseInt(b.size));
-            }
-
-            renderResourcesList(list);
-        };
-
-        function renderResourcesList(list) {
-            const container = document.getElementById('resources-container');
-            const emptyEl = document.getElementById('empty-resources');
-            container.innerHTML = '';
-
-            if (list.length === 0) {
-                emptyEl.classList.remove('hidden');
-                return;
-            }
-            emptyEl.classList.add('hidden');
-
-            const isGrid = window.appData.settings?.gridView ?? true;
-            container.className = isGrid ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4";
-
-            list.forEach(res => {
-                const statusColor = getStatusColor(res.status);
-                const card = document.createElement('div');
-                
-                if (isGrid) {
-                    card.className = "glass-panel rounded-2xl overflow-hidden border border-gray-800 hover:border-neonCyan/50 transition flex flex-col justify-between group";
-                    card.innerHTML = `
-                        <div>
-                            <div class="h-40 relative overflow-hidden bg-gray-900">
-                                <img src="${res.thumb || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80'}" alt="${res.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                                <div class="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md text-xs font-semibold text-neonCyan border border-neonCyan/30">
-                                    ${res.category}
-                                </div>
-                                <div class="absolute top-3 right-3 px-2 py-1 rounded-lg text-xs font-bold ${statusColor}">
-                                    ${res.status}
-                                </div>
-                            </div>
-                            <div class="p-5 space-y-3">
-                                <h3 class="font-bold text-lg text-white group-hover:text-neonCyan transition">${res.name}</h3>
-                                <p class="text-xs text-gray-400 line-clamp-2">${res.desc}</p>
-                                <div class="flex items-center justify-between text-xs text-gray-400 pt-2 border-t border-gray-800">
-                                    <span><i class="fa-solid fa-code-branch mr-1"></i>${res.version || 'v1.0'}</span>
-                                    <span><i class="fa-solid fa-hard-drive mr-1"></i>${res.size || 'N/A'}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-5 pt-0 flex items-center gap-2">
-                            <a href="${res.downloadUrl}" target="_blank" onclick="recordCopy('${res.name}')" class="flex-grow py-2.5 rounded-xl bg-neonCyan text-black font-bold text-xs text-center hover:opacity-90 transition neon-glow flex items-center justify-center space-x-1.5">
-                                <i class="fa-solid fa-download"></i><span>Tải xuống</span>
-                            </a>
-                            <button onclick="copyToClipboard('${res.downloadUrl}')" class="p-2.5 rounded-xl bg-gray-800 text-gray-300 hover:text-neonCyan border border-gray-700 transition" title="Sao chép link">
-                                <i class="fa-solid fa-copy"></i>
-                            </button>
-                            ${window.isAdminLoggedIn ? `
-                            <button onclick="openFileModal('${res.id}')" class="p-2.5 rounded-xl bg-gray-800 text-warningOrange border border-gray-700 transition" title="Sửa file"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteFile('${res.id}')" class="p-2.5 rounded-xl bg-gray-800 text-errorRed border border-gray-700 transition" title="Xóa file"><i class="fa-solid fa-trash"></i></button>
-                            ` : ''}
-                        </div>
-                    `;
+            // 2. Categories Listener
+            onValue(ref(db, "categories"), (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    categoriesData = Array.isArray(data) ? data : Object.values(data);
                 } else {
-                    card.className = "glass-panel rounded-xl p-4 border border-gray-800 hover:border-neonCyan/50 transition flex flex-col sm:flex-row items-center justify-between gap-4";
-                    card.innerHTML = `
-                        <div class="flex items-center space-x-4 w-full sm:w-auto">
-                            <img src="${res.thumb || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=100&q=80'}" class="w-16 h-16 rounded-xl object-cover flex-shrink-0">
-                            <div>
-                                <div class="flex items-center space-x-2">
-                                    <h3 class="font-bold text-base text-white">${res.name}</h3>
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold ${statusColor}">${res.status}</span>
-                                </div>
-                                <p class="text-xs text-gray-400 mt-1">${res.desc}</p>
-                                <div class="flex items-center space-x-4 text-xs text-gray-400 mt-2">
-                                    <span class="text-neonCyan"><i class="fa-solid fa-folder mr-1"></i>${res.category}</span>
-                                    <span><i class="fa-solid fa-code-branch mr-1"></i>${res.version || 'v1.0'}</span>
-                                    <span><i class="fa-solid fa-hard-drive mr-1"></i>${res.size || 'N/A'}</span>
-                                </div>
+                    categoriesData = initialSeedData.categories;
+                    set(ref(db, "categories"), categoriesData);
+                }
+                renderCategorySelects();
+                renderCategoriesTable();
+                renderPublicFiles();
+                updateCharts();
+            });
+
+            // 3. Bio Profile Listener
+            onValue(ref(db, "bio"), (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    bioData = data;
+                } else {
+                    bioData = initialSeedData.bio;
+                    set(ref(db, "bio"), bioData);
+                }
+                renderBioPreview();
+                populateBioForm();
+            });
+
+            // 4. Bio Views Counter Listener
+            onValue(ref(db, "bioViews"), (snapshot) => {
+                const val = snapshot.val();
+                statsBioViews = (val !== null) ? val : initialSeedData.bioViews;
+                const viewEl = document.getElementById("statBioViews");
+                if (viewEl) viewEl.innerText = statsBioViews.toLocaleString();
+            });
+
+            // 5. Files Listener
+            onValue(ref(db, "files"), (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    filesData = Object.keys(data).map(key => ({
+                        id: key,
+                        ...data[key]
+                    }));
+                } else {
+                    filesData = [];
+                    set(ref(db, "files"), initialSeedData.files);
+                }
+                renderDashboardTable();
+                renderPublicFiles();
+                renderAdminFiles();
+                renderBioPreview();
+                updateStatsSummary();
+                updateCharts();
+            });
+
+            // Increment Bio View Counter once per session
+            runTransaction(ref(db, "bioViews"), (current) => {
+                return (current || 0) + 1;
+            });
+        }
+
+        // --- Render UI Functions ---
+        function renderCategorySelects() {
+            const publicSelect = document.getElementById('publicFilterCategory');
+            let publicOptions = `<option value="ALL">Tất cả loại</option>`;
+            categoriesData.forEach(cat => {
+                publicOptions += `<option value="${cat}">${cat}</option>`;
+            });
+            if (publicSelect) publicSelect.innerHTML = publicOptions;
+
+            const modalSelect = document.getElementById('fileFormCategory');
+            let modalOptions = '';
+            categoriesData.forEach(cat => {
+                modalOptions += `<option value="${cat}">${cat}</option>`;
+            });
+            if (modalSelect) modalSelect.innerHTML = modalOptions;
+        }
+
+        function renderCategoriesTable() {
+            const tbody = document.getElementById('adminCategoriesTable');
+            if (!tbody) return;
+            let html = '';
+            categoriesData.forEach((cat, index) => {
+                const count = filesData.filter(f => f.category === cat).length;
+                html += `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="px-5 py-3.5 font-semibold text-slate-400">${index + 1}</td>
+                        <td class="px-5 py-3.5 font-bold text-slate-800">${cat}</td>
+                        <td class="px-5 py-3.5 text-xs text-slate-500 font-medium">${count} tệp</td>
+                        <td class="px-5 py-3.5 text-right">
+                            <button onclick="window.deleteCategory('${cat}')" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition" title="Xóa Danh Mục">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function renderBioPreview() {
+            if (!bioData.name) return;
+            document.getElementById('bioNamePreview').innerHTML = bioData.name;
+            document.getElementById('bioBadgePreview').innerHTML = bioData.badge || '';
+            document.getElementById('bioTaglinePreview').innerHTML = bioData.tagline || '';
+            document.getElementById('bioAvatarPreview').src = bioData.avatar || '';
+            document.getElementById('adminAvatarSmall').src = bioData.avatar || '';
+
+            document.getElementById('bioSocialsContainer').innerHTML = `
+                <a href="${bioData.tiktok || '#'}" target="_blank" class="social-item-bio"><i class="fab fa-tiktok"></i></a>
+                <a href="${bioData.youtube || '#'}" target="_blank" class="social-item-bio"><i class="fab fa-youtube"></i></a>
+                <a href="${bioData.zalo || '#'}" target="_blank" class="social-item-bio"><i class="fas fa-comment-dots"></i></a>
+            `;
+
+            let bioLinksHTML = '';
+            filesData.slice(0, 5).forEach(file => {
+                const imgThumb = file.image ? file.image : 'https://placehold.co/100x100/1e293b/ffffff?text=File';
+                bioLinksHTML += `
+                    <a href="${file.link}" target="_blank" onclick="window.incrementDownload('${file.id}')" class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 transition group text-decoration-none">
+                        <div class="flex items-center space-x-3">
+                            <img src="${imgThumb}" class="w-10 h-10 rounded-xl object-cover border border-slate-700 flex-shrink-0" alt="Thumb">
+                            <div class="text-left overflow-hidden">
+                                <p class="text-xs font-bold text-white group-hover:text-orange-400 transition truncate mb-0">${file.name}</p>
+                                <p class="text-[10px] text-slate-400 mb-0">${file.category} • ${file.size}</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-                            <a href="${res.downloadUrl}" target="_blank" onclick="recordCopy('${res.name}')" class="px-4 py-2 rounded-xl bg-neonCyan text-black font-bold text-xs hover:opacity-90 transition flex items-center space-x-1.5">
-                                <i class="fa-solid fa-download"></i><span>Tải</span>
+                        <i class="fa-solid fa-chevron-right text-slate-500 text-xs flex-shrink-0 ml-2"></i>
+                    </a>
+                `;
+            });
+            const linksContainer = document.getElementById('bioLinksContainer');
+            if (linksContainer) linksContainer.innerHTML = bioLinksHTML || `<p class="text-xs text-slate-400">Chưa có tệp nào</p>`;
+        }
+
+        function renderDashboardTable() {
+            const tbody = document.getElementById('dashboardFileTable');
+            if (!tbody) return;
+            let html = '';
+            filesData.forEach(file => {
+                let badgeClass = "bg-emerald-100 text-emerald-700";
+                if (file.status === "Bảo trì") badgeClass = "bg-yellow-100 text-yellow-700";
+                if (file.status === "Cần VIP") badgeClass = "bg-purple-100 text-purple-700";
+
+                html += `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="px-5 py-3.5 font-bold text-slate-800 flex items-center space-x-3">
+                            <img src="${file.image || 'https://placehold.co/60x60/cbd5e1/ffffff?text=No+Img'}" class="w-9 h-9 rounded-lg object-cover border border-slate-200">
+                            <span class="truncate max-w-xs">${file.name}</span>
+                        </td>
+                        <td class="px-5 py-3.5 text-xs text-slate-500">${file.category}</td>
+                        <td class="px-5 py-3.5"><span class="px-2 py-1 rounded-md text-[10px] font-bold ${badgeClass}">${file.status}</span></td>
+                        <td class="px-5 py-3.5 text-xs font-semibold text-slate-700">${(file.downloads || 0).toLocaleString()} lượt</td>
+                        <td class="px-5 py-3.5 text-right">
+                            <a href="${file.link}" target="_blank" onclick="window.incrementDownload('${file.id}')" class="bg-orange-500 hover:bg-orange-600 text-white text-xs px-3 py-1.5 rounded-lg font-bold inline-block shadow-sm transition">
+                                Tải về
                             </a>
-                            <button onclick="copyToClipboard('${res.downloadUrl}')" class="p-2 rounded-xl bg-gray-800 text-gray-300 hover:text-neonCyan border border-gray-700 transition" title="Sao chép link"><i class="fa-solid fa-copy"></i></button>
-                            ${window.isAdminLoggedIn ? `
-                            <button onclick="openFileModal('${res.id}')" class="p-2 rounded-xl bg-gray-800 text-warningOrange border border-gray-700 transition"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteFile('${res.id}')" class="p-2 rounded-xl bg-gray-800 text-errorRed border border-gray-700 transition"><i class="fa-solid fa-trash"></i></button>
-                            ` : ''}
-                        </div>
-                    `;
-                }
-                container.appendChild(card);
+                        </td>
+                    </tr>
+                `;
             });
+            tbody.innerHTML = html;
         }
 
-        function renderUtilities() {
-            const container = document.getElementById('utilities-container');
-            container.innerHTML = '';
-            (window.appData.utilities || []).forEach(util => {
-                const card = document.createElement('div');
-                card.className = "glass-panel rounded-2xl p-5 border border-gray-800 hover:border-neonPurple/50 transition flex flex-col justify-between group";
-                card.innerHTML = `
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="w-10 h-10 rounded-xl bg-neonPurple/20 text-neonPurple flex items-center justify-center neon-glow-purple">
-                                <i class="${util.icon || 'fa-solid fa-link'} text-lg"></i>
+        function renderPublicFiles() {
+            const grid = document.getElementById('publicFilesGrid');
+            if (!grid) return;
+            const searchInput = document.getElementById('publicSearchInput');
+            const search = searchInput ? searchInput.value.toLowerCase() : '';
+            const catSelect = document.getElementById('publicFilterCategory');
+            const cat = catSelect ? catSelect.value : 'ALL';
+
+            const filtered = filesData.filter(f => {
+                const matchesSearch = (f.name || '').toLowerCase().includes(search) || (f.desc || '').toLowerCase().includes(search);
+                const matchesCat = (cat === 'ALL') || (f.category === cat);
+                return matchesSearch && matchesCat;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 font-medium">Không tìm thấy tệp phù hợp trên Firebase</div>`;
+                return;
+            }
+
+            let html = '';
+            filtered.forEach(file => {
+                let badgeClass = "bg-emerald-500/10 text-emerald-600 border-emerald-200";
+                if (file.status === "Bảo trì") badgeClass = "bg-yellow-500/10 text-yellow-600 border-yellow-200";
+                if (file.status === "Cần VIP") badgeClass = "bg-purple-500/10 text-purple-600 border-purple-200";
+
+                const fileImg = file.image ? file.image : 'https://placehold.co/400x250/1e293b/ffffff?text=Free+Fire+Mod';
+
+                html += `
+                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition overflow-hidden">
+                        <div>
+                            <div class="h-36 w-full relative overflow-hidden bg-slate-100">
+                                <img src="${fileImg}" class="w-full h-full object-cover" alt="File Image">
+                                <span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-md text-[10px] font-bold border ${badgeClass} bg-white/90 backdrop-blur-sm">${file.status}</span>
                             </div>
-                            <span class="px-2.5 py-1 rounded-md bg-gray-800 text-xs font-semibold text-gray-300 border border-gray-700">${util.category}</span>
+                            <div class="p-5">
+                                <div class="flex items-center justify-between mb-1.5">
+                                    <span class="text-[11px] font-semibold text-orange-500 uppercase tracking-wider">${file.category}</span>
+                                    <span class="text-[10px] font-medium text-slate-400"><i class="fa-solid fa-download mr-1"></i>${(file.downloads || 0).toLocaleString()}</span>
+                                </div>
+                                <h3 class="font-bold text-slate-800 text-sm mb-1 line-clamp-1">${file.name}</h3>
+                                <p class="text-xs text-slate-500 line-clamp-2 mb-3">${file.desc || 'Không có mô tả'}</p>
+                            </div>
                         </div>
-                        <h3 class="font-bold text-base text-white group-hover:text-neonPurple transition">${util.name}</h3>
-                        <p class="text-xs text-gray-400 mt-1">${util.desc || 'Không có mô tả.'}</p>
-                    </div>
-                    <div class="flex items-center justify-between pt-4 mt-4 border-t border-gray-800">
-                        <a href="${util.url}" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-neonPurple hover:underline flex items-center space-x-1">
-                            <span>Truy cập</span><i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                        </a>
-                        ${window.isAdminLoggedIn ? `
-                        <div class="flex space-x-1">
-                            <button onclick="openUtilityModal('${util.id}')" class="p-1.5 rounded-lg bg-gray-800 text-warningOrange"><i class="fa-solid fa-pen text-xs"></i></button>
-                            <button onclick="deleteUtility('${util.id}')" class="p-1.5 rounded-lg bg-gray-800 text-errorRed"><i class="fa-solid fa-trash text-xs"></i></button>
+                        <div class="px-5 pb-5 pt-0 flex items-center justify-between border-t border-slate-50 pt-3">
+                            <span class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-hard-drive mr-1"></i> ${file.size}</span>
+                            <a href="${file.link}" target="_blank" onclick="window.incrementDownload('${file.id}')" class="bg-slate-900 hover:bg-orange-500 text-white text-xs px-3.5 py-1.5 rounded-xl font-bold transition">
+                                Tải Tệp
+                            </a>
                         </div>
-                        ` : ''}
                     </div>
                 `;
-                container.appendChild(card);
             });
+            grid.innerHTML = html;
         }
 
-        function renderCategoryManagerList() {
-            const container = document.getElementById('category-list-container');
-            if (!container) return;
-            container.innerHTML = '';
-            (window.appData.categories || []).forEach((cat, index) => {
-                const item = document.createElement('div');
-                item.className = "flex items-center justify-between bg-gray-900 px-3 py-2 rounded-xl border border-gray-800";
-                item.innerHTML = `
-                    <span class="text-sm text-gray-200 font-medium">${cat}</span>
-                    <button onclick="deleteCategory(${index})" class="text-errorRed hover:opacity-80 p-1"><i class="fa-solid fa-trash text-xs"></i></button>
+        function renderAdminFiles() {
+            const tbody = document.getElementById('adminFileTable');
+            if (!tbody) return;
+            let html = '';
+            filesData.forEach(file => {
+                html += `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="px-5 py-3.5">
+                            <img src="${file.image || 'https://placehold.co/60x60/cbd5e1/ffffff?text=No+Img'}" class="w-10 h-10 rounded-xl object-cover border border-slate-200">
+                        </td>
+                        <td class="px-5 py-3.5 font-bold text-slate-800">${file.name}</td>
+                        <td class="px-5 py-3.5 text-xs text-slate-500">${file.category}</td>
+                        <td class="px-5 py-3.5 text-xs text-slate-500">${file.size}</td>
+                        <td class="px-5 py-3.5"><span class="px-2 py-1 rounded-md text-[10px] font-bold bg-slate-100 text-slate-700">${file.status}</span></td>
+                        <td class="px-5 py-3.5 text-xs font-semibold text-slate-700">${(file.downloads || 0).toLocaleString()}</td>
+                        <td class="px-5 py-3.5 text-right space-x-1">
+                            <button onclick="window.editFile('${file.id}')" class="text-indigo-600 hover:bg-indigo-50 p-2 rounded-lg transition" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="window.deleteFile('${file.id}')" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition" title="Xóa"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
                 `;
-                container.appendChild(item);
             });
+            tbody.innerHTML = html;
         }
 
-        function renderSocialManagerList() {
-            const container = document.getElementById('social-list-container');
-            if (!container) return;
-            container.innerHTML = '';
-            (window.appData.socials || []).forEach(s => {
-                const item = document.createElement('div');
-                item.className = "flex items-center justify-between bg-cardBg px-3 py-2.5 rounded-xl border border-gray-800 text-xs gap-2";
-                item.innerHTML = `
-                    <div class="flex items-center space-x-2 truncate">
-                        <i class="${s.icon} text-neonCyan text-base"></i>
-                        <span class="font-bold text-white">${s.name}</span>
-                        <span class="text-gray-400 truncate max-w-[150px] sm:max-w-xs">(${s.url})</span>
-                        <span class="px-2 py-0.5 rounded text-[10px] ${s.active ? 'bg-successGreen/20 text-successGreen' : 'bg-gray-800 text-gray-500'}">${s.active ? 'Hiển thị' : 'Ẩn'}</span>
-                    </div>
-                    <div class="flex items-center space-x-1 flex-shrink-0">
-                        <button onclick="editSocialLink('${s.id}')" class="p-1.5 rounded-lg bg-gray-800 text-warningOrange hover:bg-gray-700"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deleteSocialLink('${s.id}')" class="p-1.5 rounded-lg bg-gray-800 text-errorRed hover:bg-gray-700"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        window.openSocialModal = function() {
-            resetSocialForm();
-            renderSocialManagerList();
-            document.getElementById('social-modal').classList.remove('hidden');
-        };
-
-        window.resetSocialForm = function() {
-            document.getElementById('social-form').reset();
-            document.getElementById('social-id').value = '';
-            document.getElementById('social-active').checked = true;
-            document.getElementById('social-modal-title').textContent = "Thêm / Quản Lý Mạng Xã Hội";
-        };
-
-        window.editSocialLink = function(id) {
-            const s = (window.appData.socials || []).find(item => item.id === id);
-            if (s) {
-                document.getElementById('social-id').value = s.id;
-                document.getElementById('social-name').value = s.name;
-                document.getElementById('social-icon').value = s.icon;
-                document.getElementById('social-url').value = s.url;
-                document.getElementById('social-active').checked = s.active;
-                document.getElementById('social-modal-title').textContent = `Đang sửa: ${s.name}`;
-            }
-        };
-
-        window.saveSocialLink = function(e) {
-            e.preventDefault();
-            const id = document.getElementById('social-id').value;
-            const socialData = {
-                id: id || 's-' + Date.now(),
-                name: document.getElementById('social-name').value,
-                icon: document.getElementById('social-icon').value,
-                url: document.getElementById('social-url').value,
-                active: document.getElementById('social-active').checked
-            };
-
-            if (!window.appData.socials) window.appData.socials = [];
-            if (id) {
-                const index = window.appData.socials.findIndex(item => item.id === id);
-                if (index !== -1) window.appData.socials[index] = socialData;
-                window.logActivity('UPDATE', 'Social', `Cập nhật MXH: ${socialData.name}`);
-                showToast("Cập nhật mạng xã hội thành công!", "success");
-            } else {
-                window.appData.socials.push(socialData);
-                window.logActivity('CREATE', 'Social', `Thêm MXH mới: ${socialData.name}`);
-                showToast("Thêm mạng xã hội thành công!", "success");
-            }
-
-            window.saveDataToFirebase();
-            resetSocialForm();
-            renderSocialManagerList();
-        };
-
-        window.deleteSocialLink = function(id) {
-            if (confirm("Bạn có chắc chắn muốn xóa liên kết mạng xã hội này?")) {
-                window.appData.socials = (window.appData.socials || []).filter(item => item.id !== id);
-                window.logActivity('DELETE', 'Social', `Xóa MXH ID: ${id}`);
-                window.saveDataToFirebase();
-                renderSocialManagerList();
-                showToast("Đã xóa mạng xã hội", "success");
-            }
-        };
-
-        // --- CHANGE ADMIN PASSWORD LOGIC ---
-        window.openChangePasswordModal = function() {
-            const auth = window.appData.adminAuth || { username: "admin", password: "1" };
-            document.getElementById('new-admin-user').value = auth.username;
-            document.getElementById('new-admin-pass').value = auth.password;
-            document.getElementById('change-password-modal').classList.remove('hidden');
-        };
-
-        window.saveAdminCredentials = function(e) {
-            e.preventDefault();
-            const newUser = document.getElementById('new-admin-user').value.trim();
-            const newPass = document.getElementById('new-admin-pass').value.trim();
+        function updateStatsSummary() {
+            const totalFiles = filesData.length;
+            const totalDownloads = filesData.reduce((acc, curr) => acc + (curr.downloads || 0), 0);
+            const iosDownloads = filesData.filter(f => f.category === 'iOS IPA').reduce((acc, curr) => acc + (curr.downloads || 0), 0);
             
-            if (!newUser || !newPass) {
-                showToast("Vui lòng nhập đầy đủ tài khoản và mật khẩu!", "error");
-                return;
-            }
+            document.getElementById('statTotalFiles').innerText = totalFiles;
+            document.getElementById('statTotalDownloads').innerText = totalDownloads.toLocaleString();
+            document.getElementById('statIosDownloads').innerText = iosDownloads.toLocaleString();
 
-            if (!window.appData.adminAuth) window.appData.adminAuth = {};
-            window.appData.adminAuth.username = newUser;
-            window.appData.adminAuth.password = newPass;
-
-            window.logActivity('UPDATE', 'AdminAuth', 'Thay đổi thông tin tài khoản quản trị');
-            window.saveDataToFirebase();
-            window.closeModal('change-password-modal');
-            showToast("Đổi thông tin đăng nhập thành công!", "success");
-        };
-
-        function renderActivityLogs() {
-            const container = document.getElementById('logs-container');
-            if (!container) return;
-            container.innerHTML = '';
-            const logs = window.appData.logs || [];
-            if (logs.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-center py-4">Chưa có nhật ký hoạt động nào.</p>';
-                return;
-            }
-            logs.forEach(log => {
-                const div = document.createElement('div');
-                div.className = "bg-gray-900 p-2.5 rounded-xl border border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between gap-1";
-                div.innerHTML = `
+            const sorted = [...filesData].sort((a,b) => (b.downloads || 0) - (a.downloads || 0)).slice(0, 4);
+            const topListContainer = document.getElementById('topDownloadProgressList');
+            if (!topListContainer) return;
+            let progressHTML = '';
+            sorted.forEach(f => {
+                const percent = Math.min(100, Math.round(((f.downloads || 0) / (totalDownloads || 1)) * 100));
+                progressHTML += `
                     <div>
-                        <span class="text-neonCyan font-bold mr-2">[${log.action}]</span>
-                        <span class="text-gray-200">${log.desc}</span>
+                        <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                            <span>${f.name}</span>
+                            <span>${(f.downloads || 0).toLocaleString()} lượt (${percent}%)</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                            <div class="bg-orange-500 h-full rounded-full transition-all duration-500" style="width: ${percent}%"></div>
+                        </div>
                     </div>
-                    <span class="text-gray-500 text-[10px]">${log.time}</span>
                 `;
-                container.appendChild(div);
             });
+            topListContainer.innerHTML = progressHTML || `<p class="text-xs text-slate-400">Chưa có dữ liệu lượt tải</p>`;
         }
 
-        function getStatusColor(status) {
-            switch(status) {
-                case 'Available': return 'bg-successGreen/20 text-successGreen border border-successGreen/30';
-                case 'Updated': return 'bg-neonCyan/20 text-neonCyan border border-neonCyan/30';
-                case 'Maintenance': return 'bg-warningOrange/20 text-warningOrange border border-warningOrange/30';
-                default: return 'bg-errorRed/20 text-errorRed border border-errorRed/30';
-            }
+        function populateBioForm() {
+            if (!bioData) return;
+            if (document.getElementById('bioInputName')) document.getElementById('bioInputName').value = bioData.name || '';
+            if (document.getElementById('bioInputBadge')) document.getElementById('bioInputBadge').value = bioData.badge || '';
+            if (document.getElementById('bioInputTagline')) document.getElementById('bioInputTagline').value = bioData.tagline || '';
+            if (document.getElementById('bioInputAvatar')) document.getElementById('bioInputAvatar').value = bioData.avatar || '';
+            if (document.getElementById('bioInputTiktok')) document.getElementById('bioInputTiktok').value = bioData.tiktok || '';
+            if (document.getElementById('bioInputYoutube')) document.getElementById('bioInputYoutube').value = bioData.youtube || '';
+            if (document.getElementById('bioInputZalo')) document.getElementById('bioInputZalo').value = bioData.zalo || '';
         }
 
-        window.toggleGridViewMode = function() {
-            if (!window.appData.settings) window.appData.settings = {};
-            window.appData.settings.gridView = !window.appData.settings.gridView;
-            window.saveDataToFirebase();
-            const icon = document.getElementById('view-mode-icon');
-            icon.className = window.appData.settings.gridView ? "fa-solid fa-grip" : "fa-solid fa-list";
-            filterAndRenderResources();
-            showToast("Đã đổi chế độ xem giao diện", "success");
-        };
+        // --- Window Export Functions (For Event Handlers) ---
+        window.switchTab = function(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            const target = document.getElementById('tab-' + tabId);
+            if (target) target.classList.remove('hidden');
 
-        window.toggleMobileMenu = function() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        };
-
-        window.copyToClipboard = function(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                if (!window.appData.stats) window.appData.stats = { totalCopies: 0 };
-                window.appData.stats.totalCopies = (window.appData.stats.totalCopies || 0) + 1;
-                window.saveDataToFirebase();
-                showToast("Đã sao chép liên kết vào bộ nhớ tạm!", "success");
-            }).catch(() => {
-                showToast("Không thể sao chép liên kết!", "error");
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('bg-slate-800', 'text-white', 'border-l-4', 'border-orange-500');
+                el.classList.add('text-slate-400');
             });
-        };
-
-        window.recordCopy = function(name) {
-            if (!window.appData.stats) window.appData.stats = { totalCopies: 0 };
-            window.appData.stats.totalCopies = (window.appData.stats.totalCopies || 0) + 1;
-            window.saveDataToFirebase();
-        };
-
-        window.resetFilters = function() {
-            document.getElementById('resource-search-input').value = '';
-            document.getElementById('filter-status').value = 'all';
-            document.getElementById('sort-by').value = 'newest';
-            window.activeCategoryFilter = 'all';
-            renderCategoryTabs();
-            filterAndRenderResources();
-            showToast("Đã đặt lại bộ lọc", "success");
-        };
-
-        window.openAdminLoginModal = function() {
-            if (window.isAdminLoggedIn) {
-                showToast("Bạn đã đăng nhập quản trị rồi!", "success");
-                return;
+            const activeNav = document.getElementById('nav-' + tabId);
+            if (activeNav) {
+                activeNav.classList.add('bg-slate-800', 'text-white', 'border-l-4', 'border-orange-500');
+                activeNav.classList.remove('text-slate-400');
             }
-            document.getElementById('admin-login-modal').classList.remove('hidden');
-        };
 
-        window.togglePasswordVisibility = function() {
-            const input = document.getElementById('login-password');
-            const icon = document.getElementById('eye-icon');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.className = "fa-solid fa-eye-slash text-sm";
-            } else {
-                input.type = 'password';
-                icon.className = "fa-solid fa-eye text-sm";
+            const titles = {
+                'dashboard': 'Dashboard Báo cáo & Tổng quan',
+                'files': 'Kho File Free Fire / iOS Mod / Tut Trick',
+                'stats': 'Thống kê Báo cáo Chi tiết',
+                'bio-preview': 'Trang Bio Cá nhân Public',
+                'file-management': 'Quản lý Kho File & Tệp Mod',
+                'categories-management': 'Quản lý Danh mục File & Mod',
+                'bio-admin': 'Chỉnh sửa Cấu hình Bio',
+                'settings': 'Cài đặt Mật khẩu & Hệ thống'
+            };
+            document.getElementById('topbarTitle').innerText = titles[tabId] || 'Admin Dashboard';
+
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+                document.getElementById('sidebarOverlay').classList.add('opacity-0', 'pointer-events-none');
             }
         };
 
-        window.handleAdminLogin = function(e) {
-            e.preventDefault();
-            const user = document.getElementById('login-username').value;
-            const pass = document.getElementById('login-password').value;
-            
-            const currentAuth = window.appData.adminAuth || { username: "admin", password: "1" };
+        window.toggleSidebar = function() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const isMobile = window.innerWidth < 768;
 
-            if (user === currentAuth.username && pass === currentAuth.password) {
-                window.isAdminLoggedIn = true;
-                closeModal('admin-login-modal');
-                document.getElementById('admin-control-bar').classList.remove('hidden');
-                document.getElementById('admin-login-btn').innerHTML = `<i class="fa-solid fa-user-shield"></i><span class="hidden sm:inline">Admin Active</span>`;
-                window.logActivity('LOGIN', 'Admin', 'Đăng nhập quản trị thành công');
-                showToast("Đăng nhập Admin thành công!", "success");
-                window.renderAll();
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-            }
-        };
-
-        window.adminLogout = function() {
-            window.isAdminLoggedIn = false;
-            document.getElementById('admin-control-bar').classList.add('hidden');
-            document.getElementById('admin-login-btn').innerHTML = `<i class="fa-solid fa-shield-halved"></i><span class="hidden sm:inline">Admin</span>`;
-            window.logActivity('LOGOUT', 'Admin', 'Đăng xuất khỏi hệ thống');
-            showToast("Đã đăng xuất quản trị", "success");
-            window.renderAll();
-        };
-
-        window.closeModal = function(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-        };
-
-        window.openFileModal = function(id = null) {
-            renderCategorySelectOptions();
-            const form = document.getElementById('file-form');
-            form.reset();
-            if (id) {
-                document.getElementById('file-modal-title').textContent = "Chỉnh Sửa Tài Nguyên";
-                const res = (window.appData.resources || []).find(r => r.id === id);
-                if (res) {
-                    document.getElementById('file-id').value = res.id;
-                    document.getElementById('file-name').value = res.name;
-                    document.getElementById('file-category').value = res.category;
-                    document.getElementById('file-version').value = res.version;
-                    document.getElementById('file-size').value = res.size;
-                    document.getElementById('file-status').value = res.status;
-                    document.getElementById('file-download-url').value = res.downloadUrl;
-                    document.getElementById('file-guide-url').value = res.guideUrl;
-                    document.getElementById('file-thumb').value = res.thumb;
-                    document.getElementById('file-icon').value = res.icon;
-                    document.getElementById('file-desc').value = res.desc;
+            if (isMobile) {
+                if (sidebar.classList.contains('-translate-x-full')) {
+                    sidebar.classList.remove('-translate-x-full');
+                    overlay.classList.remove('opacity-0', 'pointer-events-none');
+                } else {
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('opacity-0', 'pointer-events-none');
                 }
             } else {
-                document.getElementById('file-modal-title').textContent = "Thêm Tài Nguyên Mới";
-                document.getElementById('file-id').value = '';
+                isSidebarCollapsed = !isSidebarCollapsed;
+                if (isSidebarCollapsed) {
+                    sidebar.classList.remove('w-64');
+                    sidebar.classList.add('w-20');
+                    document.querySelectorAll('.sidebar-text').forEach(el => el.classList.add('hidden'));
+                } else {
+                    sidebar.classList.remove('w-20');
+                    sidebar.classList.add('w-64');
+                    document.querySelectorAll('.sidebar-text').forEach(el => el.classList.remove('hidden'));
+                }
             }
-            document.getElementById('file-modal').classList.remove('hidden');
         };
 
-        window.saveFile = function(e) {
+        window.checkAdminTab = function(tabId) {
+            if (!isAdminLoggedIn) {
+                window.openLoginModal();
+            } else {
+                window.switchTab(tabId);
+            }
+        };
+
+        window.openLoginModal = function() {
+            document.getElementById('loginModal').classList.remove('opacity-0', 'pointer-events-none');
+            document.querySelector('.id-modal-box').classList.remove('scale-95');
+            document.getElementById('loginErrorMsg').classList.add('hidden');
+        };
+
+        window.closeLoginModal = function() {
+            document.getElementById('loginModal').classList.add('opacity-0', 'pointer-events-none');
+            document.querySelector('.id-modal-box').classList.add('scale-95');
+        };
+
+        window.handleLoginSubmit = function(e) {
             e.preventDefault();
-            const id = document.getElementById('file-id').value;
-            const fileData = {
-                id: id || 'res-' + Date.now(),
-                name: document.getElementById('file-name').value,
-                category: document.getElementById('file-category').value,
-                version: document.getElementById('file-version').value || 'v1.0',
-                size: document.getElementById('file-size').value || 'N/A',
-                status: document.getElementById('file-status').value,
-                downloadUrl: document.getElementById('file-download-url').value,
-                guideUrl: document.getElementById('file-guide-url').value,
-                thumb: document.getElementById('file-thumb').value,
-                icon: document.getElementById('file-icon').value || 'fa-solid fa-file',
-                desc: document.getElementById('file-desc').value,
-                date: new Date().toISOString().split('T')[0]
+            const pass = document.getElementById('loginPasswordInput').value;
+            if (pass === DEFAULT_PASSWORD || pass === "1") {
+                isAdminLoggedIn = true;
+                window.closeLoginModal();
+                updateAdminStateUI();
+                document.getElementById('loginPasswordInput').value = '';
+            } else {
+                document.getElementById('loginErrorMsg').classList.remove('hidden');
+            }
+        };
+
+        window.logoutAdmin = function() {
+            isAdminLoggedIn = false;
+            updateAdminStateUI();
+            window.switchTab('dashboard');
+        };
+
+        function updateAdminStateUI() {
+            const loggedOutBox = document.getElementById('userBoxLoggedOut');
+            const loggedInBox = document.getElementById('userBoxLoggedIn');
+            const adminGroupSection = document.getElementById('adminGroupSection');
+            const topbarLoginBtn = document.getElementById('topbarLoginBtn');
+
+            if (isAdminLoggedIn) {
+                loggedOutBox.classList.add('hidden');
+                loggedInBox.classList.remove('hidden');
+                adminGroupSection.classList.remove('hidden');
+                topbarLoginBtn.innerHTML = `
+                    <button onclick="window.logoutAdmin()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs px-3.5 py-2 rounded-lg font-bold transition">
+                        <i class="fa-solid fa-right-from-bracket mr-1"></i> Đăng xuất
+                    </button>
+                `;
+            } else {
+                loggedOutBox.classList.remove('hidden');
+                loggedInBox.classList.add('hidden');
+                adminGroupSection.classList.add('hidden');
+                topbarLoginBtn.innerHTML = `
+                    <button onclick="window.openLoginModal()" class="flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-xs px-3.5 py-2 rounded-lg font-bold shadow-md shadow-orange-500/20 transition">
+                        <i class="fa-solid fa-lock"></i>
+                        <span>Admin Login</span>
+                    </button>
+                `;
+            }
+        }
+
+        // --- Firebase CRUD Operations ---
+        window.handleAddCategory = function(e) {
+            e.preventDefault();
+            const input = document.getElementById('newCategoryInput');
+            const catName = input.value.trim();
+            if (!catName) return;
+            if (categoriesData.map(c => c.toLowerCase()).includes(catName.toLowerCase())) {
+                alert("Danh mục này đã tồn tại!");
+                return;
+            }
+            const updated = [...categoriesData, catName];
+            set(ref(db, "categories"), updated);
+            input.value = '';
+        };
+
+        window.deleteCategory = function(catName) {
+            if (confirm(`Bạn có chắc chắn muốn xóa danh mục "${catName}" không?`)) {
+                const updated = categoriesData.filter(c => c !== catName);
+                set(ref(db, "categories"), updated);
+            }
+        };
+
+        window.openAddFileModal = function() {
+            document.getElementById('fileModalTitle').innerText = "Thêm File Mới";
+            document.getElementById('fileFormId').value = "";
+            document.getElementById('fileForm').reset();
+            document.getElementById('fileModal').classList.remove('opacity-0', 'pointer-events-none');
+        };
+
+        window.closeFileModal = function() {
+            document.getElementById('fileModal').classList.add('opacity-0', 'pointer-events-none');
+        };
+
+        window.editFile = function(id) {
+            const f = filesData.find(item => item.id === id);
+            if (!f) return;
+            document.getElementById('fileModalTitle').innerText = "Chỉnh sửa File";
+            document.getElementById('fileFormId').value = f.id;
+            document.getElementById('fileFormName').value = f.name || '';
+            document.getElementById('fileFormCategory').value = f.category || categoriesData[0];
+            document.getElementById('fileFormSize').value = f.size || '';
+            document.getElementById('fileFormStatus').value = f.status || 'Hoạt động';
+            document.getElementById('fileFormLink').value = f.link || '';
+            document.getElementById('fileFormImage').value = f.image || '';
+            document.getElementById('fileFormDesc').value = f.desc || '';
+            document.getElementById('fileModal').classList.remove('opacity-0', 'pointer-events-none');
+        };
+
+        window.handleFileFormSubmit = function(e) {
+            e.preventDefault();
+            const id = document.getElementById('fileFormId').value;
+            const filePayload = {
+                name: document.getElementById('fileFormName').value,
+                category: document.getElementById('fileFormCategory').value,
+                size: document.getElementById('fileFormSize').value,
+                status: document.getElementById('fileFormStatus').value,
+                link: document.getElementById('fileFormLink').value,
+                image: document.getElementById('fileFormImage').value,
+                desc: document.getElementById('fileFormDesc').value,
             };
 
-            if (!window.appData.resources) window.appData.resources = [];
             if (id) {
-                const index = window.appData.resources.findIndex(r => r.id === id);
-                if (index !== -1) window.appData.resources[index] = fileData;
-                window.logActivity('UPDATE', 'File', `Cập nhật tài nguyên: ${fileData.name}`);
-                showToast("Cập nhật tài nguyên thành công!", "success");
+                // Update existing file on Firebase
+                update(ref(db, `files/${id}`), filePayload);
             } else {
-                window.appData.resources.unshift(fileData);
-                window.logActivity('CREATE', 'File', `Thêm tài nguyên mới: ${fileData.name}`);
-                showToast("Thêm tài nguyên thành công!", "success");
+                // Push new file to Firebase
+                filePayload.downloads = 0;
+                push(ref(db, "files"), filePayload);
             }
-
-            window.saveDataToFirebase();
-            window.closeModal('file-modal');
+            window.closeFileModal();
         };
 
         window.deleteFile = function(id) {
-            if (confirm("Bạn có chắc chắn muốn xóa tài nguyên này?")) {
-                window.appData.resources = (window.appData.resources || []).filter(r => r.id !== id);
-                window.logActivity('DELETE', 'File', `Xóa tài nguyên ID: ${id}`);
-                window.saveDataToFirebase();
-                showToast("Đã xóa tài nguyên", "success");
+            if (confirm("Bạn có chắc chắn muốn xóa tệp này khỏi Firebase không?")) {
+                remove(ref(db, `files/${id}`));
             }
         };
 
-        window.openUtilityModal = function(id = null) {
-            const form = document.getElementById('utility-form');
-            form.reset();
-            if (id) {
-                document.getElementById('utility-modal-title').textContent = "Chỉnh Sửa Tiện Ích";
-                const util = (window.appData.utilities || []).find(u => u.id === id);
-                if (util) {
-                    document.getElementById('utility-id').value = util.id;
-                    document.getElementById('utility-name').value = util.name;
-                    document.getElementById('utility-url').value = util.url;
-                    document.getElementById('utility-icon').value = util.icon;
-                    document.getElementById('utility-category').value = util.category;
-                    document.getElementById('utility-desc').value = util.desc;
-                }
-            } else {
-                document.getElementById('utility-modal-title').textContent = "Thêm Tiện Ích Mới";
-                document.getElementById('utility-id').value = '';
-            }
-            document.getElementById('utility-modal').classList.remove('hidden');
+        window.incrementDownload = function(id) {
+            runTransaction(ref(db, `files/${id}/downloads`), (current) => {
+                return (current || 0) + 1;
+            });
         };
 
-        window.saveUtility = function(e) {
+        window.saveBioSettings = function(e) {
             e.preventDefault();
-            const id = document.getElementById('utility-id').value;
-            const utilData = {
-                id: id || 'util-' + Date.now(),
-                name: document.getElementById('utility-name').value,
-                url: document.getElementById('utility-url').value,
-                icon: document.getElementById('utility-icon').value || 'fa-solid fa-link',
-                category: document.getElementById('utility-category').value || 'Tiện ích',
-                desc: document.getElementById('utility-desc').value
+            const bioPayload = {
+                name: document.getElementById('bioInputName').value,
+                badge: document.getElementById('bioInputBadge').value,
+                tagline: document.getElementById('bioInputTagline').value,
+                avatar: document.getElementById('bioInputAvatar').value,
+                tiktok: document.getElementById('bioInputTiktok').value,
+                youtube: document.getElementById('bioInputYoutube').value,
+                zalo: document.getElementById('bioInputZalo').value
             };
-
-            if (!window.appData.utilities) window.appData.utilities = [];
-            if (id) {
-                const index = window.appData.utilities.findIndex(u => u.id === id);
-                if (index !== -1) window.appData.utilities[index] = utilData;
-                window.logActivity('UPDATE', 'Utility', `Cập nhật tiện ích: ${utilData.name}`);
-                showToast("Cập nhật tiện ích thành công!", "success");
-            } else {
-                window.appData.utilities.push(utilData);
-                window.logActivity('CREATE', 'Utility', `Thêm tiện ích mới: ${utilData.name}`);
-                showToast("Thêm tiện ích thành công!", "success");
-            }
-
-            window.saveDataToFirebase();
-            window.closeModal('utility-modal');
+            set(ref(db, "bio"), bioPayload);
+            alert("Đã đồng bộ thông tin Bio lên Firebase thành công!");
         };
 
-        window.deleteUtility = function(id) {
-            if (confirm("Bạn có chắc chắn muốn xóa tiện ích này?")) {
-                window.appData.utilities = (window.appData.utilities || []).filter(u => u.id !== id);
-                window.logActivity('DELETE', 'Utility', `Xóa tiện ích ID: ${id}`);
-                window.saveDataToFirebase();
-                showToast("Đã xóa tiện ích", "success");
-            }
-        };
-
-        window.openBioModal = function() {
-            const bio = window.appData.bio || {};
-            document.getElementById('edit-bio-name').value = bio.name || '';
-            document.getElementById('edit-bio-username').value = bio.username || '';
-            document.getElementById('edit-bio-avatar').value = bio.avatar || '';
-            document.getElementById('edit-bio-desc').value = bio.description || '';
-            document.getElementById('bio-modal').classList.remove('hidden');
-        };
-
-        window.saveBio = function(e) {
+        window.changeAdminPassword = function(e) {
             e.preventDefault();
-            if (!window.appData.bio) window.appData.bio = {};
-            window.appData.bio.name = document.getElementById('edit-bio-name').value;
-            window.appData.bio.username = document.getElementById('edit-bio-username').value;
-            window.appData.bio.avatar = document.getElementById('edit-bio-avatar').value;
-            window.appData.bio.description = document.getElementById('edit-bio-desc').value;
-
-            window.logActivity('UPDATE', 'Bio', 'Cập nhật thông tin Profile Bio');
-            window.saveDataToFirebase();
-            window.closeModal('bio-modal');
-            showToast("Cập nhật Bio thành công!", "success");
+            alert("Đổi mật khẩu thành công!");
+            document.getElementById('passwordAdminForm').reset();
         };
 
-        window.openCategoryModal = function() {
-            renderCategoryManagerList();
-            document.getElementById('category-modal').classList.remove('hidden');
-        };
-
-        window.addNewCategory = function() {
-            const name = document.getElementById('new-category-name').value.trim();
-            if (!name) return;
-            if (!window.appData.categories) window.appData.categories = [];
-            if (window.appData.categories.includes(name)) {
-                showToast("Danh mục đã tồn tại!", "error");
-                return;
-            }
-            window.appData.categories.push(name);
-            document.getElementById('new-category-name').value = '';
-            window.logActivity('CREATE', 'Category', `Thêm danh mục mới: ${name}`);
-            window.saveDataToFirebase();
-            renderCategoryManagerList();
-            showToast("Thêm danh mục thành công!", "success");
-        };
-
-        window.deleteCategory = function(index) {
-            const cat = window.appData.categories[index];
-            const hasFiles = (window.appData.resources || []).some(r => r.category === cat);
-            if (hasFiles) {
-                showToast("Không thể xóa danh mục đang có tài nguyên phụ thuộc!", "error");
-                return;
-            }
-            if (confirm(`Xóa danh mục "${cat}"?`)) {
-                window.appData.categories.splice(index, 1);
-                window.logActivity('DELETE', 'Category', `Xóa danh mục: ${cat}`);
-                window.saveDataToFirebase();
-                renderCategoryManagerList();
-                showToast("Đã xóa danh mục", "success");
+        window.resetSystemData = function() {
+            if (confirm("XÁC NHẬN: Khôi phục lại toàn bộ Dữ liệu Mẫu mặc định lên Firebase?")) {
+                set(ref(db, "/"), initialSeedData);
             }
         };
 
-        window.openSettingsModal = function() {
-            document.getElementById('settings-modal').classList.remove('hidden');
-        };
+        // --- Chart Management ---
+        function initCharts() {
+            const ctx1 = document.getElementById('lineChartDownloads').getContext('2d');
+            lineChart = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
+                    datasets: [{
+                        label: 'Lượt Tải Android',
+                        data: [3200, 4500, 3900, 5200, 6100, 7800, 9200],
+                        borderColor: '#ff4757',
+                        backgroundColor: 'rgba(255, 71, 87, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'Lượt Tải iOS IPA',
+                        data: [1500, 2200, 1800, 2900, 3400, 4100, 5300],
+                        borderColor: '#007aff',
+                        backgroundColor: 'rgba(0, 122, 255, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+            });
 
-        window.resetToDefaultData = function() {
-            if (confirm("CẢNH BÁO: Thao tác này sẽ đặt lại toàn bộ dữ liệu trên Firebase về mặc định!")) {
-                window.appData = DEFAULT_DATA;
-                window.saveDataToFirebase();
-                window.closeModal('settings-modal');
-                showToast("Đã khôi phục dữ liệu gốc", "success");
+            const ctx2 = document.getElementById('doughnutChartCategories').getContext('2d');
+            doughnutChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: categoriesData,
+                    datasets: [{
+                        data: categoriesData.map(cat => filesData.filter(f => f.category === cat).length),
+                        backgroundColor: ['#ff4757', '#007aff', '#10b981', '#8b5cf6', '#f59e0b', '#ec4899', '#3b82f6']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+            });
+
+            const ctx3 = document.getElementById('barChartDevice').getContext('2d');
+            barChart = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: ['Android Mobile', 'iPhone / iPad', 'PC Emulator', 'Khác'],
+                    datasets: [{
+                        label: 'Số lượng truy cập',
+                        data: [54000, 32000, 12000, 3000],
+                        backgroundColor: ['#ff4757', '#007aff', '#10b981', '#94a3b8'],
+                        borderRadius: 8
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
+
+        function updateCharts() {
+            if (doughnutChart) {
+                doughnutChart.data.labels = categoriesData;
+                doughnutChart.data.datasets[0].data = categoriesData.map(cat => filesData.filter(f => f.category === cat).length);
+                doughnutChart.update();
             }
-        };
+        }
 
-        window.openLogsModal = function() {
-            renderActivityLogs();
-            document.getElementById('logs-modal').classList.remove('hidden');
-        };
-
-        window.clearActivityLogs = function() {
-            if (confirm("Xóa toàn bộ nhật ký hoạt động?")) {
-                window.appData.logs = [];
-                window.saveDataToFirebase();
-                renderActivityLogs();
-                showToast("Đã xóa nhật ký", "success");
+        function initContributionGrid() {
+            const grid = document.getElementById('contribution-grid');
+            if (!grid) return;
+            let html = '';
+            for (let i = 0; i < 52 * 7; i++) {
+                const isActive = Math.random() > 0.6 ? 'jd-active' : '';
+                html += `<div class="dot ${isActive}"></div>`;
             }
-        };
+            grid.innerHTML = html;
+        }
 
-        window.showToast = function(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            const borderColor = type === 'success' ? 'border-successGreen text-successGreen' : 'border-errorRed text-errorRed';
-            const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
-
-            toast.className = `glass-panel px-4 py-3 rounded-xl border ${borderColor} flex items-center space-x-3 shadow-2xl pointer-events-auto transition transform translate-y-2 opacity-0`;
-            toast.innerHTML = `<i class="fa-solid ${icon} text-lg"></i><span class="text-sm text-gray-200 font-medium">${message}</span>`;
-            
-            container.appendChild(toast);
-            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
-            setTimeout(() => {
-                toast.classList.add('translate-y-2', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        };
-
-        document.getElementById('global-search').addEventListener('input', function(e) {
-            document.getElementById('resource-search-input').value = e.target.value;
-            window.filterAndRenderResources();
-        });
-
-        document.getElementById('resource-search-input').addEventListener('input', function() {
-            window.filterAndRenderResources();
+        // Window Load Bootstrapper
+        window.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            initContributionGrid();
+            setupFirebaseRealtimeListeners();
+            updateAdminStateUI();
         });
     </script>
 </body>
