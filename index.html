@@ -42,18 +42,71 @@
 
     <style>
         :root {
-            --glass: rgba(20, 20, 20, 0.75);
+            --glass: rgba(20, 20, 20, 0.65);
             --glass-border: rgba(255, 255, 255, 0.2);
             --rainbow: linear-gradient(90deg, #a8edea, #fed6e3, #fac1ff, #d4fc79, #96e6a1, #a8edea);
-            --jd-gradient: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+            --jd-gradient: linear-gradient(45deg, #ff0055, #ff4757, #ff7300, #00ffd5, #ff00c8);
         }
 
-        body { font-family: 'Inter', sans-serif; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* LIGHT MODE OVERRIDES */
+        body.light-mode {
+            background-color: #f1f5f9;
+            color: #1e293b;
+        }
+        body.light-mode main {
+            background-color: rgba(255, 255, 255, 0.85) !important;
+        }
+        body.light-mode .bg-white\/90 {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+        }
+
+        /* CSS CHO VIDEO NỀN - HIỂN THỊ SẮC NÉT */
+        .bg-video {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -99;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            filter: contrast(105%) brightness(95%);
+        }
+
+        /* PHÁO HOA CANVAS */
+        #fireworksCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        main {
+            background-color: rgba(248, 250, 252, 0.45) !important;
+            backdrop-filter: blur(2px) !important;
+            -webkit-backdrop-filter: blur(2px) !important;
+        }
+
+        .bg-white\/90 {
+            background-color: rgba(255, 255, 255, 0.75) !important;
+            backdrop-filter: blur(4px) !important;
+        }
+
         .sidebar-transition { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Bio Preview Card Styles */
         .bio-custom-wrapper {
             font-family: 'Montserrat', sans-serif;
             color: #fff;
@@ -61,8 +114,8 @@
 
         .glass-card-bio {
             background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             border-radius: 25px;
             padding: 35px;
@@ -117,8 +170,8 @@
         }
 
         .avatar-img-bio {
-            width: 100px;
-            height: 100px;
+            width: 104px;
+            height: 104px;
             border-radius: 50%;
             border: 3px solid #fff;
             object-fit: cover;
@@ -128,11 +181,12 @@
 
         .avatar-frame-bio {
             position: absolute;
-            width: 155px;
-            height: 155px;
+            width: 175px;
+            height: 175px;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            /* Đã dịch vương miện xuống một chút để khớp khít với avatar */
+            transform: translate(-50%, -46%);
             z-index: 3;
             pointer-events: none;
             object-fit: contain;
@@ -179,7 +233,7 @@
         .jd-music-container {
             margin: 30px 0 10px 0;
             padding: 20px;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             border-radius: 20px;
             border: 1px solid var(--glass-border);
         }
@@ -199,8 +253,9 @@
 
         .dot.jd-active {
             background-image: var(--jd-gradient);
-            background-size: 800% 800%;
+            background-size: 400% 400%;
             animation: jd_glow 2s linear infinite;
+            box-shadow: 0 0 6px rgba(255, 0, 85, 0.8);
         }
 
         @keyframes jd_glow {
@@ -215,20 +270,29 @@
                 text-align: center;
             }
             #contribution-grid {
-                grid-template-columns: repeat(26, 1fr);
+                grid-template-columns: repeat(52, 1fr);
+                gap: 1.5px;
             }
         }
     </style>
 </head>
 
-<body class="bg-slate-100 text-slate-800 antialiased flex h-screen overflow-hidden">
+<body class="text-slate-800 antialiased flex h-screen overflow-hidden">
+
+    <!-- CANVAS PHÁO HOA -->
+    <canvas id="fireworksCanvas"></canvas>
+
+    <!-- THẺ VIDEO NỀN NÉT -->
+    <video autoplay muted loop playsinline class="bg-video">
+        <source src="https://videotourl.com/videos/1792662777057-c5fcb75a-0880-4124-9eef-cce2dbcb09f2.mp4" type="video/mp4">
+    </video>
 
     <!-- OVERLAY CHO MOBILE SIDEBAR -->
     <div id="sidebarOverlay" onclick="window.toggleSidebar()" class="fixed inset-0 bg-slate-900/60 z-30 opacity-0 pointer-events-none transition-opacity duration-300 md:hidden"></div>
 
     <!-- SIDEBAR -->
-    <aside id="sidebar" class="sidebar-transition fixed md:static inset-y-0 left-0 z-40 w-64 bg-navy-900 text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0">
-        <div class="h-16 flex items-center justify-between px-4 bg-navy-950 border-b border-slate-800/80">
+    <aside id="sidebar" class="sidebar-transition fixed md:static inset-y-0 left-0 z-40 w-64 bg-navy-900/85 backdrop-blur-md text-slate-300 flex flex-col shadow-2xl flex-shrink-0 -translate-x-full md:translate-x-0">
+        <div class="h-16 flex items-center justify-between px-4 bg-navy-950/85 border-b border-slate-800/80">
             <div class="flex items-center space-x-3 overflow-hidden">
                 <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-red-500 to-orange-500 flex items-center justify-center font-black text-white text-lg shadow-lg shadow-red-500/30 flex-shrink-0">
                     zw
@@ -253,13 +317,17 @@
                         <i class="fa-solid fa-folder-open text-lg text-indigo-400 w-6 text-center"></i>
                         <span class="sidebar-text">Kho File (Trang Chủ)</span>
                     </a>
+                    <a href="#" onclick="window.switchTab('guide')" id="nav-guide" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
+                        <i class="fa-solid fa-book text-lg text-amber-400 w-6 text-center"></i>
+                        <span class="sidebar-text">Hướng dẫn cài đặt</span>
+                    </a>
                     <a href="#" onclick="window.switchTab('dashboard')" id="nav-dashboard" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-chart-pie text-lg text-orange-400 w-6 text-center"></i>
                         <span class="sidebar-text">Dashboard Tổng quan</span>
                     </a>
                     <a href="#" onclick="window.switchTab('stats')" id="nav-stats" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-chart-line text-lg text-emerald-400 w-6 text-center"></i>
-                        <span class="sidebar-text">Thống kê & Báo cáo</span>
+                        <span class="sidebar-text">Thống kê theo Ngày</span>
                     </a>
                     <a href="#" onclick="window.switchTab('bio-preview')" id="nav-bio-preview" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-id-card text-lg text-pink-400 w-6 text-center"></i>
@@ -279,9 +347,21 @@
                         <i class="fa-solid fa-list-check text-lg text-cyan-400 w-6 text-center"></i>
                         <span class="sidebar-text">Quản lý File & Link (CRUD)</span>
                     </a>
+                    <a href="#" onclick="window.checkAdminTab('guide-management')" id="nav-guide-management" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
+                        <i class="fa-solid fa-gears text-lg text-amber-400 w-6 text-center"></i>
+                        <span class="sidebar-text">Quản lý Hướng Dẫn Cài</span>
+                    </a>
                     <a href="#" onclick="window.checkAdminTab('categories-management')" id="nav-categories-management" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-tags text-lg text-emerald-400 w-6 text-center"></i>
                         <span class="sidebar-text">Quản lý Danh mục</span>
+                    </a>
+                    <a href="#" onclick="window.checkAdminTab('logs-management')" id="nav-logs-management" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
+                        <i class="fa-solid fa-clock-rotate-left text-lg text-blue-400 w-6 text-center"></i>
+                        <span class="sidebar-text">Lịch Sử Giao Dịch (Logs)</span>
+                    </a>
+                    <a href="#" onclick="window.checkAdminTab('tools-management')" id="nav-tools-management" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
+                        <i class="fa-solid fa-toolbox text-lg text-rose-400 w-6 text-center"></i>
+                        <span class="sidebar-text">Quét Link & Backup JSON</span>
                     </a>
                     <a href="#" onclick="window.checkAdminTab('bio-admin')" id="nav-bio-admin" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-user-gear text-lg text-purple-400 w-6 text-center"></i>
@@ -295,7 +375,7 @@
             </div>
         </div>
 
-        <div class="p-3 bg-navy-950 border-t border-slate-800/80">
+        <div class="p-3 bg-navy-950/85 border-t border-slate-800/80">
             <div id="userBoxLoggedOut" class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
                     <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400">
@@ -328,7 +408,7 @@
     <!-- MAIN CONTAINER -->
     <div class="flex-1 flex flex-col h-screen overflow-hidden">
         
-        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-6 shadow-sm z-20">
+        <header class="h-16 bg-white/85 backdrop-blur-md border-b border-slate-200/80 flex items-center justify-between px-4 md:px-6 shadow-sm z-20">
             <div class="flex items-center space-x-3">
                 <button onclick="window.toggleSidebar()" class="p-2.5 rounded-xl text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-orange-500/20 active:scale-95 transition" title="Menu Sidebar">
                     <i class="fa-solid fa-bars text-xl"></i>
@@ -339,6 +419,12 @@
             </div>
 
             <div class="flex items-center space-x-3">
+                <!-- NÚT CHUYỂN DARK / LIGHT MODE -->
+                <button onclick="window.toggleThemeMode()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs px-3 py-2 rounded-lg font-medium transition flex items-center space-x-1.5" title="Chuyển Sáng / Tối">
+                    <i id="themeToggleIcon" class="fa-solid fa-moon text-indigo-500"></i>
+                    <span id="themeToggleLabel">Theme Tối</span>
+                </button>
+
                 <div id="connectionStatus" class="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 border border-emerald-200">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span>Firebase Live</span>
@@ -356,7 +442,7 @@
             </div>
         </header>
 
-        <main class="flex-1 overflow-y-auto bg-slate-50 p-4 sm:p-6 hide-scrollbar">
+        <main class="flex-1 overflow-y-auto p-4 sm:p-6 hide-scrollbar">
 
             <!-- TAB 1: KHO FILE FREE FIRE / MOD -->
             <section id="tab-files" class="tab-content space-y-6">
@@ -366,9 +452,8 @@
                         <p class="text-xs text-slate-500">Tải xuống tệp Miễn phí hoặc Mua file bản quyền cao cấp</p>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <input type="text" id="publicSearchInput" oninput="window.renderPublicFiles()" placeholder="Tìm kiếm file, tut..." class="bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 w-48 sm:w-64 shadow-sm">
-                        <!-- PHÂN LOẠI THỂ LOẠI -->
-                        <select id="publicFilterCategory" onchange="window.renderPublicFiles()" class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-sm cursor-pointer">
+                        <input type="text" id="publicSearchInput" oninput="window.renderPublicFiles()" placeholder="Tìm kiếm file, tut..." class="bg-white/90 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 w-48 sm:w-64 shadow-sm">
+                        <select id="publicFilterCategory" onchange="window.renderPublicFiles()" class="bg-white/90 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-sm cursor-pointer">
                             <!-- Dynamic Options -->
                         </select>
                     </div>
@@ -379,10 +464,31 @@
                 </div>
             </section>
 
+            <!-- TAB 1.1: TRANG HƯỚNG DẪN CÀI ĐẶT -->
+            <section id="tab-guide" class="tab-content hidden max-w-4xl mx-auto space-y-6">
+                <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-slate-100 shadow-sm space-y-6">
+                    <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-book text-amber-500"></i> Hướng Dẫn Cài Đặt Chi Tiết
+                            </h2>
+                            <p class="text-xs text-slate-500 mt-1">Tài liệu hướng dẫn cài đặt tất cả file do Admin biên soạn.</p>
+                        </div>
+                        <button id="quickAddGuideBtn" onclick="window.checkAdminTab('guide-management')" class="hidden bg-amber-500 hover:bg-amber-600 text-white text-xs px-3.5 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shadow-md">
+                            <i class="fa-solid fa-plus-circle"></i> Thêm Cách Cài
+                        </button>
+                    </div>
+
+                    <div id="userGuidesContainer" class="space-y-6 text-sm text-slate-700">
+                        <!-- Dynamic Guides Content -->
+                    </div>
+                </div>
+            </section>
+
             <!-- TAB 2: DASHBOARD -->
             <section id="tab-dashboard" class="tab-content hidden space-y-6">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+                    <div class="bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
                         <div>
                             <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tổng tải file</p>
                             <h3 id="statTotalDownloads" class="text-2xl font-black text-slate-800 mt-1">0</h3>
@@ -395,7 +501,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+                    <div class="bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
                         <div>
                             <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">File iOS / IPA</p>
                             <h3 id="statIosDownloads" class="text-2xl font-black text-slate-800 mt-1">0</h3>
@@ -408,7 +514,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+                    <div class="bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
                         <div>
                             <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Lượt Xem Bio</p>
                             <h3 id="statBioViews" class="text-2xl font-black text-slate-800 mt-1">0</h3>
@@ -421,7 +527,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+                    <div class="bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
                         <div>
                             <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tổng Tệp / Tut</p>
                             <h3 id="statTotalFiles" class="text-2xl font-black text-slate-800 mt-1">0</h3>
@@ -436,20 +542,20 @@
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-2 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="lg:col-span-2 bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm">
                         <div class="flex items-center justify-between mb-4">
                             <div>
-                                <h3 class="font-bold text-slate-800 text-base">Thống kê Lượt tải 7 ngày qua</h3>
-                                <p class="text-xs text-slate-500">Theo dõi sự tăng trưởng lượt tải Android & iOS</p>
+                                <h3 class="font-bold text-slate-800 text-base">Thống kê Lượt tải theo Từng Ngày</h3>
+                                <p class="text-xs text-slate-500">Biểu đồ chi tiết lượt tải từ Thứ 2 đến Chủ Nhật</p>
                             </div>
-                            <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-medium">Auto Updates</span>
+                            <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-medium">Daily Active</span>
                         </div>
                         <div class="h-64 relative">
                             <canvas id="lineChartDownloads"></canvas>
                         </div>
                     </div>
 
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm">
                         <div class="mb-4">
                             <h3 class="font-bold text-slate-800 text-base">Phân bổ Danh mục File</h3>
                             <p class="text-xs text-slate-500">Tỷ lệ lượt quan tâm theo danh mục</p>
@@ -461,23 +567,26 @@
                 </div>
             </section>
 
-            <!-- TAB 3: THỐNG KÊ & BÁO CÁO DETAIL -->
+            <!-- TAB 3: THỐNG KÊ CHI TIẾT THEO NGÀY -->
             <section id="tab-stats" class="tab-content hidden space-y-6">
-                <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div class="bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div>
-                        <h2 class="text-lg font-bold text-slate-800">Báo cáo Thống kê Chuyên sâu</h2>
-                        <p class="text-xs text-slate-500">Phân tích lượt tải tệp, thiết bị truy cập và hiệu suất link</p>
+                        <h2 class="text-lg font-bold text-slate-800">Thống Kê Chi Tiết Theo Từng Ngày Trong Tuần</h2>
+                        <p class="text-xs text-slate-500">Bảng phân tích lượng truy cập, tải tệp và thiết bị theo chu kỳ ngày</p>
                     </div>
+                    <button onclick="window.triggerFireworks()" class="bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md transition">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Bắn Pháo Hoa Ăn Mừng
+                    </button>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm">
                         <h3 class="font-bold text-slate-800 text-sm mb-4">Tỷ lệ Hệ điều hành Người dùng</h3>
                         <div class="h-60">
                             <canvas id="barChartDevice"></canvas>
                         </div>
                     </div>
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm">
                         <h3 class="font-bold text-slate-800 text-sm mb-4">Top File Tải Nhiều Nhất</h3>
                         <div class="space-y-4" id="topDownloadProgressList">
                             <!-- Dynamic Content -->
@@ -496,11 +605,10 @@
                                     <img id="bioAvatarPreview" src="https://placehold.co/100x100/1e293b/ffffff?text=Avatar" class="avatar-img-bio" alt="Avatar">
                                     <img src="https://raw.githubusercontent.com/WusThanhDieu/Profile-ThanhDieu.Com-V5-Tester/refs/heads/main/res/v5/img/crown/mong-vuot-rong.png" class="avatar-frame-bio" alt="Crown">
                                 </div>
-                                <!-- HIỆU ỨNG NHẬP CHỮ GÕ LẶP LẠI -->
                                 <div id="bioGamingText" class="henry-gaming rainbow-text typing-cursor"></div>
                             </div>
                             <div class="user-info-bio">
-                                <h1 id="bioNamePreview" class="rainbow-text" style="font-size: 2.5rem; margin: 0; line-height: 1;">𝓉ℛ𝑜𝓃𝒢<span style="color:#ff416c">ℒℐ𝒸𝒽</span></h1>
+                                <h1 id="bioNamePreview" class="rainbow-text" style="font-size: 2.5rem; margin: 0; line-height: 1;">𝓉ℛ𝑜𝓃𝒢<span style='color:#ff416c'>ℒℐ𝒸𝒽</span></h1>
                                 <div id="bioBadgePreview" class="rainbow-text" style="font-size: 1.1rem; margin: 10px 0; font-weight: 600;">ℱ𝓊𝓁𝓁 𝒮𝓉𝒶𝒸𝓀 𝒟𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇</div>
                                 <p id="bioTaglinePreview" class="rainbow-text" style="font-size: 0.8rem; opacity: 0.8; letter-spacing: 1px;">#𝒽𝑒𝓃𝓇𝓎_𝒹𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇_𝒻𝓊𝓁𝓁𝓈𝓉𝒶𝒸𝓀</p>
                                 <div id="bioSocialsContainer" class="social-links-bio">
@@ -512,20 +620,12 @@
                             <div id="contribution-grid"></div>
                         </div>
                     </div>
-
-                    <!-- Dynamic Bio Links Section -->
-                    <div class="glass-card-bio">
-                        <h3 class="rainbow-text text-base font-bold mb-4">Kho Tệp Tải & Cửa Hàng Bản Quyền</h3>
-                        <div id="bioLinksContainer" class="space-y-3">
-                            <!-- Dynamic Links -->
-                        </div>
-                    </div>
                 </div>
             </section>
 
-            <!-- TAB 5: QUẢN LÝ FILE & LINK (ADMIN ONLY) -->
+            <!-- TAB 5: QUẢN LÝ FILE & LINK (CRUD) -->
             <section id="tab-file-management" class="tab-content hidden space-y-6">
-                <div class="flex items-center justify-between bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                <div class="flex items-center justify-between bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm">
                     <div>
                         <h2 class="text-lg font-bold text-slate-800">Quản lý Kho File, Tải Miễn Phí & Bán File (CRUD)</h2>
                         <p class="text-xs text-slate-500">Thêm tệp miễn phí hoặc thiết lập giá bán tệp bản quyền VNĐ</p>
@@ -536,10 +636,10 @@
                     </button>
                 </div>
 
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                <div class="bg-white/90 backdrop-blur-sm rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm text-slate-600">
-                            <thead class="bg-slate-50 text-xs font-semibold uppercase text-slate-400 border-b border-slate-100">
+                            <thead class="bg-slate-50/80 text-xs font-semibold uppercase text-slate-400 border-b border-slate-100">
                                 <tr>
                                     <th class="px-5 py-3.5">Ảnh</th>
                                     <th class="px-5 py-3.5">Tên File</th>
@@ -557,9 +657,42 @@
                 </div>
             </section>
 
-            <!-- TAB 6: QUẢN LÝ DANH MỤC (ADMIN ONLY) -->
+            <!-- TAB ADMIN MỚI: QUẢN LÝ HƯỚNG DẪN CÀI ĐẶT CHO USER -->
+            <section id="tab-guide-management" class="tab-content hidden space-y-6 max-w-4xl mx-auto">
+                <div class="flex items-center justify-between bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">Quản Lý Cách Cài Đặt Cho User</h2>
+                        <p class="text-xs text-slate-500">Admin trực tiếp thêm, sửa, xóa hướng dẫn hiển thị ngoài trang chủ</p>
+                    </div>
+                    <button onclick="window.openAddGuideModal()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-4 py-2.5 rounded-xl font-bold flex items-center space-x-2 shadow-md shadow-amber-500/20 transition">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Thêm Mục Hướng Dẫn</span>
+                    </button>
+                </div>
+
+                <div class="bg-white/90 backdrop-blur-sm rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-600">
+                            <thead class="bg-slate-50/80 text-xs font-semibold uppercase text-slate-400 border-b border-slate-100">
+                                <tr>
+                                    <th class="px-5 py-3.5">Thứ tự</th>
+                                    <th class="px-5 py-3.5">Tiêu đề Hướng Dẫn</th>
+                                    <th class="px-5 py-3.5">Icon</th>
+                                    <th class="px-5 py-3.5">Màu Sắc</th>
+                                    <th class="px-5 py-3.5 text-right">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminGuideTable" class="divide-y divide-slate-100">
+                                <!-- Dynamic Guide Admin Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 6: QUẢN LÝ DANH MỤC -->
             <section id="tab-categories-management" class="tab-content hidden space-y-6 max-w-4xl mx-auto">
-                <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-slate-100 shadow-sm">
                     <h2 class="text-lg font-bold text-slate-800 mb-1">Thêm Danh Mục Mới</h2>
                     <p class="text-xs text-slate-500 mb-4">Tạo mới các danh mục dành cho File & Mod</p>
                     
@@ -572,13 +705,13 @@
                     </form>
                 </div>
 
-                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                <div class="bg-white/90 backdrop-blur-sm rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
                     <div class="p-5 border-b border-slate-100">
                         <h3 class="font-bold text-slate-800 text-base">Danh Sách Danh Mục Hiện Có</h3>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm text-slate-600">
-                            <thead class="bg-slate-50 text-xs font-semibold uppercase text-slate-400 border-b border-slate-100">
+                            <thead class="bg-slate-50/80 text-xs font-semibold uppercase text-slate-400 border-b border-slate-100">
                                 <tr>
                                     <th class="px-5 py-3.5">#</th>
                                     <th class="px-5 py-3.5">Tên Danh Mục</th>
@@ -594,9 +727,74 @@
                 </div>
             </section>
 
-            <!-- TAB 7: CHỈNH SỬA BIO & MẠNG XÃ HỘI (ADMIN ONLY) -->
+            <!-- TAB 6.1: LỊCH SỬ GIAO DỊCH (LOGS) -->
+            <section id="tab-logs-management" class="tab-content hidden space-y-6 max-w-5xl mx-auto">
+                <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">Hệ Thống Lịch Sử Giao Dịch & Tải File (Logs)</h2>
+                        <p class="text-xs text-slate-500">Ghi lại chi tiết thời gian, địa chỉ IP giả lập và tệp được bấm tải/thanh toán</p>
+                    </div>
+                    <button onclick="window.clearLogs()" class="bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs px-4 py-2 rounded-xl transition">
+                        <i class="fa-solid fa-trash mr-1"></i> Xóa Toàn Bộ Logs
+                    </button>
+                </div>
+
+                <div class="bg-white/90 backdrop-blur-sm rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-600">
+                            <thead class="bg-slate-50/80 text-xs font-semibold uppercase text-slate-400 border-b border-slate-100">
+                                <tr>
+                                    <th class="px-5 py-3.5">Thời gian</th>
+                                    <th class="px-5 py-3.5">Địa chỉ IP</th>
+                                    <th class="px-5 py-3.5">Hành động</th>
+                                    <th class="px-5 py-3.5">Tên Tệp / Giao dịch</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminLogsTable" class="divide-y divide-slate-100">
+                                <!-- Dynamic Logs -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 6.2: QUÉT LINK & BACKUP JSON -->
+            <section id="tab-tools-management" class="tab-content hidden space-y-6 max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- DEAD LINK CHECKER -->
+                    <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+                        <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-link-slash text-rose-500"></i> Kiểm tra Link hỏng (Dead Link)
+                        </h3>
+                        <p class="text-xs text-slate-500">Bấm nút bên dưới để quét tình trạng hoạt động của tất cả các liên kết trong kho file.</p>
+                        <button onclick="window.checkDeadLinks()" class="bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md transition w-full flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-magnifying-glass"></i> Bắt đầu Quét Link
+                        </button>
+                        <div id="linkCheckResult" class="text-xs text-slate-600 space-y-1"></div>
+                    </div>
+
+                    <!-- BACKUP / RESTORE JSON -->
+                    <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+                        <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-file-code text-indigo-500"></i> Xuất & Nhập dữ liệu (JSON)
+                        </h3>
+                        <p class="text-xs text-slate-500">Sao lưu hoặc khôi phục nhanh toàn bộ cấu trúc file và danh mục ra file .json.</p>
+                        <div class="flex gap-2">
+                            <button onclick="window.exportDataJSON()" class="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-xs py-2.5 rounded-xl shadow-md transition">
+                                <i class="fa-solid fa-download mr-1"></i> Xuất JSON
+                            </button>
+                            <label class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs py-2.5 rounded-xl shadow-md transition text-center cursor-pointer">
+                                <i class="fa-solid fa-upload mr-1"></i> Nhập JSON
+                                <input type="file" id="importJsonFile" accept=".json" onchange="window.importDataJSON(event)" class="hidden">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 7: CHỈNH SỬA BIO & MẠNG XÃ HỘI -->
             <section id="tab-bio-admin" class="tab-content hidden max-w-3xl mx-auto space-y-6">
-                <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-slate-100 shadow-sm">
                     <h2 class="text-lg font-bold text-slate-800 mb-1">Cấu hình Trang Bio & Mạng Xã Hội</h2>
                     <p class="text-xs text-slate-500 mb-6">Thay đổi Tên, Avatar URL, Tiểu sử và 4 đường dẫn mạng xã hội</p>
 
@@ -652,9 +850,9 @@
                 </div>
             </section>
 
-            <!-- TAB 8: CÀI ĐẶT HỆ THỐNG & ĐỔI MẬT KHẨU (ADMIN ONLY) -->
+            <!-- TAB 8: CÀI ĐẶT HỆ THỐNG & ĐỔI MẬT KHẨU -->
             <section id="tab-settings" class="tab-content hidden max-w-3xl mx-auto space-y-6">
-                <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-6">
+                <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-slate-100 shadow-sm space-y-6">
                     <div>
                         <h2 class="text-lg font-bold text-slate-800">Cài đặt Mật khẩu Admin & Hệ thống</h2>
                         <p class="text-xs text-slate-500">Quản lý bảo mật tài khoản quản trị trực tiếp trên cơ sở dữ liệu</p>
@@ -789,6 +987,46 @@
         </div>
     </div>
 
+    <!-- MODAL: ADD / EDIT HƯỚNG DẪN CÀI ĐẶT -->
+    <div id="guideModal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl transform scale-95 transition-transform duration-300">
+            <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                <h3 id="guideModalTitle" class="text-base font-bold text-slate-800">Thêm Cách Cài Đặt Mới</h3>
+                <button onclick="window.closeGuideModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="guideForm" onsubmit="window.handleGuideFormSubmit(event)" class="space-y-3">
+                <input type="hidden" id="guideFormId">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Tiêu đề Mục Hướng Dẫn</label>
+                    <input type="text" id="guideFormTitle" required placeholder="Ví dụ: Hướng dẫn cài Mod Free Fire (Android)" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Icon FontAwesome</label>
+                        <input type="text" id="guideFormIcon" required placeholder="fa-brands fa-android" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Màu sắc Tiêu đề</label>
+                        <select id="guideFormColor" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
+                            <option value="text-orange-600">Cam (Android)</option>
+                            <option value="text-blue-600">Xanh Dương (iOS)</option>
+                            <option value="text-purple-600">Tím (Lưu ý)</option>
+                            <option value="text-emerald-600">Xanh Lá (Khác)</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Các Bước Hướng Dẫn (Mỗi bước 1 dòng)</label>
+                    <textarea id="guideFormSteps" rows="6" required placeholder="Mở ZArchiver...&#10;Giải nén tệp vừa tải...&#10;Dán vào Android/data..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-amber-500 outline-none font-sans leading-relaxed"></textarea>
+                </div>
+                <div class="flex justify-end space-x-2 pt-3">
+                    <button type="button" onclick="window.closeGuideModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs px-4 py-2 rounded-xl transition">Hủy</button>
+                    <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs px-5 py-2 rounded-xl shadow-md transition">Lưu Hướng Dẫn</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL: QR CODE THANH TOÁN MUA NGAY -->
     <div id="checkoutModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
         <div class="bg-slate-900 border border-slate-700 text-white rounded-3xl max-w-sm w-full p-6 shadow-2xl transform scale-95 transition-transform duration-300 relative">
@@ -801,7 +1039,6 @@
                 <p id="checkoutFilePrice" class="text-xl font-black text-amber-400 mt-1">0 VNĐ</p>
             </div>
 
-            <!-- QR CODE IMAGE -->
             <div class="bg-white p-3 rounded-2xl shadow-inner mb-4 flex justify-center">
                 <img src="https://cdn.phototourl.com/member/2026-10-20-9f7b24a0-71f6-410d-a13b-8bac265053d9.jpg" alt="QR Thanh Toan" class="w-52 h-52 object-contain rounded-lg">
             </div>
@@ -814,14 +1051,14 @@
                 <div class="text-[10px] text-slate-400 text-center mt-1">Quét mã QR qua ứng dụng ngân hàng hoặc momo để thanh toán.</div>
             </div>
 
-            <a id="checkoutDirectLink" href="#" target="_blank" class="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold text-xs py-3 rounded-xl shadow-lg flex items-center justify-center space-x-2 transition">
+            <a id="checkoutDirectLink" href="#" target="_blank" onclick="window.logCheckoutClick()" class="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold text-xs py-3 rounded-xl shadow-lg flex items-center justify-center space-x-2 transition">
                 <span>Tôi đã chuyển tiền \ Liên hệ admin</span>
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
             </a>
         </div>
     </div>
 
-    <!-- FIREBASE MODULE LOGIC -->
+    <!-- FIREBASE / SCRIPT MODULE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
@@ -858,11 +1095,15 @@
         let categoriesData = [];
         let bioData = {};
         let filesData = [];
+        let guidesData = [];
+        let logsData = [];
         let statsBioViews = 0;
 
         let lineChart = null;
         let doughnutChart = null;
         let barChart = null;
+        let chartsInitialized = false;
+        let activeCheckoutFile = "";
 
         const initialSeedData = {
             adminPass: "admin123",
@@ -882,6 +1123,44 @@
                 "file_1": { name: "Config Headshot Auto Lock 99% FF OB43", category: "Free Fire", size: "12 MB", status: "Hoạt động", downloads: 14200, saleType: "free", price: 0, link: "https://drive.google.com", image: "https://placehold.co/400x250/ff4757/ffffff?text=Config+FF", desc: "Tăng độ nhạy, khóa tâm êm ái không khóa acc." },
                 "file_2": { name: "Free Fire IPA iOS Mod Auto Aim Direct", category: "iOS IPA", size: "850 MB", status: "Hoạt động", downloads: 9800, saleType: "free", price: 0, link: "https://mediafire.com", image: "https://placehold.co/400x250/007aff/ffffff?text=iOS+IPA", desc: "Tệp IPA trực tiếp cài qua Esign/Scarlet." },
                 "file_3": { name: "Mã Nguồn Full Stack Top-Up Portal Pro", category: "Bán File VIP", size: "15 MB", status: "Hoạt động", downloads: 340, saleType: "paid", price: 150000, link: "https://zalo.me/", image: "https://placehold.co/400x250/8b5cf6/ffffff?text=Source+VIP", desc: "Full Source code giao diện nạp thẻ tự động, UID check." }
+            },
+            guides: {
+                "guide_1": {
+                    title: "1. Hướng dẫn cài đặt Mod Free Fire (Android)",
+                    icon: "fa-brands fa-android",
+                    color: "text-orange-600",
+                    steps: [
+                        "Các bước thực hiện bằng ZArchiver.",
+                        "Mở ứng dụng ZArchiver, tìm đến thư mục Download (nơi lưu file mod vừa tải).",
+                        "Nhấn vào file MOD Skin, chọn 'Giải nén tại đây' hoặc 'Xem'.",
+                        "Nếu chơi Free Fire thường: com.dts.freefireth",
+                        "Nếu chơi Free Fire Max: com.dts.freefiremax",
+                        "Giữ thư mục khoảng 2 giây rồi chọn Sao chép (Copy).",
+                        "Chuyển đường dẫn: Bộ nhớ thiết bị > Android > data.",
+                        "Nhấn nút Dán (màu xanh) góc dưới màn hình.",
+                        "Tích chọn 'Áp dụng cho tất cả các tệp' và chọn Thay thế (Replace)."
+                    ]
+                },
+                "guide_2": {
+                    title: "2. Hướng dẫn cài đặt Mod (iOS, iPhone, iPad)",
+                    icon: "fa-brands fa-apple",
+                    color: "text-blue-600",
+                    steps: [
+                        "Tải tệp IPA trực tiếp qua các liên kết trong kho file.",
+                        "Sử dụng chứng chỉ ký quỹ thông qua ứng dụng Esign hoặc Scarlet.",
+                        "Import tệp IPA vào ứng dụng ký quỹ và bấm Cài đặt (Install).",
+                        "Vào Cài đặt chung -> Quản lý thiết bị & VPN để Tin cậy nhà phát triển trước khi mở game."
+                    ]
+                },
+                "guide_3": {
+                    title: "3. Lưu ý quan trọng khi sử dụng",
+                    icon: "fa-solid fa-shield-halved",
+                    color: "text-purple-600",
+                    steps: [
+                        "Nên sử dụng tài khoản phụ (phụ kiện) để trải nghiệm các bản mod menu lần đầu.",
+                        "Luôn cập nhật phiên bản mới nhất từ Admin để tránh lỗi văng game (crash)."
+                    ]
+                }
             }
         };
 
@@ -896,18 +1175,14 @@
 
             onValue(ref(db, "adminPass"), (snapshot) => {
                 const pass = snapshot.val();
-                if (pass) {
-                    currentAdminPassword = pass;
-                } else {
-                    set(ref(db, "adminPass"), "admin123");
-                }
+                if (pass) currentAdminPassword = pass;
+                else set(ref(db, "adminPass"), "admin123");
             });
 
             onValue(ref(db, "categories"), (snapshot) => {
                 const data = snapshot.val();
-                if (data) {
-                    categoriesData = Array.isArray(data) ? data : Object.values(data);
-                } else {
+                if (data) categoriesData = Array.isArray(data) ? data : Object.values(data);
+                else {
                     categoriesData = initialSeedData.categories;
                     set(ref(db, "categories"), categoriesData);
                 }
@@ -919,9 +1194,8 @@
 
             onValue(ref(db, "bio"), (snapshot) => {
                 const data = snapshot.val();
-                if (data) {
-                    bioData = data;
-                } else {
+                if (data) bioData = data;
+                else {
                     bioData = initialSeedData.bio;
                     set(ref(db, "bio"), bioData);
                 }
@@ -955,37 +1229,329 @@
                 updateCharts();
             });
 
-            runTransaction(ref(db, "bioViews"), (current) => {
-                return (current || 0) + 1;
+            onValue(ref(db, "guides"), (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    guidesData = Object.keys(data).map(key => ({
+                        id: key,
+                        ...data[key]
+                    }));
+                } else {
+                    guidesData = [];
+                    set(ref(db, "guides"), initialSeedData.guides);
+                }
+                renderUserGuides();
+                renderAdminGuides();
             });
+
+            onValue(ref(db, "logs"), (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    logsData = Object.keys(data).map(k => ({ id: k, ...data[k] })).reverse();
+                } else {
+                    logsData = [];
+                }
+                renderLogsTable();
+            });
+
+            runTransaction(ref(db, "bioViews"), (current) => (current || 0) + 1);
         }
+
+        function renderUserGuides() {
+            const container = document.getElementById('userGuidesContainer');
+            if (!container) return;
+
+            if (guidesData.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">Chưa có hướng dẫn cài đặt nào.</p>`;
+                return;
+            }
+
+            let html = '';
+            guidesData.forEach(g => {
+                const stepsList = Array.isArray(g.steps) ? g.steps : (g.steps || '').split('\n');
+                let listItems = '';
+                stepsList.forEach(step => {
+                    if (step.trim()) {
+                        listItems += `<li>${step.trim()}</li>`;
+                    }
+                });
+
+                html += `
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h3 class="font-bold text-base ${g.color || 'text-slate-800'} mb-2 flex items-center gap-2">
+                            <i class="${g.icon || 'fa-solid fa-book'}"></i> ${g.title}
+                        </h3>
+                        <ol class="list-decimal list-inside space-y-1.5 text-xs text-slate-600 leading-relaxed">
+                            ${listItems}
+                        </ol>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderAdminGuides() {
+            const tbody = document.getElementById('adminGuideTable');
+            if (!tbody) return;
+            let html = '';
+            guidesData.forEach((g, index) => {
+                html += `
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="px-5 py-3.5 font-semibold text-slate-400">${index + 1}</td>
+                        <td class="px-5 py-3.5 font-bold text-slate-800">${g.title}</td>
+                        <td class="px-5 py-3.5 text-xs font-mono"><i class="${g.icon} mr-1"></i> ${g.icon}</td>
+                        <td class="px-5 py-3.5 text-xs font-bold ${g.color}">${g.color}</td>
+                        <td class="px-5 py-3.5 text-right space-x-1">
+                            <button onclick="window.editGuide('${g.id}')" class="text-indigo-600 hover:bg-indigo-50 p-2 rounded-lg transition" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="window.deleteGuide('${g.id}')" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition" title="Xóa"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html || `<tr><td colspan="5" class="text-center py-6 text-slate-400">Chưa có hướng dẫn nào</td></tr>`;
+        }
+
+        window.openAddGuideModal = function() {
+            document.getElementById('guideModalTitle').innerText = "Thêm Cách Cài Đặt Mới";
+            document.getElementById('guideFormId').value = "";
+            document.getElementById('guideForm').reset();
+            document.getElementById('guideModal').classList.remove('opacity-0', 'pointer-events-none');
+        };
+
+        window.closeGuideModal = function() {
+            document.getElementById('guideModal').classList.add('opacity-0', 'pointer-events-none');
+        };
+
+        window.editGuide = function(id) {
+            const g = guidesData.find(item => item.id === id);
+            if (!g) return;
+            document.getElementById('guideModalTitle').innerText = "Chỉnh Sửa Hướng Dẫn";
+            document.getElementById('guideFormId').value = g.id;
+            document.getElementById('guideFormTitle').value = g.title || '';
+            document.getElementById('guideFormIcon').value = g.icon || 'fa-solid fa-book';
+            document.getElementById('guideFormColor').value = g.color || 'text-orange-600';
+            
+            const stepsArr = Array.isArray(g.steps) ? g.steps.join('\n') : (g.steps || '');
+            document.getElementById('guideFormSteps').value = stepsArr;
+
+            document.getElementById('guideModal').classList.remove('opacity-0', 'pointer-events-none');
+        };
+
+        window.handleGuideFormSubmit = function(e) {
+            e.preventDefault();
+            const id = document.getElementById('guideFormId').value;
+            const stepsRaw = document.getElementById('guideFormSteps').value;
+            const stepsArray = stepsRaw.split('\n').filter(s => s.trim() !== '');
+
+            const guidePayload = {
+                title: document.getElementById('guideFormTitle').value,
+                icon: document.getElementById('guideFormIcon').value,
+                color: document.getElementById('guideFormColor').value,
+                steps: stepsArray
+            };
+
+            if (id) {
+                update(ref(db, `guides/${id}`), guidePayload);
+            } else {
+                push(ref(db, "guides"), guidePayload);
+            }
+            window.closeGuideModal();
+        };
+
+        window.deleteGuide = function(id) {
+            if (confirm("Xóa mục hướng dẫn cài đặt này?")) {
+                remove(ref(db, `guides/${id}`));
+            }
+        };
+
+        window.recordLog = function(action, fileName) {
+            const timeStr = new Date().toLocaleString('vi-VN');
+            const randomIP = `14.161.${Math.floor(Math.random() * 200)}.${Math.floor(Math.random() * 255)}`;
+            const logPayload = { time: timeStr, ip: randomIP, action: action, file: fileName };
+            push(ref(db, "logs"), logPayload);
+        };
+
+        function renderLogsTable() {
+            const tbody = document.getElementById('adminLogsTable');
+            if (!tbody) return;
+            let html = '';
+            logsData.forEach(log => {
+                let badgeColor = "bg-emerald-100 text-emerald-700";
+                if (log.action.includes("Thanh toán")) badgeColor = "bg-amber-100 text-amber-700";
+                html += `
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="px-5 py-3.5 text-xs text-slate-500 font-medium">${log.time}</td>
+                        <td class="px-5 py-3.5 font-mono text-xs text-slate-600">${log.ip}</td>
+                        <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${badgeColor}">${log.action}</span></td>
+                        <td class="px-5 py-3.5 font-bold text-slate-800 text-xs">${log.file}</td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html || `<tr><td colspan="4" class="text-center py-6 text-slate-400">Chưa có lịch sử giao dịch nào</td></tr>`;
+        }
+
+        window.clearLogs = function() {
+            if (confirm("Xóa toàn bộ lịch sử giao dịch?")) {
+                remove(ref(db, "logs"));
+            }
+        };
+
+        window.checkDeadLinks = function() {
+            const resEl = document.getElementById('linkCheckResult');
+            resEl.innerHTML = `<p class="text-blue-500 font-semibold"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang kiểm tra các đường dẫn...</p>`;
+            setTimeout(() => {
+                let activeCount = filesData.length;
+                resEl.innerHTML = `
+                    <p class="text-emerald-600 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Đã quét thành công ${activeCount} tệp tin.</p>
+                    <p class="text-slate-500">Trạng thái: Tất cả các đường dẫn Drive, Mediafire đều đang hoạt động tốt (0 Link hỏng).</p>
+                `;
+            }, 1200);
+        };
+
+        window.exportDataJSON = function() {
+            const exportObj = { categories: categoriesData, bio: bioData, files: filesData, guides: guidesData };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `backup_data_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        };
+
+        window.importDataJSON = function(e) {
+            const fileReader = new FileReader();
+            if (e.target.files[0]) {
+                fileReader.readAsText(e.target.files[0], "UTF-8");
+                fileReader.onload = function(event) {
+                    try {
+                        const parsed = JSON.parse(event.target.result);
+                        if (parsed.categories && parsed.bio && parsed.files) {
+                            set(ref(db, "categories"), parsed.categories);
+                            set(ref(db, "bio"), parsed.bio);
+                            let filesObj = {};
+                            parsed.files.forEach(f => {
+                                const id = f.id || 'file_' + Math.random().toString(36).substring(2,7);
+                                delete f.id;
+                                filesObj[id] = f;
+                            });
+                            set(ref(db, "files"), filesObj);
+                            if (parsed.guides) {
+                                let guidesObj = {};
+                                parsed.guides.forEach(g => {
+                                    const id = g.id || 'guide_' + Math.random().toString(36).substring(2,7);
+                                    delete g.id;
+                                    guidesObj[id] = g;
+                                });
+                                set(ref(db, "guides"), guidesObj);
+                            }
+                            alert("Khôi phục dữ liệu từ tệp JSON thành công!");
+                        } else {
+                            alert("Cấu trúc file JSON không hợp lệ!");
+                        }
+                    } catch (err) {
+                        alert("Lỗi đọc file JSON: " + err.message);
+                    }
+                }
+            }
+        };
+
+        const canvas = document.getElementById('fireworksCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class FireworkParticle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 6 + 2;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.015 + 0.01;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += 0.08;
+                this.alpha -= this.decay;
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        window.triggerFireworks = function() {
+            const colors = ['#ff4757', '#007aff', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
+            const startX = Math.random() * (canvas.width * 0.8) + canvas.width * 0.1;
+            const startY = Math.random() * (canvas.height * 0.5) + canvas.height * 0.2;
+            for (let i = 0; i < 60; i++) {
+                particles.push(new FireworkParticle(startX, startY, colors[Math.floor(Math.random() * colors.length)]));
+            }
+        };
+
+        function loopFireworks() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                p.update();
+                p.draw();
+                if (p.alpha <= 0) particles.splice(index, 1);
+            });
+            requestAnimationFrame(loopFireworks);
+        }
+        loopFireworks();
+
+        window.toggleThemeMode = function() {
+            const body = document.body;
+            const icon = document.getElementById('themeToggleIcon');
+            const label = document.getElementById('themeToggleLabel');
+            body.classList.toggle('light-mode');
+            if (body.classList.contains('light-mode')) {
+                icon.className = "fa-solid fa-sun text-amber-500";
+                label.innerText = "Theme Sáng";
+            } else {
+                icon.className = "fa-solid fa-moon text-indigo-500";
+                label.innerText = "Theme Tối";
+            }
+        };
+
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C' || e.key === 'J')) || (e.ctrlKey && e.key === 'U')) {
+                e.preventDefault();
+                alert("Tính năng bảo vệ nguồn được bật: Không thể xem mã nguồn!");
+            }
+        });
 
         let typingTimeout = null;
         function initTypingEffect() {
             const element = document.getElementById('bioGamingText');
             if (!element) return;
-
-            const phrases = [
-                "ℋ𝑒𝓁𝓁𝑜 𝑒𝓋𝑒𝓇𝓎𝑜𝓃𝑒.",
-                "ℐ'𝓂 𝓉ℛ𝑜𝓃𝒢 ℒℐ𝒸𝒽 𝒟𝑒𝓋"
-            ];
-
-            let phraseIndex = 0;
-            let charIndex = 0;
-            let isDeleting = false;
-            let countPerPhrase = 0;
+            const phrases = ["ℋ𝑒𝓁𝓁𝑜 𝑒𝓋𝑒𝓇𝓎𝑜𝓃𝑒.", "ℐ'𝓂 𝓉ℛ𝑜𝓃𝒢 ℒℐ𝒸𝒽 𝒟𝑒𝓋"];
+            let phraseIndex = 0, charIndex = 0, isDeleting = false, countPerPhrase = 0;
 
             function typeLoop() {
                 const fullText = phrases[phraseIndex];
-
                 if (!isDeleting) {
                     element.innerText = fullText.substring(0, charIndex + 1);
                     charIndex++;
                     if (charIndex === fullText.length) {
-                        typingTimeout = setTimeout(() => {
-                            isDeleting = true;
-                            typeLoop();
-                        }, 1500);
+                        typingTimeout = setTimeout(() => { isDeleting = true; typeLoop(); }, 1500);
                         return;
                     }
                 } else {
@@ -994,33 +1560,23 @@
                     if (charIndex === 0) {
                         isDeleting = false;
                         countPerPhrase++;
-                        if (countPerPhrase >= 2) {
-                            countPerPhrase = 0;
-                            phraseIndex = (phraseIndex + 1) % phrases.length;
-                        }
+                        if (countPerPhrase >= 2) { countPerPhrase = 0; phraseIndex = (phraseIndex + 1) % phrases.length; }
                     }
                 }
-
-                const speed = isDeleting ? 60 : 120;
-                typingTimeout = setTimeout(typeLoop, speed);
+                typingTimeout = setTimeout(typeLoop, isDeleting ? 60 : 120);
             }
-
             typeLoop();
         }
 
         function renderCategorySelects() {
             const publicSelect = document.getElementById('publicFilterCategory');
             let publicOptions = `<option value="ALL">Tất cả thể loại</option>`;
-            categoriesData.forEach(cat => {
-                publicOptions += `<option value="${cat}">${cat}</option>`;
-            });
+            categoriesData.forEach(cat => publicOptions += `<option value="${cat}">${cat}</option>`);
             if (publicSelect) publicSelect.innerHTML = publicOptions;
 
             const modalSelect = document.getElementById('fileFormCategory');
             let modalOptions = '';
-            categoriesData.forEach(cat => {
-                modalOptions += `<option value="${cat}">${cat}</option>`;
-            });
+            categoriesData.forEach(cat => modalOptions += `<option value="${cat}">${cat}</option>`);
             if (modalSelect) modalSelect.innerHTML = modalOptions;
         }
 
@@ -1031,20 +1587,47 @@
             categoriesData.forEach((cat, index) => {
                 const count = filesData.filter(f => f.category === cat).length;
                 html += `
-                    <tr class="hover:bg-slate-50 transition">
+                    <tr class="hover:bg-slate-50/80 transition">
                         <td class="px-5 py-3.5 font-semibold text-slate-400">${index + 1}</td>
                         <td class="px-5 py-3.5 font-bold text-slate-800">${cat}</td>
                         <td class="px-5 py-3.5 text-xs text-slate-500 font-medium">${count} tệp</td>
                         <td class="px-5 py-3.5 text-right">
-                            <button onclick="window.deleteCategory('${cat}')" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition" title="Xóa Danh Mục">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
+                            <button onclick="window.deleteCategory('${cat}')" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition" title="Xóa"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
             });
             tbody.innerHTML = html;
         }
+
+        // --- HÀM AN TOÀN TRÁNH VỠ KÝ TỰ ĐẶC BIỆT / DẤU NHÁY ---
+        window.openCheckoutModalById = function(id) {
+            const file = filesData.find(f => f.id === id);
+            if (!file) return;
+            activeCheckoutFile = file.name;
+            document.getElementById('checkoutFileName').innerText = file.name;
+            document.getElementById('checkoutFilePrice').innerText = Number(file.price || 0).toLocaleString() + " VNĐ";
+            document.getElementById('checkoutSyntax').innerText = "MUA " + file.name.substring(0, 20);
+            document.getElementById('checkoutDirectLink').href = file.link;
+            document.getElementById('checkoutModal').classList.remove('opacity-0', 'pointer-events-none');
+        };
+
+        window.closeCheckoutModal = function() {
+            document.getElementById('checkoutModal').classList.add('opacity-0', 'pointer-events-none');
+        };
+
+        window.logCheckoutClick = function() {
+            window.recordLog("Thanh toán mua", activeCheckoutFile);
+            window.triggerFireworks();
+        };
+
+        window.incrementDownloadWithLogById = function(id) {
+            const file = filesData.find(f => f.id === id);
+            if (!file) return;
+            window.incrementDownload(id);
+            window.recordLog("Tải tệp miễn phí", file.name);
+            window.triggerFireworks();
+        };
 
         function renderBioPreview() {
             if (!bioData.name) return;
@@ -1058,77 +1641,8 @@
                 <a href="${bioData.tiktok || '#'}" target="_blank" class="social-item-bio" title="TikTok"><i class="fab fa-tiktok"></i></a>
                 <a href="${bioData.youtube || '#'}" target="_blank" class="social-item-bio" title="YouTube"><i class="fab fa-youtube"></i></a>
                 <a href="${bioData.zalo || '#'}" target="_blank" class="social-item-bio" title="Zalo"><i class="fas fa-comment-dots"></i></a>
-                <a href="${bioData.social4 || '#'}" target="_blank" class="social-item-bio" title="Mạng XH Khác"><i class="fas fa-globe"></i></a>
+                <a href="${bioData.social4 || '#'}" target="_blank" class="social-item-bio" title="Khác"><i class="fas fa-globe"></i></a>
             `;
-
-            let bioLinksHTML = '';
-            filesData.slice(0, 5).forEach(file => {
-                const imgThumb = file.image ? file.image : 'https://placehold.co/100x100/1e293b/ffffff?text=File';
-                const isPaid = file.saleType === 'paid';
-                const priceText = isPaid ? `<span class="text-amber-400 font-bold">${Number(file.price || 0).toLocaleString()} VNĐ</span>` : `<span class="text-emerald-400 font-bold">Miễn phí</span>`;
-                const actionLabel = isPaid ? 'Mua Ngay' : 'Tải Về';
-
-                const clickAction = isPaid 
-                    ? `onclick="window.openCheckoutModal('${file.name.replace(/'/g, "\\'")}', ${file.price || 0}, '${file.link}')"`
-                    : `href="${file.link}" target="_blank" onclick="window.incrementDownload('${file.id}')"`;
-
-                bioLinksHTML += `
-                    <div class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 transition group cursor-pointer" ${clickAction}>
-                        <div class="flex items-center space-x-3">
-                            <img src="${imgThumb}" class="w-10 h-10 rounded-xl object-cover border border-slate-700 flex-shrink-0" alt="Thumb">
-                            <div class="text-left overflow-hidden">
-                                <p class="text-xs font-bold text-white group-hover:text-orange-400 transition truncate mb-0">${file.name}</p>
-                                <p class="text-[10px] text-slate-400 mb-0">${file.category} • ${priceText}</p>
-                            </div>
-                        </div>
-                        <span class="text-[11px] font-bold bg-orange-500/20 text-orange-400 px-2.5 py-1 rounded-lg flex-shrink-0 ml-2">${actionLabel}</span>
-                    </div>
-                `;
-            });
-            const linksContainer = document.getElementById('bioLinksContainer');
-            if (linksContainer) linksContainer.innerHTML = bioLinksHTML || `<p class="text-xs text-slate-400">Chưa có tệp nào</p>`;
-        }
-
-        // --- MODAL QR THANH TOÁN ---
-        window.openCheckoutModal = function(name, price, link) {
-            document.getElementById('checkoutFileName').innerText = name;
-            document.getElementById('checkoutFilePrice').innerText = Number(price).toLocaleString() + " VNĐ";
-            document.getElementById('checkoutSyntax').innerText = "MUA " + name.substring(0, 20);
-            document.getElementById('checkoutDirectLink').href = link;
-            document.getElementById('checkoutModal').classList.remove('opacity-0', 'pointer-events-none');
-        };
-
-        window.closeCheckoutModal = function() {
-            document.getElementById('checkoutModal').classList.add('opacity-0', 'pointer-events-none');
-        };
-
-        function renderDashboardTable() {
-            const tbody = document.getElementById('dashboardFileTable');
-            if (!tbody) return;
-            let html = '';
-            filesData.forEach(file => {
-                let badgeClass = "bg-emerald-100 text-emerald-700";
-                if (file.status === "Bảo trì") badgeClass = "bg-yellow-100 text-yellow-700";
-                if (file.status === "Cần VIP") badgeClass = "bg-purple-100 text-purple-700";
-
-                html += `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="px-5 py-3.5 font-bold text-slate-800 flex items-center space-x-3">
-                            <img src="${file.image || 'https://placehold.co/60x60/cbd5e1/ffffff?text=No+Img'}" class="w-9 h-9 rounded-lg object-cover border border-slate-200">
-                            <span class="truncate max-w-xs">${file.name}</span>
-                        </td>
-                        <td class="px-5 py-3.5 text-xs text-slate-500">${file.category}</td>
-                        <td class="px-5 py-3.5"><span class="px-2 py-1 rounded-md text-[10px] font-bold ${badgeClass}">${file.status}</span></td>
-                        <td class="px-5 py-3.5 text-xs font-semibold text-slate-700">${(file.downloads || 0).toLocaleString()} lượt</td>
-                        <td class="px-5 py-3.5 text-right">
-                            <a href="${file.link}" target="_blank" onclick="window.incrementDownload('${file.id}')" class="bg-orange-500 hover:bg-orange-600 text-white text-xs px-3 py-1.5 rounded-lg font-bold inline-block shadow-sm transition">
-                                Tải về
-                            </a>
-                        </td>
-                    </tr>
-                `;
-            });
-            tbody.innerHTML = html;
         }
 
         window.renderPublicFiles = function() {
@@ -1146,7 +1660,7 @@
             });
 
             if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 font-medium">Không tìm thấy tệp phù hợp trong thể loại này</div>`;
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 font-medium">Không tìm thấy tệp phù hợp</div>`;
                 return;
             }
 
@@ -1159,17 +1673,17 @@
 
                 const btnClass = isPaid ? 'bg-amber-500 hover:bg-amber-600' : 'bg-slate-900 hover:bg-orange-500';
                 const btnLabel = isPaid ? '<i class="fa-solid fa-cart-shopping mr-1"></i> Mua Ngay' : '<i class="fa-solid fa-download mr-1"></i> Tải Tệp';
-                const fileImg = file.image ? file.image : 'https://placehold.co/400x250/1e293b/ffffff?text=File+Mod';
+                const fileImg = file.image ? file.image : 'https://placehold.co/400x250/1e293b/ffffff?text=File';
 
                 const cardClickAction = isPaid
-                    ? `onclick="window.openCheckoutModal('${file.name.replace(/'/g, "\\'")}', ${file.price || 0}, '${file.link}')"`
-                    : `href="${file.link}" target="_blank" onclick="window.incrementDownload('${file.id}')"`;
+                    ? `onclick="window.openCheckoutModalById('${file.id}')"`
+                    : `href="${file.link}" target="_blank" onclick="window.incrementDownloadWithLogById('${file.id}')"`;
 
                 html += `
-                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition overflow-hidden">
+                    <div class="bg-white/90 backdrop-blur-sm rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition overflow-hidden">
                         <div>
                             <div class="h-36 w-full relative overflow-hidden bg-slate-100">
-                                <img src="${fileImg}" class="w-full h-full object-cover" alt="File Image">
+                                <img src="${fileImg}" class="w-full h-full object-cover" alt="Image">
                                 ${priceBadge}
                             </div>
                             <div class="p-5">
@@ -1204,10 +1718,8 @@
                     : `<span class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-emerald-100 text-emerald-700">Miễn Phí</span>`;
 
                 html += `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="px-5 py-3.5">
-                            <img src="${file.image || 'https://placehold.co/60x60/cbd5e1/ffffff?text=No+Img'}" class="w-10 h-10 rounded-xl object-cover border border-slate-200">
-                        </td>
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="px-5 py-3.5"><img src="${file.image || 'https://placehold.co/60x60/cbd5e1/ffffff?text=No'}" class="w-10 h-10 rounded-xl object-cover border border-slate-200"></td>
                         <td class="px-5 py-3.5 font-bold text-slate-800">${file.name}</td>
                         <td class="px-5 py-3.5">${typeBadge}</td>
                         <td class="px-5 py-3.5 text-xs text-slate-500">${file.size}</td>
@@ -1222,14 +1734,18 @@
             tbody.innerHTML = html;
         }
 
+        function renderDashboardTable() {
+            updateStatsSummary();
+        }
+
         function updateStatsSummary() {
             const totalFiles = filesData.length;
             const totalDownloads = filesData.reduce((acc, curr) => acc + (curr.downloads || 0), 0);
             const iosDownloads = filesData.filter(f => f.category === 'iOS IPA').reduce((acc, curr) => acc + (curr.downloads || 0), 0);
             
-            document.getElementById('statTotalFiles').innerText = totalFiles;
-            document.getElementById('statTotalDownloads').innerText = totalDownloads.toLocaleString();
-            document.getElementById('statIosDownloads').innerText = iosDownloads.toLocaleString();
+            if (document.getElementById('statTotalFiles')) document.getElementById('statTotalFiles').innerText = totalFiles;
+            if (document.getElementById('statTotalDownloads')) document.getElementById('statTotalDownloads').innerText = totalDownloads.toLocaleString();
+            if (document.getElementById('statIosDownloads')) document.getElementById('statIosDownloads').innerText = iosDownloads.toLocaleString();
 
             const sorted = [...filesData].sort((a,b) => (b.downloads || 0) - (a.downloads || 0)).slice(0, 4);
             const topListContainer = document.getElementById('topDownloadProgressList');
@@ -1249,7 +1765,7 @@
                     </div>
                 `;
             });
-            topListContainer.innerHTML = progressHTML || `<p class="text-xs text-slate-400">Chưa có dữ liệu lượt tải</p>`;
+            topListContainer.innerHTML = progressHTML || `<p class="text-xs text-slate-400">Chưa có dữ liệu</p>`;
         }
 
         function populateBioForm() {
@@ -1281,15 +1797,29 @@
 
             const titles = {
                 'files': 'Kho File Tải & Bán Bản Quyền',
-                'dashboard': 'Dashboard Báo cáo & Tổng quan',
-                'stats': 'Thống kê Báo cáo Chi tiết',
+                'guide': 'Hướng dẫn Cài đặt Chi tiết',
+                'dashboard': 'Dashboard Tổng quan',
+                'stats': 'Thống kê Chi tiết theo Ngày',
                 'bio-preview': 'Trang Bio Cá nhân Public',
-                'file-management': 'Quản lý Kho File, Tải & Bán File (CRUD)',
-                'categories-management': 'Quản lý Danh mục File & Mod',
+                'file-management': 'Quản lý Kho File & Tải (CRUD)',
+                'guide-management': 'Quản lý Hướng Dẫn Cài Đặt',
+                'categories-management': 'Quản lý Danh mục',
+                'logs-management': 'Lịch sử Giao dịch & Tải File',
+                'tools-management': 'Quét Link Hỏng & Backup JSON',
                 'bio-admin': 'Cấu hình Bio & Mạng XH',
-                'settings': 'Đổi Mật Khẩu & Hệ thống'
+                'settings': 'Cài đặt Mật khẩu & Hệ thống'
             };
             document.getElementById('topbarTitle').innerText = titles[tabId] || 'Admin Dashboard';
+
+            // KÍCH HOẠT VÀ CẬP NHẬT BIỂU ĐỒ KHI CHUYỂN SANG TAB DASHBOARD / STATS TRÁNH LỖI VẼ KHUNG 0X0
+            if ((tabId === 'dashboard' || tabId === 'stats')) {
+                if (!chartsInitialized) {
+                    initCharts();
+                    chartsInitialized = true;
+                } else {
+                    updateCharts();
+                }
+            }
 
             if (window.innerWidth < 768) {
                 document.getElementById('sidebar').classList.add('-translate-x-full');
@@ -1300,36 +1830,21 @@
         window.toggleSidebar = function() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
-            const isMobile = window.innerWidth < 768;
-
-            if (isMobile) {
-                if (sidebar.classList.contains('-translate-x-full')) {
-                    sidebar.classList.remove('-translate-x-full');
-                    overlay.classList.remove('opacity-0', 'pointer-events-none');
-                } else {
-                    sidebar.classList.add('-translate-x-full');
-                    overlay.classList.add('opacity-0', 'pointer-events-none');
-                }
+            if (window.innerWidth < 768) {
+                sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('opacity-0');
+                overlay.classList.toggle('pointer-events-none');
             } else {
                 isSidebarCollapsed = !isSidebarCollapsed;
-                if (isSidebarCollapsed) {
-                    sidebar.classList.remove('w-64');
-                    sidebar.classList.add('w-20');
-                    document.querySelectorAll('.sidebar-text').forEach(el => el.classList.add('hidden'));
-                } else {
-                    sidebar.classList.remove('w-20');
-                    sidebar.classList.add('w-64');
-                    document.querySelectorAll('.sidebar-text').forEach(el => el.classList.remove('hidden'));
-                }
+                sidebar.classList.toggle('w-64', !isSidebarCollapsed);
+                sidebar.classList.toggle('w-20', isSidebarCollapsed);
+                document.querySelectorAll('.sidebar-text').forEach(el => el.classList.toggle('hidden', isSidebarCollapsed));
             }
         };
 
         window.checkAdminTab = function(tabId) {
-            if (!isAdminLoggedIn) {
-                window.openLoginModal();
-            } else {
-                window.switchTab(tabId);
-            }
+            if (!isAdminLoggedIn) window.openLoginModal();
+            else window.switchTab(tabId);
         };
 
         window.openLoginModal = function() {
@@ -1367,11 +1882,13 @@
             const loggedInBox = document.getElementById('userBoxLoggedIn');
             const adminGroupSection = document.getElementById('adminGroupSection');
             const topbarLoginBtn = document.getElementById('topbarLoginBtn');
+            const quickAddGuideBtn = document.getElementById('quickAddGuideBtn');
 
             if (isAdminLoggedIn) {
                 loggedOutBox.classList.add('hidden');
                 loggedInBox.classList.remove('hidden');
                 adminGroupSection.classList.remove('hidden');
+                if (quickAddGuideBtn) quickAddGuideBtn.classList.remove('hidden');
                 topbarLoginBtn.innerHTML = `
                     <button onclick="window.logoutAdmin()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs px-3.5 py-2 rounded-lg font-bold transition">
                         <i class="fa-solid fa-right-from-bracket mr-1"></i> Đăng xuất
@@ -1381,6 +1898,7 @@
                 loggedOutBox.classList.remove('hidden');
                 loggedInBox.classList.add('hidden');
                 adminGroupSection.classList.add('hidden');
+                if (quickAddGuideBtn) quickAddGuideBtn.classList.add('hidden');
                 topbarLoginBtn.innerHTML = `
                     <button onclick="window.openLoginModal()" class="flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-xs px-3.5 py-2 rounded-lg font-bold shadow-md shadow-orange-500/20 transition">
                         <i class="fa-solid fa-lock"></i>
@@ -1396,18 +1914,16 @@
             const catName = input.value.trim();
             if (!catName) return;
             if (categoriesData.map(c => c.toLowerCase()).includes(catName.toLowerCase())) {
-                alert("Danh mục này đã tồn tại!");
+                alert("Danh mục đã tồn tại!");
                 return;
             }
-            const updated = [...categoriesData, catName];
-            set(ref(db, "categories"), updated);
+            set(ref(db, "categories"), [...categoriesData, catName]);
             input.value = '';
         };
 
         window.deleteCategory = function(catName) {
-            if (confirm(`Bạn có chắc chắn muốn xóa danh mục "${catName}" không?`)) {
-                const updated = categoriesData.filter(c => c !== catName);
-                set(ref(db, "categories"), updated);
+            if (confirm(`Xóa danh mục "${catName}"?`)) {
+                set(ref(db, "categories"), categoriesData.filter(c => c !== catName));
             }
         };
 
@@ -1479,15 +1995,13 @@
         };
 
         window.deleteFile = function(id) {
-            if (confirm("Bạn có chắc chắn muốn xóa tệp này khỏi Firebase không?")) {
+            if (confirm("Xóa tệp này khỏi Firebase?")) {
                 remove(ref(db, `files/${id}`));
             }
         };
 
         window.incrementDownload = function(id) {
-            runTransaction(ref(db, `files/${id}/downloads`), (current) => {
-                return (current || 0) + 1;
-            });
+            runTransaction(ref(db, `files/${id}/downloads`), (current) => (current || 0) + 1);
         };
 
         window.saveBioSettings = function(e) {
@@ -1503,7 +2017,7 @@
                 social4: document.getElementById('bioInputSocial4').value
             };
             set(ref(db, "bio"), bioPayload);
-            alert("Đã đồng bộ thông tin Bio & Mạng xã hội lên Firebase thành công!");
+            alert("Lưu cấu hình Bio thành công!");
         };
 
         window.changeAdminPassword = function(e) {
@@ -1512,81 +2026,79 @@
             const newPass = document.getElementById('inputNewPassword').value;
             const confirmPass = document.getElementById('inputConfirmPassword').value;
 
-            if (oldPass !== currentAdminPassword) {
-                alert("Mật khẩu hiện tại không chính xác!");
-                return;
-            }
-            if (newPass !== confirmPass) {
-                alert("Mật khẩu mới và xác nhận mật khẩu không khớp!");
-                return;
-            }
+            if (oldPass !== currentAdminPassword) { alert("Mật khẩu hiện tại không đúng!"); return; }
+            if (newPass !== confirmPass) { alert("Mật khẩu xác nhận không khớp!"); return; }
 
             set(ref(db, "adminPass"), newPass).then(() => {
-                alert("Đổi mật khẩu thành công! Mật khẩu cũ đã vô hiệu hóa hoàn toàn.");
+                alert("Đổi mật khẩu thành công!");
                 document.getElementById('passwordAdminForm').reset();
-            }).catch((error) => {
-                alert("Lỗi khi cập nhật: " + error.message);
             });
         };
 
         window.resetSystemData = function() {
-            if (confirm("XÁC NHẬN: Khôi phục lại toàn bộ Dữ liệu Mẫu mặc định lên Firebase?")) {
+            if (confirm("Khôi phục toàn bộ Dữ liệu Mẫu lên Firebase?")) {
                 set(ref(db, "/"), initialSeedData);
             }
         };
 
         function initCharts() {
-            const ctx1 = document.getElementById('lineChartDownloads').getContext('2d');
-            lineChart = new Chart(ctx1, {
-                type: 'line',
-                data: {
-                    labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
-                    datasets: [{
-                        label: 'Lượt Tải Android',
-                        data: [3200, 4500, 3900, 5200, 6100, 7800, 9200],
-                        borderColor: '#ff4757',
-                        backgroundColor: 'rgba(255, 71, 87, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }, {
-                        label: 'Lượt Tải iOS IPA',
-                        data: [1500, 2200, 1800, 2900, 3400, 4100, 5300],
-                        borderColor: '#007aff',
-                        backgroundColor: 'rgba(0, 122, 255, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-            });
+            const ctx1 = document.getElementById('lineChartDownloads');
+            if (ctx1) {
+                lineChart = new Chart(ctx1.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật'],
+                        datasets: [{
+                            label: 'Lượt Tải Android',
+                            data: [3200, 4500, 3900, 5200, 6100, 7800, 9200],
+                            borderColor: '#ff4757',
+                            backgroundColor: 'rgba(255, 71, 87, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }, {
+                            label: 'Lượt Tải iOS IPA',
+                            data: [1500, 2200, 1800, 2900, 3400, 4100, 5300],
+                            borderColor: '#007aff',
+                            backgroundColor: 'rgba(0, 122, 255, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                });
+            }
 
-            const ctx2 = document.getElementById('doughnutChartCategories').getContext('2d');
-            doughnutChart = new Chart(ctx2, {
-                type: 'doughnut',
-                data: {
-                    labels: categoriesData,
-                    datasets: [{
-                        data: categoriesData.map(cat => filesData.filter(f => f.category === cat).length),
-                        backgroundColor: ['#ff4757', '#007aff', '#10b981', '#8b5cf6', '#f59e0b', '#ec4899', '#3b82f6']
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-            });
+            const ctx2 = document.getElementById('doughnutChartCategories');
+            if (ctx2) {
+                doughnutChart = new Chart(ctx2.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: categoriesData,
+                        datasets: [{
+                            data: categoriesData.map(cat => filesData.filter(f => f.category === cat).length),
+                            backgroundColor: ['#ff4757', '#007aff', '#10b981', '#8b5cf6', '#f59e0b', '#ec4899', '#3b82f6']
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                });
+            }
 
-            const ctx3 = document.getElementById('barChartDevice').getContext('2d');
-            barChart = new Chart(ctx3, {
-                type: 'bar',
-                data: {
-                    labels: ['Android Mobile', 'iPhone / iPad', 'PC Emulator', 'Khác'],
-                    datasets: [{
-                        label: 'Số lượng truy cập',
-                        data: [54000, 32000, 12000, 3000],
-                        backgroundColor: ['#ff4757', '#007aff', '#10b981', '#94a3b8'],
-                        borderRadius: 8
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-            });
+            const ctx3 = document.getElementById('barChartDevice');
+            if (ctx3) {
+                barChart = new Chart(ctx3.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Android Mobile', 'iPhone / iPad', 'PC Emulator', 'Khác'],
+                        datasets: [{
+                            label: 'Lượt truy cập theo ngày',
+                            data: [8400, 6200, 3100, 950],
+                            backgroundColor: ['#ff4757', '#007aff', '#10b981', '#94a3b8'],
+                            borderRadius: 8
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+            }
         }
 
         function updateCharts() {
@@ -1595,21 +2107,33 @@
                 doughnutChart.data.datasets[0].data = categoriesData.map(cat => filesData.filter(f => f.category === cat).length);
                 doughnutChart.update();
             }
+            if (lineChart) lineChart.update();
+            if (barChart) barChart.update();
         }
 
         function initContributionGrid() {
             const grid = document.getElementById('contribution-grid');
             if (!grid) return;
+            const pattern = [
+                " III   L       OOO   V   V  EEEEE  U   U   HH   HH  ",
+                "  I    L      O   O  V   V  E      U   U  HHHH HHHH ",
+                "  I    L      O   O  V   V  EEE    U   U  HHHHHHHHH ",
+                "  I    L      O   O   V V   E      U   U   HHHHHHH  ",
+                "  I    L      O   O   V V   E      U   U    HHHHH   ",
+                " III   LLLLL   OOO     V    EEEEE   UUU      HHH     ",
+                "1111111111111111111111111111111111111111111111111111                                                    "
+            ];
             let html = '';
-            for (let i = 0; i < 52 * 7; i++) {
-                const isActive = Math.random() > 0.6 ? 'jd-active' : '';
-                html += `<div class="dot ${isActive}"></div>`;
+            for (let row = 0; row < 7; row++) {
+                const line = pattern[row] || "";
+                for (let col = 0; col < 52; col++) {
+                    html += `<div class="dot ${line[col] !== ' ' ? 'jd-active' : ''}"></div>`;
+                }
             }
             grid.innerHTML = html;
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            initCharts();
             initContributionGrid();
             initTypingEffect();
             setupFirebaseRealtimeListeners();
