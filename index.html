@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard & Share File Free Fire / iOS Mod - Firebase Realtime</title>
+    <title>Admin Dashboard & share file</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -54,7 +54,13 @@
             overflow: hidden;
         }
 
-        /* LIGHT MODE OVERRIDES */
+        /* KHỐI CHỐNG TRÀN CHỮ TOÀN HỆ THỐNG */
+        *, ::before, ::after {
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+
         body.light-mode {
             background-color: #f1f5f9;
             color: #1e293b;
@@ -66,7 +72,6 @@
             background-color: rgba(255, 255, 255, 0.95) !important;
         }
 
-        /* CSS CHO VIDEO NỀN - HIỂN THỊ SẮC NÉT */
         .bg-video {
             position: fixed;
             top: 50%;
@@ -81,7 +86,6 @@
             filter: contrast(105%) brightness(95%);
         }
 
-        /* PHÁO HOA CANVAS */
         #fireworksCanvas {
             position: fixed;
             top: 0;
@@ -185,7 +189,6 @@
             height: 175px;
             top: 50%;
             left: 50%;
-            /* Đã dịch vương miện xuống một chút để khớp khít với avatar */
             transform: translate(-50%, -46%);
             z-index: 3;
             pointer-events: none;
@@ -279,15 +282,12 @@
 
 <body class="text-slate-800 antialiased flex h-screen overflow-hidden">
 
-    <!-- CANVAS PHÁO HOA -->
     <canvas id="fireworksCanvas"></canvas>
 
-    <!-- THẺ VIDEO NỀN NÉT -->
     <video autoplay muted loop playsinline class="bg-video">
         <source src="https://videotourl.com/videos/1792662777057-c5fcb75a-0880-4124-9eef-cce2dbcb09f2.mp4" type="video/mp4">
     </video>
 
-    <!-- OVERLAY CHO MOBILE SIDEBAR -->
     <div id="sidebarOverlay" onclick="window.toggleSidebar()" class="fixed inset-0 bg-slate-900/60 z-30 opacity-0 pointer-events-none transition-opacity duration-300 md:hidden"></div>
 
     <!-- SIDEBAR -->
@@ -297,8 +297,8 @@
                 <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-red-500 to-orange-500 flex items-center justify-center font-black text-white text-lg shadow-lg shadow-red-500/30 flex-shrink-0">
                     zw
                 </div>
-                <div class="sidebar-text transition-opacity duration-200">
-                    <h1 class="font-bold text-white text-sm leading-tight uppercase tracking-wider">𝓉ℛ𝑜𝓃𝒢ℒℐ𝒸𝒽</h1>
+                <div class="sidebar-text transition-opacity duration-200 truncate">
+                    <h1 class="font-bold text-white text-sm leading-tight uppercase tracking-wider truncate">𝓉ℛ𝑜𝓃𝒢ℒℐ𝒸𝒽</h1>
                     <p class="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
                         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Realtime Sync
                     </p>
@@ -315,28 +315,28 @@
                 <nav class="space-y-1">
                     <a href="#" onclick="window.switchTab('files')" id="nav-files" class="nav-item active flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-slate-800 text-white border-l-4 border-orange-500">
                         <i class="fa-solid fa-folder-open text-lg text-indigo-400 w-6 text-center"></i>
-                        <span class="sidebar-text">Kho File (Trang Chủ)</span>
+                        <span class="sidebar-text truncate">Kho File (Trang Chủ)</span>
                     </a>
                     <a href="#" onclick="window.switchTab('guide')" id="nav-guide" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-book text-lg text-amber-400 w-6 text-center"></i>
-                        <span class="sidebar-text">Hướng dẫn cài đặt</span>
+                        <span class="sidebar-text truncate">Hướng dẫn cài đặt</span>
                     </a>
                     <a href="#" onclick="window.switchTab('dashboard')" id="nav-dashboard" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-chart-pie text-lg text-orange-400 w-6 text-center"></i>
-                        <span class="sidebar-text">Dashboard Tổng quan</span>
+                        <span class="sidebar-text truncate">Dashboard Tổng quan</span>
                     </a>
                     <a href="#" onclick="window.switchTab('stats')" id="nav-stats" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-chart-line text-lg text-emerald-400 w-6 text-center"></i>
-                        <span class="sidebar-text">Thống kê theo Ngày</span>
+                        <span class="sidebar-text truncate">Thống kê theo Ngày</span>
                     </a>
                     <a href="#" onclick="window.switchTab('bio-preview')" id="nav-bio-preview" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-id-card text-lg text-pink-400 w-6 text-center"></i>
-                        <span class="sidebar-text">Trang Bio Public</span>
+                        <span class="sidebar-text truncate">Trang Bio Public</span>
                     </a>
                 </nav>
             </div>
 
-            <!-- NHÓM ADMIN QUẢN LÝ -->
+            <!-- ADMIN GROUP -->
             <div id="adminGroupSection" class="hidden">
                 <div class="flex items-center justify-between px-3 mb-2">
                     <p class="sidebar-text text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Admin Quản lý</p>
@@ -345,31 +345,31 @@
                 <nav class="space-y-1">
                     <a href="#" onclick="window.checkAdminTab('file-management')" id="nav-file-management" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-list-check text-lg text-cyan-400 w-6 text-center"></i>
-                        <span class="sidebar-text">Quản lý File & Link (CRUD)</span>
+                        <span class="sidebar-text truncate">Quản lý File & Link (CRUD)</span>
                     </a>
                     <a href="#" onclick="window.checkAdminTab('guide-management')" id="nav-guide-management" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-gears text-lg text-amber-400 w-6 text-center"></i>
-                        <span class="sidebar-text">Quản lý Hướng Dẫn Cài</span>
+                        <span class="sidebar-text truncate">Quản lý Hướng Dẫn Cài</span>
                     </a>
                     <a href="#" onclick="window.checkAdminTab('categories-management')" id="nav-categories-management" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-tags text-lg text-emerald-400 w-6 text-center"></i>
-                        <span class="sidebar-text">Quản lý Danh mục</span>
+                        <span class="sidebar-text truncate">Quản lý Danh mục</span>
                     </a>
                     <a href="#" onclick="window.checkAdminTab('logs-management')" id="nav-logs-management" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-clock-rotate-left text-lg text-blue-400 w-6 text-center"></i>
-                        <span class="sidebar-text">Lịch Sử Giao Dịch (Logs)</span>
+                        <span class="sidebar-text truncate">Lịch Sử Giao Dịch (Logs)</span>
                     </a>
                     <a href="#" onclick="window.checkAdminTab('tools-management')" id="nav-tools-management" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-toolbox text-lg text-rose-400 w-6 text-center"></i>
-                        <span class="sidebar-text">Quét Link & Backup JSON</span>
+                        <span class="sidebar-text truncate">Quét Link & Backup JSON</span>
                     </a>
                     <a href="#" onclick="window.checkAdminTab('bio-admin')" id="nav-bio-admin" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-user-gear text-lg text-purple-400 w-6 text-center"></i>
-                        <span class="sidebar-text">Cấu hình Bio & Mạng XH</span>
+                        <span class="sidebar-text truncate">Cấu hình Bio & Mạng XH</span>
                     </a>
                     <a href="#" onclick="window.checkAdminTab('settings')" id="nav-settings" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-colors">
                         <i class="fa-solid fa-sliders text-lg text-yellow-400 w-6 text-center"></i>
-                        <span class="sidebar-text">Đổi Mật Khẩu & Hệ thống</span>
+                        <span class="sidebar-text truncate">Đổi Mật Khẩu & Hệ thống</span>
                     </a>
                 </nav>
             </div>
@@ -378,27 +378,27 @@
         <div class="p-3 bg-navy-950/85 border-t border-slate-800/80">
             <div id="userBoxLoggedOut" class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400">
+                    <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 flex-shrink-0">
                         <i class="fa-solid fa-user-lock"></i>
                     </div>
-                    <div class="sidebar-text">
-                        <p class="text-xs font-medium text-slate-300">Khách / Viewer</p>
+                    <div class="sidebar-text truncate">
+                        <p class="text-xs font-medium text-slate-300 truncate">Khách / Viewer</p>
                     </div>
                 </div>
-                <button onclick="window.openLoginModal()" class="sidebar-text bg-orange-500 hover:bg-orange-600 text-white text-xs px-2.5 py-1.5 rounded-md font-semibold transition">
+                <button onclick="window.openLoginModal()" class="sidebar-text bg-orange-500 hover:bg-orange-600 text-white text-xs px-2.5 py-1.5 rounded-md font-semibold transition flex-shrink-0">
                     Đăng nhập
                 </button>
             </div>
 
             <div id="userBoxLoggedIn" class="hidden flex items-center justify-between">
-                <div class="flex items-center space-x-2">
-                    <img id="adminAvatarSmall" src="https://placehold.co/100x100/1e293b/ffffff?text=Admin" class="w-8 h-8 rounded-full border border-orange-500 object-cover">
-                    <div class="sidebar-text overflow-hidden">
+                <div class="flex items-center space-x-2 min-w-0">
+                    <img id="adminAvatarSmall" src="https://placehold.co/100x100/1e293b/ffffff?text=Admin" class="w-8 h-8 rounded-full border border-orange-500 object-cover flex-shrink-0">
+                    <div class="sidebar-text min-w-0">
                         <p id="adminNameSmall" class="text-xs font-semibold text-white truncate">Admin 𝓉ℛ𝑜𝓃𝒢ℒℐ𝒸𝒽</p>
-                        <p class="text-[10px] text-emerald-400 flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1 animate-pulse"></span> Quản trị viên</p>
+                        <p class="text-[10px] text-emerald-400 flex items-center truncate"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1 animate-pulse"></span> Quản trị viên</p>
                     </div>
                 </div>
-                <button onclick="window.logoutAdmin()" class="sidebar-text text-slate-400 hover:text-red-400 p-1.5 rounded-md transition" title="Đăng xuất">
+                <button onclick="window.logoutAdmin()" class="sidebar-text text-slate-400 hover:text-red-400 p-1.5 rounded-md transition flex-shrink-0" title="Đăng xuất">
                     <i class="fa-solid fa-right-from-bracket"></i>
                 </button>
             </div>
@@ -406,20 +406,19 @@
     </aside>
 
     <!-- MAIN CONTAINER -->
-    <div class="flex-1 flex flex-col h-screen overflow-hidden">
+    <div class="flex-1 flex flex-col h-screen overflow-hidden min-w-0">
         
-        <header class="h-16 bg-white/85 backdrop-blur-md border-b border-slate-200/80 flex items-center justify-between px-4 md:px-6 shadow-sm z-20">
-            <div class="flex items-center space-x-3">
-                <button onclick="window.toggleSidebar()" class="p-2.5 rounded-xl text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-orange-500/20 active:scale-95 transition" title="Menu Sidebar">
+        <header class="h-16 bg-white/85 backdrop-blur-md border-b border-slate-200/80 flex items-center justify-between px-4 md:px-6 shadow-sm z-20 flex-shrink-0">
+            <div class="flex items-center space-x-3 min-w-0">
+                <button onclick="window.toggleSidebar()" class="p-2.5 rounded-xl text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-orange-500/20 active:scale-95 transition flex-shrink-0" title="Menu Sidebar">
                     <i class="fa-solid fa-bars text-xl"></i>
                 </button>
-                <div class="hidden sm:block">
-                    <h2 id="topbarTitle" class="text-base font-bold text-slate-800">Kho File Free Fire / iOS Mod</h2>
+                <div class="hidden sm:block min-w-0">
+                    <h2 id="topbarTitle" class="text-base font-bold text-slate-800 truncate">Kho File Free Fire / iOS Mod</h2>
                 </div>
             </div>
 
-            <div class="flex items-center space-x-3">
-                <!-- NÚT CHUYỂN DARK / LIGHT MODE -->
+            <div class="flex items-center space-x-3 flex-shrink-0">
                 <button onclick="window.toggleThemeMode()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs px-3 py-2 rounded-lg font-medium transition flex items-center space-x-1.5" title="Chuyển Sáng / Tối">
                     <i id="themeToggleIcon" class="fa-solid fa-moon text-indigo-500"></i>
                     <span id="themeToggleLabel">Theme Tối</span>
@@ -451,23 +450,21 @@
                         <h2 class="text-xl font-bold text-slate-800">Kho File Free Fire / iOS IPA / Tut Trick</h2>
                         <p class="text-xs text-slate-500">Tải xuống tệp Miễn phí hoặc Mua file bản quyền cao cấp</p>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <input type="text" id="publicSearchInput" oninput="window.renderPublicFiles()" placeholder="Tìm kiếm file, tut..." class="bg-white/90 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 w-48 sm:w-64 shadow-sm">
-                        <select id="publicFilterCategory" onchange="window.renderPublicFiles()" class="bg-white/90 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-sm cursor-pointer">
-                            <!-- Dynamic Options -->
+                    <div class="flex items-center space-x-2 flex-wrap sm:flex-nowrap gap-2">
+                        <input type="text" id="publicSearchInput" oninput="window.renderPublicFiles()" placeholder="Tìm kiếm file, tut..." class="bg-white/90 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 w-full sm:w-64 shadow-sm">
+                        <select id="publicFilterCategory" onchange="window.renderPublicFiles()" class="bg-white/90 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-sm cursor-pointer w-full sm:w-auto">
                         </select>
                     </div>
                 </div>
 
                 <div id="publicFilesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                    <!-- Dynamic Render -->
                 </div>
             </section>
 
             <!-- TAB 1.1: TRANG HƯỚNG DẪN CÀI ĐẶT -->
             <section id="tab-guide" class="tab-content hidden max-w-4xl mx-auto space-y-6">
                 <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-slate-100 shadow-sm space-y-6">
-                    <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
+                    <div class="border-b border-slate-100 pb-4 flex items-center justify-between flex-wrap gap-2">
                         <div>
                             <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
                                 <i class="fa-solid fa-book text-amber-500"></i> Hướng Dẫn Cài Đặt Chi Tiết
@@ -480,7 +477,6 @@
                     </div>
 
                     <div id="userGuidesContainer" class="space-y-6 text-sm text-slate-700">
-                        <!-- Dynamic Guides Content -->
                     </div>
                 </div>
             </section>
@@ -489,53 +485,53 @@
             <section id="tab-dashboard" class="tab-content hidden space-y-6">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
-                        <div>
-                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tổng tải file</p>
-                            <h3 id="statTotalDownloads" class="text-2xl font-black text-slate-800 mt-1">0</h3>
+                        <div class="min-w-0">
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider truncate">Tổng tải file</p>
+                            <h3 id="statTotalDownloads" class="text-2xl font-black text-slate-800 mt-1 truncate">0</h3>
                             <span class="inline-flex items-center text-xs font-semibold text-emerald-500 mt-1">
-                                <i class="fa-solid fa-arrow-trend-up mr-1"></i> Đồng bộ thời gian thực
+                                <i class="fa-solid fa-arrow-trend-up mr-1"></i> Realtime Sync
                             </span>
                         </div>
-                        <div class="w-12 h-12 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center text-xl shadow-inner">
+                        <div class="w-12 h-12 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center text-xl shadow-inner flex-shrink-0">
                             <i class="fa-solid fa-fire"></i>
                         </div>
                     </div>
 
                     <div class="bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
-                        <div>
-                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">File iOS / IPA</p>
-                            <h3 id="statIosDownloads" class="text-2xl font-black text-slate-800 mt-1">0</h3>
+                        <div class="min-w-0">
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider truncate">File iOS / IPA</p>
+                            <h3 id="statIosDownloads" class="text-2xl font-black text-slate-800 mt-1 truncate">0</h3>
                             <span class="inline-flex items-center text-xs font-semibold text-blue-500 mt-1">
                                 <i class="fa-solid fa-apple-whole mr-1"></i> IPA Direct Sign
                             </span>
                         </div>
-                        <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-xl shadow-inner">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-xl shadow-inner flex-shrink-0">
                             <i class="fa-brands fa-apple"></i>
                         </div>
                     </div>
 
                     <div class="bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
-                        <div>
-                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Lượt Xem Bio</p>
-                            <h3 id="statBioViews" class="text-2xl font-black text-slate-800 mt-1">0</h3>
+                        <div class="min-w-0">
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider truncate">Lượt Xem Bio</p>
+                            <h3 id="statBioViews" class="text-2xl font-black text-slate-800 mt-1 truncate">0</h3>
                             <span class="inline-flex items-center text-xs font-semibold text-purple-500 mt-1">
                                 <i class="fa-solid fa-eye mr-1"></i> Realtime Traffic
                             </span>
                         </div>
-                        <div class="w-12 h-12 bg-purple-50 text-purple-500 rounded-2xl flex items-center justify-center text-xl shadow-inner">
+                        <div class="w-12 h-12 bg-purple-50 text-purple-500 rounded-2xl flex items-center justify-center text-xl shadow-inner flex-shrink-0">
                             <i class="fa-solid fa-chart-simple"></i>
                         </div>
                     </div>
 
                     <div class="bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
-                        <div>
-                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tổng Tệp / Tut</p>
-                            <h3 id="statTotalFiles" class="text-2xl font-black text-slate-800 mt-1">0</h3>
+                        <div class="min-w-0">
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider truncate">Tổng Tệp / Tut</p>
+                            <h3 id="statTotalFiles" class="text-2xl font-black text-slate-800 mt-1 truncate">0</h3>
                             <span class="inline-flex items-center text-xs font-semibold text-emerald-500 mt-1">
                                 <i class="fa-solid fa-check-circle mr-1"></i> Đang hoạt động
                             </span>
                         </div>
-                        <div class="w-12 h-12 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center text-xl shadow-inner">
+                        <div class="w-12 h-12 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center text-xl shadow-inner flex-shrink-0">
                             <i class="fa-solid fa-box-archive"></i>
                         </div>
                     </div>
@@ -589,7 +585,6 @@
                     <div class="bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm">
                         <h3 class="font-bold text-slate-800 text-sm mb-4">Top File Tải Nhiều Nhất</h3>
                         <div class="space-y-4" id="topDownloadProgressList">
-                            <!-- Dynamic Content -->
                         </div>
                     </div>
                 </div>
@@ -607,12 +602,11 @@
                                 </div>
                                 <div id="bioGamingText" class="henry-gaming rainbow-text typing-cursor"></div>
                             </div>
-                            <div class="user-info-bio">
-                                <h1 id="bioNamePreview" class="rainbow-text" style="font-size: 2.5rem; margin: 0; line-height: 1;">𝓉ℛ𝑜𝓃𝒢<span style='color:#ff416c'>ℒℐ𝒸𝒽</span></h1>
-                                <div id="bioBadgePreview" class="rainbow-text" style="font-size: 1.1rem; margin: 10px 0; font-weight: 600;">ℱ𝓊𝓁𝓁 𝒮𝓉𝒶𝒸𝓀 𝒟𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇</div>
-                                <p id="bioTaglinePreview" class="rainbow-text" style="font-size: 0.8rem; opacity: 0.8; letter-spacing: 1px;">#𝒽𝑒𝓃𝓇𝓎_𝒹𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇_𝒻𝓊𝓁𝓁𝓈𝓉𝒶𝒸𝓀</p>
+                            <div class="user-info-bio min-w-0">
+                                <h1 id="bioNamePreview" class="rainbow-text truncate" style="font-size: 2.5rem; margin: 0; line-height: 1;">𝓉ℛ𝑜𝓃𝒢<span style='color:#ff416c'>ℒℐ𝒸𝒽</span></h1>
+                                <div id="bioBadgePreview" class="rainbow-text truncate" style="font-size: 1.1rem; margin: 10px 0; font-weight: 600;">ℱ𝓊𝓁𝓁 𝒮𝓉𝒶𝒸𝓀 𝒟𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇</div>
+                                <p id="bioTaglinePreview" class="rainbow-text truncate" style="font-size: 0.8rem; opacity: 0.8; letter-spacing: 1px;">#𝒽𝑒𝓃𝓇𝓎_𝒹𝑒𝓋𝑒𝓁𝑜𝓅𝑒𝓇_𝒻𝓊𝓁𝓁𝓈𝓉𝒶𝒸𝓀</p>
                                 <div id="bioSocialsContainer" class="social-links-bio">
-                                    <!-- Dynamic Socials -->
                                 </div>
                             </div>
                         </div>
@@ -625,7 +619,7 @@
 
             <!-- TAB 5: QUẢN LÝ FILE & LINK (CRUD) -->
             <section id="tab-file-management" class="tab-content hidden space-y-6">
-                <div class="flex items-center justify-between bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm">
+                <div class="flex items-center justify-between bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm flex-wrap gap-3">
                     <div>
                         <h2 class="text-lg font-bold text-slate-800">Quản lý Kho File, Tải Miễn Phí & Bán File (CRUD)</h2>
                         <p class="text-xs text-slate-500">Thêm tệp miễn phí hoặc thiết lập giá bán tệp bản quyền VNĐ</p>
@@ -650,16 +644,15 @@
                                 </tr>
                             </thead>
                             <tbody id="adminFileTable" class="divide-y divide-slate-100">
-                                <!-- Dynamic Rows -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- TAB ADMIN MỚI: QUẢN LÝ HƯỚNG DẪN CÀI ĐẶT CHO USER -->
+            <!-- TAB ADMIN: QUẢN LÝ HƯỚNG DẪN CÀI ĐẶT -->
             <section id="tab-guide-management" class="tab-content hidden space-y-6 max-w-4xl mx-auto">
-                <div class="flex items-center justify-between bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm">
+                <div class="flex items-center justify-between bg-white/90 backdrop-blur-sm p-5 rounded-2xl border border-slate-100 shadow-sm flex-wrap gap-3">
                     <div>
                         <h2 class="text-lg font-bold text-slate-800">Quản Lý Cách Cài Đặt Cho User</h2>
                         <p class="text-xs text-slate-500">Admin trực tiếp thêm, sửa, xóa hướng dẫn hiển thị ngoài trang chủ</p>
@@ -683,7 +676,6 @@
                                 </tr>
                             </thead>
                             <tbody id="adminGuideTable" class="divide-y divide-slate-100">
-                                <!-- Dynamic Guide Admin Rows -->
                             </tbody>
                         </table>
                     </div>
@@ -720,7 +712,6 @@
                                 </tr>
                             </thead>
                             <tbody id="adminCategoriesTable" class="divide-y divide-slate-100">
-                                <!-- Dynamic Insert -->
                             </tbody>
                         </table>
                     </div>
@@ -729,7 +720,7 @@
 
             <!-- TAB 6.1: LỊCH SỬ GIAO DỊCH (LOGS) -->
             <section id="tab-logs-management" class="tab-content hidden space-y-6 max-w-5xl mx-auto">
-                <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+                <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between flex-wrap gap-3">
                     <div>
                         <h2 class="text-lg font-bold text-slate-800">Hệ Thống Lịch Sử Giao Dịch & Tải File (Logs)</h2>
                         <p class="text-xs text-slate-500">Ghi lại chi tiết thời gian, địa chỉ IP giả lập và tệp được bấm tải/thanh toán</p>
@@ -751,7 +742,6 @@
                                 </tr>
                             </thead>
                             <tbody id="adminLogsTable" class="divide-y divide-slate-100">
-                                <!-- Dynamic Logs -->
                             </tbody>
                         </table>
                     </div>
@@ -761,7 +751,6 @@
             <!-- TAB 6.2: QUÉT LINK & BACKUP JSON -->
             <section id="tab-tools-management" class="tab-content hidden space-y-6 max-w-4xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- DEAD LINK CHECKER -->
                     <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
                         <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
                             <i class="fa-solid fa-link-slash text-rose-500"></i> Kiểm tra Link hỏng (Dead Link)
@@ -773,7 +762,6 @@
                         <div id="linkCheckResult" class="text-xs text-slate-600 space-y-1"></div>
                     </div>
 
-                    <!-- BACKUP / RESTORE JSON -->
                     <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
                         <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
                             <i class="fa-solid fa-file-code text-indigo-500"></i> Xuất & Nhập dữ liệu (JSON)
@@ -907,7 +895,7 @@
             </div>
             <form onsubmit="window.handleLoginSubmit(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Mật khẩu Quản trị</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Mật khẩu</label>
                     <input type="password" id="loginPasswordInput" required placeholder="Nhập mật khẩu..." class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
                 </div>
                 <div id="loginErrorMsg" class="hidden text-xs text-red-500 font-semibold text-center">
@@ -923,7 +911,7 @@
 
     <!-- MODAL: ADD / EDIT FILE -->
     <div id="fileModal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl transform scale-95 transition-transform duration-300">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto hide-scrollbar">
             <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
                 <h3 id="fileModalTitle" class="text-base font-bold text-slate-800">Thêm File Mới</h3>
                 <button onclick="window.closeFileModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -938,7 +926,6 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Thể loại (Danh mục)</label>
                         <select id="fileFormCategory" class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
-                            <!-- Dynamic Options -->
                         </select>
                     </div>
                     <div>
@@ -977,7 +964,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Mô tả chi tiết</label>
-                    <input type="text" id="fileFormDesc" placeholder="Tính năng nổi bật của tệp..." class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none">
+                    <textarea id="fileFormDesc" rows="4" placeholder="Tính năng nổi bật của tệp, hướng dẫn sơ bộ..." class="w-full border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none font-sans leading-relaxed"></textarea>
                 </div>
                 <div class="flex justify-end space-x-2 pt-3">
                     <button type="button" onclick="window.closeFileModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs px-4 py-2 rounded-xl transition">Hủy</button>
@@ -989,7 +976,7 @@
 
     <!-- MODAL: ADD / EDIT HƯỚNG DẪN CÀI ĐẶT -->
     <div id="guideModal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl transform scale-95 transition-transform duration-300">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto hide-scrollbar">
             <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
                 <h3 id="guideModalTitle" class="text-base font-bold text-slate-800">Thêm Cách Cài Đặt Mới</h3>
                 <button onclick="window.closeGuideModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -1027,6 +1014,46 @@
         </div>
     </div>
 
+    <!-- MODAL: XEM MÔ TẢ CHI TIẾT FILE -->
+    <div id="descModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl transform scale-95 transition-transform duration-300 relative max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4 flex-shrink-0">
+                <div class="flex items-center space-x-2 min-w-0 pr-2">
+                    <i class="fa-solid fa-circle-info text-orange-500 text-lg flex-shrink-0"></i>
+                    <h3 id="descModalTitle" class="text-base font-bold text-slate-800 truncate">Mô Tả Chi Tiết Tệp</h3>
+                </div>
+                <button onclick="window.closeDescModal()" class="text-slate-400 hover:text-slate-600 text-lg flex-shrink-0"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="overflow-y-auto flex-1 hide-scrollbar space-y-4">
+                <div class="relative rounded-xl overflow-hidden bg-slate-100 group">
+                    <img id="descModalImg" src="" class="w-full h-48 object-cover cursor-pointer" alt="Thumbnail">
+                    <button onclick="window.openImageLightbox(document.getElementById('descModalImg').src)" class="absolute bottom-2 right-2 bg-slate-900/80 hover:bg-slate-900 text-white text-xs px-2.5 py-1.5 rounded-lg backdrop-blur-sm flex items-center gap-1 transition">
+                        <i class="fa-solid fa-magnifying-glass-plus"></i>
+                        <span>Phóng to</span>
+                    </button>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Chi tiết tính năng:</p>
+                    <div id="descModalBody" class="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-end flex-shrink-0">
+                <button onclick="window.closeDescModal()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: KÍNH LÚP LIGHTBOX PHÓNG TO HÌNH Ảnh -->
+    <div id="imageLightboxModal" onclick="window.closeImageLightbox()" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 cursor-zoom-out">
+        <button onclick="window.closeImageLightbox()" class="absolute top-5 right-5 text-white/80 hover:text-white text-2xl z-50">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <img id="lightboxImage" src="" class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl transition-transform duration-200">
+    </div>
+
     <!-- MODAL: QR CODE THANH TOÁN MUA NGAY -->
     <div id="checkoutModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
         <div class="bg-slate-900 border border-slate-700 text-white rounded-3xl max-w-sm w-full p-6 shadow-2xl transform scale-95 transition-transform duration-300 relative">
@@ -1035,7 +1062,7 @@
             </button>
             <div class="text-center mb-4">
                 <span class="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Thanh Toán Bản Quyền</span>
-                <h3 id="checkoutFileName" class="text-base font-bold text-white mt-2">Tên File Bản Quyền</h3>
+                <h3 id="checkoutFileName" class="text-base font-bold text-white mt-2 truncate">Tên File Bản Quyền</h3>
                 <p id="checkoutFilePrice" class="text-xl font-black text-amber-400 mt-1">0 VNĐ</p>
             </div>
 
@@ -1046,13 +1073,13 @@
             <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/60 text-xs space-y-1.5 mb-4">
                 <div class="flex justify-between">
                     <span class="text-slate-400">Nội dung chuyển khoản:</span>
-                    <span id="checkoutSyntax" class="font-bold text-emerald-400 select-all">MUA FILE</span>
+                    <span id="checkoutSyntax" class="font-bold text-emerald-400 select-all truncate ml-2">MUA FILE</span>
                 </div>
                 <div class="text-[10px] text-slate-400 text-center mt-1">Quét mã QR qua ứng dụng ngân hàng hoặc momo để thanh toán.</div>
             </div>
 
             <a id="checkoutDirectLink" href="#" target="_blank" onclick="window.logCheckoutClick()" class="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold text-xs py-3 rounded-xl shadow-lg flex items-center justify-center space-x-2 transition">
-                <span>Tôi đã chuyển tiền \ Liên hệ admin</span>
+                <span>Tôi đã chuyển tiền / Liên hệ admin</span>
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
             </a>
         </div>
@@ -1600,7 +1627,32 @@
             tbody.innerHTML = html;
         }
 
-        // --- HÀM AN TOÀN TRÁNH VỠ KÝ TỰ ĐẶC BIỆT / DẤU NHÁY ---
+        // FUNCS CHO MODAL MÔ TẢ CHI TIẾT VÀ KÍNH LÚP XEM ẢNH
+        window.openDescModal = function(id) {
+            const file = filesData.find(f => f.id === id);
+            if (!file) return;
+            document.getElementById('descModalTitle').innerText = file.name;
+            document.getElementById('descModalImg').src = file.image || 'https://placehold.co/400x250/1e293b/ffffff?text=File';
+            document.getElementById('descModalBody').innerText = file.desc || 'Không có mô tả chi tiết cho tệp này.';
+            document.getElementById('descModal').classList.remove('opacity-0', 'pointer-events-none');
+            document.querySelector('#descModal > div').classList.remove('scale-95');
+        };
+
+        window.closeDescModal = function() {
+            document.getElementById('descModal').classList.add('opacity-0', 'pointer-events-none');
+            document.querySelector('#descModal > div').classList.add('scale-95');
+        };
+
+        window.openImageLightbox = function(src) {
+            if (!src) return;
+            document.getElementById('lightboxImage').src = src;
+            document.getElementById('imageLightboxModal').classList.remove('opacity-0', 'pointer-events-none');
+        };
+
+        window.closeImageLightbox = function() {
+            document.getElementById('imageLightboxModal').classList.add('opacity-0', 'pointer-events-none');
+        };
+
         window.openCheckoutModalById = function(id) {
             const file = filesData.find(f => f.id === id);
             if (!file) return;
@@ -1682,22 +1734,31 @@
                 html += `
                     <div class="bg-white/90 backdrop-blur-sm rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition overflow-hidden">
                         <div>
-                            <div class="h-36 w-full relative overflow-hidden bg-slate-100">
-                                <img src="${fileImg}" class="w-full h-full object-cover" alt="Image">
+                            <div class="h-40 w-full relative overflow-hidden bg-slate-100 group">
+                                <img src="${fileImg}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" alt="Image">
                                 ${priceBadge}
+                                <button onclick="window.openImageLightbox('${fileImg}')" class="absolute top-2.5 right-2.5 bg-slate-900/60 hover:bg-slate-900 text-white w-8 h-8 rounded-full backdrop-blur-sm flex items-center justify-center text-xs transition" title="Kính lúp xem toàn bộ hình ảnh">
+                                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                                </button>
                             </div>
                             <div class="p-5">
-                                <div class="flex items-center justify-between mb-1.5">
-                                    <span class="text-[11px] font-semibold text-orange-500 uppercase tracking-wider">${file.category}</span>
-                                    <span class="text-[10px] font-medium text-slate-400"><i class="fa-solid fa-fire mr-1"></i>${(file.downloads || 0).toLocaleString()} lượt</span>
+                                <div class="flex items-center justify-between mb-1.5 gap-2">
+                                    <span class="text-[11px] font-semibold text-orange-500 uppercase tracking-wider truncate">${file.category}</span>
+                                    <span class="text-[10px] font-medium text-slate-400 flex-shrink-0"><i class="fa-solid fa-fire mr-1"></i>${(file.downloads || 0).toLocaleString()} lượt</span>
                                 </div>
                                 <h3 class="font-bold text-slate-800 text-sm mb-1 line-clamp-1">${file.name}</h3>
                                 <p class="text-xs text-slate-500 line-clamp-2 mb-3">${file.desc || 'Không có mô tả'}</p>
+                                
+                                <div class="border-t border-slate-100 pt-2.5">
+                                    <button onclick="window.openDescModal('${file.id}')" class="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition flex items-center gap-1">
+                                        <i class="fa-solid fa-circle-info"></i> Mô tả chi tiết
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="px-5 pb-5 pt-0 flex items-center justify-between border-t border-slate-50 pt-3">
-                            <span class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-hard-drive mr-1"></i> ${file.size}</span>
-                            <a ${cardClickAction} class="${btnClass} text-white text-xs px-3.5 py-1.5 rounded-xl font-bold transition cursor-pointer">
+                            <span class="text-xs text-slate-400 font-medium truncate mr-2"><i class="fa-solid fa-hard-drive mr-1"></i> ${file.size}</span>
+                            <a ${cardClickAction} class="${btnClass} text-white text-xs px-3.5 py-1.5 rounded-xl font-bold transition cursor-pointer flex-shrink-0">
                                 ${btnLabel}
                             </a>
                         </div>
@@ -1719,7 +1780,7 @@
 
                 html += `
                     <tr class="hover:bg-slate-50/80 transition">
-                        <td class="px-5 py-3.5"><img src="${file.image || 'https://placehold.co/60x60/cbd5e1/ffffff?text=No'}" class="w-10 h-10 rounded-xl object-cover border border-slate-200"></td>
+                        <td class="px-5 py-3.5"><img src="${file.image || 'https://placehold.co/60x60/cbd5e1/ffffff?text=No'}" class="w-10 h-10 rounded-xl object-cover border border-slate-200 cursor-pointer" onclick="window.openImageLightbox('${file.image}')"></td>
                         <td class="px-5 py-3.5 font-bold text-slate-800">${file.name}</td>
                         <td class="px-5 py-3.5">${typeBadge}</td>
                         <td class="px-5 py-3.5 text-xs text-slate-500">${file.size}</td>
@@ -1756,8 +1817,8 @@
                 progressHTML += `
                     <div>
                         <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
-                            <span>${f.name}</span>
-                            <span>${(f.downloads || 0).toLocaleString()} lượt (${percent}%)</span>
+                            <span class="truncate pr-2">${f.name}</span>
+                            <span class="flex-shrink-0">${(f.downloads || 0).toLocaleString()} lượt (${percent}%)</span>
                         </div>
                         <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                             <div class="bg-orange-500 h-full rounded-full transition-all duration-500" style="width: ${percent}%"></div>
@@ -1811,7 +1872,6 @@
             };
             document.getElementById('topbarTitle').innerText = titles[tabId] || 'Admin Dashboard';
 
-            // KÍCH HOẠT VÀ CẬP NHẬT BIỂU ĐỒ KHI CHUYỂN SANG TAB DASHBOARD / STATS TRÁNH LỖI VẼ KHUNG 0X0
             if ((tabId === 'dashboard' || tabId === 'stats')) {
                 if (!chartsInitialized) {
                     initCharts();
